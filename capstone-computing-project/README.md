@@ -1,3 +1,7 @@
+In your terminal, make sure to type "npm i" which installs necessary dependencies onto your computer
+then type "npm run dev" to run the localhost. This localhost will automatically update as you type your code. 
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
