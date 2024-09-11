@@ -29,7 +29,6 @@ export default function Home() {
                         <p className="text-lg mb-8 max-w-2xl mx-auto">
                             TEMP STATEMENT
                         </p>
-                        {/* Placeholder for your projects */}
                     </div>
                 </section>
 

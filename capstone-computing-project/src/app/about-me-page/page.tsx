@@ -1,4 +1,4 @@
-//TEMP FILE 
+//temporary page 
 
 
 export default function AboutMe() {
