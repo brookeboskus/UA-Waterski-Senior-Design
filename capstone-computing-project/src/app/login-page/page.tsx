@@ -9,9 +9,11 @@ export default function Home() {
 
             <main className="flex-grow">
                 {/* Hero Section */}
-                <section className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white py-28">
+                <section className="bg-white py-28">
                     <div className="container mx-auto text-center flex flex-col justify-center items-center min-h-[70vh]">
-                        <h1> TEMP </h1>
+                        <h2 className="text-4xl font-bold mb-6 text-[#F96868]">
+                            Enter your credentials to access your account
+                        </h2>
                     </div>
                 </section>
 

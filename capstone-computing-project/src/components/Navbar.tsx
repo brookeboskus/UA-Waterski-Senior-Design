@@ -6,7 +6,8 @@ import Link from 'next/link';
 
 export default function Navbar() {
     return (
-        <nav className="bg-gray-900 p-4 shadow-md sticky top-0 z-50">
+        <nav className="bg-[#900] p-4 shadow-md sticky top-0 z-50">
+            {/* bg-gray-900 */}
             <div className="container mx-auto flex justify-between items-center">
                 {/* Photo / Logo */}
                 {/* Navigation Links */}
@@ -25,7 +26,7 @@ export default function Navbar() {
                     </Link>
                 </div>
                 <div>
-                    <Link href="/login-page" className="bg-blue-500 text-white text-lg py-2 px-4 rounded hover:bg-blue-600 transition duration-300">
+                    <Link href="/login-page" className="bg-white-500 text-white text-lg py-2 px-4 rounded hover:bg-blue-600 transition duration-300">
                         Login
                     </Link>
                 </div>
