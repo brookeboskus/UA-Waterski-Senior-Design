@@ -34,8 +34,7 @@ export default function LoginPage() {
             if (isLogin) {
                 localStorage.setItem('token', response.data.token);  // stores token if login is successful
                 console.log('Login successful:', response.data.token);
-                {/*router.push('/protected-pages/after-login-page'); */ } // Redirect after successful login like to /protected-pages/after-login-page
-                router.push('/'); // protected pages so we can remove certain elements from this page than on homepage, etc (login button can become either Photo they upload for the team to see or their Initials)
+                router.push('/protected-pages/protected-home-page'); // protected pages so we can remove certain elements from this page than on homepage, etc (login button can become either Photo they upload for the team to see or their Initials)
             } else {
                 console.log('Signup successful:', response.data.message);
             }
