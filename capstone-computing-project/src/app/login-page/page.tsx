@@ -1,6 +1,7 @@
 // This will be for home page
 // Important to not move this page.tsx into any other folders or to a different location
 
+// team picture or lake picture on login page, client said.
 "use client";
 
 import { useState } from 'react';

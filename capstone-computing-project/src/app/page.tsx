@@ -1,6 +1,10 @@
 // This will be for home page
 // Important to not move this page.tsx into any other folders or to a different location
 
+// monthly news letter updating ppl what's going on at the time
+// officer's position updating the news letter
+// 
+
 
 // helper home page
 export default function Home() {
