@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const authRoutes = require('./src/routes/auth');
 const cors = require('cors'); // Cross-Origin requests
+const db = require('./db');
 
 const app = express();
 
