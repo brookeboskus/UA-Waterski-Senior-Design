@@ -7,6 +7,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import WaterskiImage from '../img/loginSkiIMG.svg';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -169,14 +170,18 @@ export default function LoginPage() {
                     </p>
                 )}
             </div>
-            <div className='w-1/2 relative'>
+            {/* <div className='w-1/2 relative'>
                 <Image 
                     src="/img/loginSkiIMG.jpeg"
                     alt="Login Waterski Image"
                     layout="fill"
                     objectFit="cover"
                 />
-            </div>
+            </div> */}
+
+            <div className="flex justify-center mb-12">
+                    <Image src={WaterskiImage} alt="Water ski image" width={600} height={600} />
+                </div>
         </div>
     );
 }
