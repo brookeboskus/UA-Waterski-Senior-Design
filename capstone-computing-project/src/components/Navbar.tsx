@@ -13,13 +13,13 @@ export default function Navbar() {
                 {/* Navigation Links */}
                 <div className="space-x-8">
                     <Link href="/" className="text-white text-lg hover:text-gray-400 transition duration-300">
-                        My Portfolio
+                        Home
                     </Link>
                     <Link href="/about-me-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
-                        About Me
+                        About
                     </Link>
                     <Link href="/projects-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
-                        Projects
+                        Page 3
                     </Link>
                     <Link href="/contact-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
                         Contact
