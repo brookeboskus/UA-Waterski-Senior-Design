@@ -39,6 +39,8 @@ export default function LoginPage() {
                 router.push('/protected-pages/protected-home-page'); // protected pages so we can remove certain elements from this page than on homepage, etc (login button can become either Photo they upload for the team to see or their Initials)
             } else {
                 console.log('Signup successful:', response.data.message);
+                setIsLogin(true); // switches to login page after successful signup
+        
             }
         } catch (error) {
             console.error('Error:', error.response?.data?.message || error.message); // debugging

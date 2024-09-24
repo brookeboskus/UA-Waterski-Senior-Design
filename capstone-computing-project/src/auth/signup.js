@@ -32,6 +32,7 @@ module.exports.signup = async (req, res) => {
                         return res.status(500).json({ message: 'Database error' });
                     }
                     res.status(201).json({ message: 'Signup successful!' });
+                    
                 }
             );
         } catch (err) {
