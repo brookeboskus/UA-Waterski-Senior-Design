@@ -6,6 +6,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -45,6 +46,7 @@ export default function LoginPage() {
 
     return (
         <div className='login-page flex items-center justify-center min-h-screen bg-[#f4f4f9]'>
+
             <div className='bg-white p-8 rounded-lg shadow-lg w-full max-w-md text-black'>
                 <h2 className='text-2xl font-bold text-center mb-8 text-black'>{isLogin ? 'Login' : 'Sign Up'}</h2>
                 <div className='flex justify-between mb-4'>
@@ -166,6 +168,14 @@ export default function LoginPage() {
                         </a>
                     </p>
                 )}
+            </div>
+            <div className='w-1/2 relative'>
+                <Image 
+                    src="/img/loginSkiIMG.jpeg"
+                    alt="Login Waterski Image"
+                    layout="fill"
+                    objectFit="cover"
+                />
             </div>
         </div>
     );

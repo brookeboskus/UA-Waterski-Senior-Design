@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export default function Navbar() {
     return (
-        <nav className="bg-[#900] p-4 shadow-md sticky top-0 z-50">
+        <nav className="bg-[#9E1B32] p-4 shadow-md sticky top-0 z-50">
             {/* bg-gray-900 */}
             <div className="container mx-auto flex justify-between items-center">
                 {/* Photo / Logo */}

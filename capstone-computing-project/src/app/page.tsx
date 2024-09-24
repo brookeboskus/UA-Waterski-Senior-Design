@@ -18,7 +18,7 @@ export default function Home() {
 
                     <div className="container mx-auto text-center flex flex-col justify-center items-center min-h-[70vh]">
                         {/* Add photo of Skibama team */}
-                        <h1 className="text-6xl font-extrabold mb-6 text-[#F96868]">
+                        <h1 className="text-6xl font-extrabold mb-6 text-[#9E1B32]">
                             TEMP WELCOME MESSAGE
                         </h1>
                         <p className="text-2xl mb-12 text-black-300 max-w-3xl mx-auto">
