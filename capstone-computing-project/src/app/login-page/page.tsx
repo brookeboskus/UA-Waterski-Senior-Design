@@ -170,18 +170,9 @@ export default function LoginPage() {
                     </p>
                 )}
             </div>
-            {/* <div className='w-1/2 relative'>
-                <Image 
-                    src="/img/loginSkiIMG.jpeg"
-                    alt="Login Waterski Image"
-                    layout="fill"
-                    objectFit="cover"
-                />
-            </div> */}
-
             <div className="flex justify-center mb-12">
-                    <Image src={WaterskiImage} alt="Water ski image" width={600} height={600} />
-                </div>
+                <Image src={WaterskiImage} alt="Water ski image" width={600} height={600}/>
+            </div>
         </div>
     );
 }

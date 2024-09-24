@@ -18,7 +18,7 @@ export default function Navbar() {
                     <Link href="/about-me-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
                         About
                     </Link>
-                    <Link href="/projects-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
+                    <Link href="/page-3" className="text-white text-lg hover:text-gray-400 transition duration-300">
                         Page 3
                     </Link>
                     <Link href="/contact-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
