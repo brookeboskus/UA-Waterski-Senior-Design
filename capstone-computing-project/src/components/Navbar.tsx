@@ -3,6 +3,9 @@
 "use client";
 
 import Link from 'next/link';
+import HeaderWLAM from './img/headerWLAM.svg';
+import Image from 'next/image';
+//import WaterskiImage from '../img/loginSkiIMG.svg';
 
 export default function Navbar() {
     return (
@@ -11,6 +14,9 @@ export default function Navbar() {
             <div className="container mx-auto flex justify-between items-center">
                 {/* Photo / Logo */}
                 {/* Navigation Links */}
+                <div className="flex items-center">
+                    <Image src={HeaderWLAM} alt="Header WLAM image" width={300} height={300}/>
+                </div>
                 <div className="space-x-8">
                     <Link href="/" className="text-white text-lg hover:text-gray-400 transition duration-300">
                         Home

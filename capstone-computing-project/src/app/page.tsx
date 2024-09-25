@@ -5,6 +5,8 @@
 // officer's position updating the news letter
 // 
 
+import HomePicture from './img/homePicture.svg';
+import Image from 'next/image';
 
 // helper home page
 export default function Home() {
@@ -15,6 +17,9 @@ export default function Home() {
                 {/* Hero Section */}
                 {/* bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white */}
                 <section className="bg-white py-28">
+                    <div className="w-full flex justify-center">
+                        <Image src={HomePicture} alt="Home Picture image" width={1200} height={1200}/>
+                    </div>
 
                     <div className="container mx-auto text-center flex flex-col justify-center items-center min-h-[70vh]">
                         {/* Add photo of Skibama team */}
