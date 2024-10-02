@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const db = require('../../db');  // MySQL connection
 
 module.exports.signup = async (req, res) => {
-    const { email, password, fname, lname, cwid, gradYear, major } = req.body;
+    const { email, password, fname, lname, cwid, phone, gradYear, major } = req.body;
 
     // Check if the user already exists
     db.query('SELECT * FROM User WHERE Email = ?', [email], async (err, results) => {
@@ -23,9 +23,9 @@ module.exports.signup = async (req, res) => {
 
             // Insert the new user into the database
             db.query(
-                `INSERT INTO User (Email, Password, Fname, Lname, CWID, GradYear, Major) 
-                 VALUES (?, ?, ?, ?, ?, ?, ?)`,
-                [email, hashedPassword, fname, lname, cwid, gradYear, major],
+                `INSERT INTO User (Email, Password, Fname, Lname, CWID, Phone, GradYear, Major) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                [email, hashedPassword, fname, lname, cwid, phone, gradYear, major],
                 (err, result) => {
                     if (err) {
                         console.error('Database insert error:', err);

@@ -13,6 +13,7 @@ export default function LoginPage() {
     const [fname, setFname] = useState('');
     const [lname, setLname] = useState('');
     const [cwid, setCwid] = useState('');
+    const [phone, setPhone] = useState('');
     const [gradYear, setGradYear] = useState('Freshman');
     // const [memberType, setMemberType] = useState('Athlete'); //not in use right now
     const [major, setMajor] = useState('');
@@ -26,7 +27,7 @@ export default function LoginPage() {
 
         const payload = isLogin
             ? { email, password }
-            : { email, password, fname, lname, cwid, gradYear, major };
+            : { email, password, fname, lname, cwid, phone, gradYear, major };
 
         try {
             const response = await axios.post(endpoint, payload);
@@ -108,6 +109,14 @@ export default function LoginPage() {
                                         placeholder='CWID'
                                         value={cwid}
                                         onChange={(e) => setCwid(e.target.value)}
+                                        className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]'
+                                        required
+                                    />
+                                    <input
+                                        type='text'
+                                        placeholder='Phone Number'
+                                        value={phone}
+                                        onChange={(e) => setPhone(e.target.value)}
                                         className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]'
                                         required
                                     />

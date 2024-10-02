@@ -10,8 +10,8 @@ import Navbar from '../components/Navbar';
 const dmSans = DM_Sans({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-    title: 'Portfolio Website',
-    description: 'TEMPORARY DESCRIPTION ABOUT MY PORTFOLIO WEBSITE',
+    title: 'UA Waterski',
+    description: 'TEMPORARY STATEMENT',
 };
 
 export default function RootLayout({
