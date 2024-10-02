@@ -1,5 +1,5 @@
 "use client";
-//9e1b32 9E1B32
+
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -142,14 +142,14 @@ export default function LoginPage() {
                                 </>
                             )}
 
-                            <button type='submit' className='w-full bg-[white] text-[black] py-2 rounded-full font-bold'>
+                            <button type='submit' className='w-full bg-[white] text-[black] py-2 rounded-full font-bold hover:text-[#9E1B32]'>
                                 {isLogin ? 'Sign In' : 'Sign Up'}
                             </button>
                         </form>
 
                         {isLogin && (
-                            <p className='text-center mt-4'>
-                                <a href='/forgot-password' className='text-[black] hover:underline font-bold'>
+                            <p className='text-center mt-4 text-xs'>
+                                <a href='/forgot-password' className='text-[black] hover:text-[#9E1B32] font-bold'>
                                     Forgot Password?
                                 </a>
                             </p>
