@@ -14,7 +14,7 @@ export default function LoginPage() {
     const [lname, setLname] = useState('');
     const [cwid, setCwid] = useState('');
     const [gradYear, setGradYear] = useState('Freshman');
-    const [memberType, setMemberType] = useState('Athlete');
+    // const [memberType, setMemberType] = useState('Athlete'); //not in use right now
     const [major, setMajor] = useState('');
     const [isLogin, setIsLogin] = useState(true);
     const router = useRouter();
@@ -26,7 +26,7 @@ export default function LoginPage() {
 
         const payload = isLogin
             ? { email, password }
-            : { email, password, fname, lname, cwid, gradYear, memberType, major };
+            : { email, password, fname, lname, cwid, gradYear, major };
 
         try {
             const response = await axios.post(endpoint, payload);
@@ -122,7 +122,7 @@ export default function LoginPage() {
                                         <option value='Junior'>Junior</option>
                                         <option value='Senior'>Senior</option>
                                     </select>
-                                    <select
+                                    {/* <select
                                         value={memberType}
                                         onChange={(e) => setMemberType(e.target.value)}
                                         className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]'
@@ -130,7 +130,7 @@ export default function LoginPage() {
                                     >
                                         <option value='Athlete'>Athlete</option>
                                         <option value='Officer'>Officer</option>
-                                    </select>
+                                    </select> */}
                                     <input
                                         type='text'
                                         placeholder='Major'
