@@ -39,6 +39,13 @@ export default function LoginPage() {
             }
         } catch (error) {
             console.error('Error:', error.response?.data?.message || error.message);
+            if (isLogin) {
+                document.getElementById('errorBox')?.setAttribute("style", "display: block;") // Show error box
+                document.getElementById('errorText')!.innerText = "Invalid email or password. Please try again." // Change text of error. Keep text vague to not give away if account exists.
+            } else {
+                // Handle additional error cases
+                // What error cases could happen when signing up for an account?
+            }
         }
     };
 
@@ -53,6 +60,11 @@ export default function LoginPage() {
 
                     {/* Login Form */}
                     <div className='bg-white p-8 rounded-lg shadow-lg w-full max-w-md text-black mt-[-40px]'>
+
+                        <div className='bg-[#ffaaaa] rounded-lg p-2 mt-2 mb-2 hidden' id="errorBox">
+                            <p className='font-bold'>Error:</p><p id="errorText">DEFAULT ERROR TEXT</p>
+                        </div>
+
                         <div className='flex justify-between mb-4'>
                             <button
                                 onClick={() => setIsLogin(true)}
@@ -74,6 +86,8 @@ export default function LoginPage() {
                                 placeholder='Email Address'
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                pattern=".+@+(.+\.)?ua\.edu" // Allows for emails ending in ua.edu, cs.ua.edu, crimson.ua.edu, but not blahua.edu
+                                title="Email must be a valid University of Alabama address (i.e. ending in ua.edu)"
                                 className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]'
                                 required
                             />
