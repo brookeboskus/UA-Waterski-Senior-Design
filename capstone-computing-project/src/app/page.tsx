@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from 'next/image';
 import { fetchSheetData } from "./googlesheetservices";
 import placeholderhomepageimage from "../app/img/placeholderhomepage.svg";
 
@@ -10,7 +11,7 @@ export default function Home() {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isSliding, setIsSliding] = useState(false);
     const [direction, setDirection] = useState<"left" | "right">("right");
-    const [loading, setLoading] = useState(true);  
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         // fetching data from Google Sheets
@@ -25,11 +26,11 @@ export default function Home() {
                 } else {
                     setSheetData([]);
                 }
-                setLoading(false); 
+                setLoading(false);
             } catch (err) {
                 console.error("Error fetching sheet data:", err);
                 setError("Failed to fetch data");
-                setLoading(false);  
+                setLoading(false);
             }
         };
 
@@ -70,11 +71,17 @@ export default function Home() {
                         {/* placeholder image when loading or on error */}
                         {loading || error ? (
                             <div className="relative w-full flex justify-center items-center">
-                                <img
-                                    src={placeholderhomepageimage}
-                                    alt="Placeholder Image"
-                                    className="object-cover w-[800px] h-[500px] rounded-md scale-100"
-                                />
+                                <div className="flex justify-center mb-12">
+                                    <Image
+                                        src={placeholderhomepageimage}
+                                        alt="Jeongbin Son"
+                                        width={1000}
+                                        height={1000}
+                                        className="rounded-full"
+                                    />
+                                </div>
+
+
                             </div>
                         ) : (
                             !error && sheetData && sheetData.length > 1 && (
