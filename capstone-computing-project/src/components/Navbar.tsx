@@ -1,44 +1,58 @@
-// Navbar.tsx for the top navigation bar of the website (Like about me, home, contact, etc of the websites)
-
 "use client";
 
 import Link from 'next/link';
 import HeaderWLAM from './img/headerWLAM.svg';
 import Image from 'next/image';
-//import WaterskiImage from '../img/loginSkiIMG.svg';
+import { useState } from 'react';
 
 export default function Navbar() {
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
     return (
         <nav className="bg-[#9E1B32] p-4 shadow-md sticky top-0 z-50">
-            {/* bg-gray-900 */}
             <div className="container mx-auto flex justify-between items-center">
-                {/* Photo / Logo */}
-                {/* Navigation Links */}
                 <div className="flex items-center">
                     <Image src={HeaderWLAM} alt="Header WLAM image" width={300} height={300} />
                 </div>
-                <div className="space-x-6">
+                <div className="space-x-6 flex items-center">
                     <Link href="/" className="text-white text-lg hover:text-gray-400 transition duration-300">
                         Home
-                    </Link>
-                    {/* can and should remove about, navbar is cluttered */}
-                    {/* will restructure with dropdown menus to declutter */}
-                    <Link href="/about-me-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
-                        About
                     </Link>
                     <Link href="/set-list-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
                         Set List
                     </Link>
-                    <Link href="/roster-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
-                        Roster
-                    </Link>
-                    <Link href="/merch-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
-                        Merch
-                    </Link>
-                    <Link href="/club-information-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
-                        Club Info
-                    </Link>
-                    {/*will need to restructure navbar so that officer resources only shows up for officers */}
+                    {/* About Dropdown */}
+                    <div className='cursor-pointer items-center gap-2 group relative'>
+                        <div className='flex flex-row text-white text-lg hover:text-gray-400 transition duration-300'>
+                            About
+                        </div>
+                        <ul className='hidden absolute right-0 pt-4 w-40 rounded-lg group-hover:block border-collapse'>
+                            <li className='border-secondary hover:bg-[#D44122] hover:text-white text-black bg-white rounded-t-lg'>
+                                <Link
+                                    href='/roster-page'
+                                    className='block py-2 px-4'
+                                >
+                                    Roster
+                                </Link>
+                            </li>
+                            <li className='hover:bg-[#D44122] hover:text-white text-black bg-white rounded-t-lg'>
+                                <Link
+                                    href='/club-information-page'
+                                    className='block py-2 px-4'
+                                >
+                                    Club Info
+                                </Link>
+                            </li>
+                            <li className='border-t-0 border-secondary hover:bg-[#D44122] hover:text-white text-black bg-white rounded-b-lg'>
+                                <Link
+                                    href='/merch-page'
+                                    className='block py-2 px-4'
+                                >
+                                    Merch
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
                     <Link href="/officer-resources-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
                         Officer Resources
                     </Link>
