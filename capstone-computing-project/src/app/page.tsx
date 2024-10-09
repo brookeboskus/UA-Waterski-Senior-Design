@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { fetchSheetData } from "./googlesheetservices";
-import placeholderhomepageimage from "./img/placeholderhomepage.svg";
+import placeholderhomepageimage from "../app/img/placeholderhomepage.svg";
 
 export default function Home() {
     const [sheetData, setSheetData] = useState<string[] | null>(null);
@@ -162,25 +162,25 @@ export default function Home() {
                         </p>
                         <a
                             href="#projects"
-                            className="bg-[#49A097] text-white px-8 py-4 rounded-full hover:bg-[#3d857c] transition duration-300"
+                            className="bg-[#D45031] text-white px-8 py-4 rounded-full hover:bg-[#3d857c] transition duration-300"
                         >
                             TEMP
                         </a>
                     </div>
                 </section>
 
-                <div className="w-full border-t-4 border-[#49A097]"></div>
+                <div className="w-full border-t-4 border-[#D45031]"></div>
 
                 <section id="projects" className="py-20 bg-gray-100 text-gray-800">
                     <div className="container mx-auto text-center">
-                        <h2 className="text-4xl font-bold mb-6 text-[#49A097]">
+                        <h2 className="text-4xl font-bold mb-6 text-[#D45031]">
                             TEMP SECTION
                         </h2>
                         <p className="text-lg mb-8 max-w-2xl mx-auto">TEMP</p>
                     </div>
                 </section>
 
-                <div className="w-full border-t-4 border-[#49A097]"></div>
+                <div className="w-full border-t-4 border-[#D45031]"></div>
             </main>
         </div>
     );
