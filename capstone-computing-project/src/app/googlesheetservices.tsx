@@ -9,7 +9,7 @@ export const fetchSheetData = async (): Promise<string[][] | null> => {
         const response = await axios.get(
             `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${RANGE}?key=${API_KEY}`
         );
-        return response.data.values; // Returns the data from the sheet
+        return response.data.values; 
     } catch (error) {
         console.error('Error fetching data from Google Sheets:', error);
         return null;

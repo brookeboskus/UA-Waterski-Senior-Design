@@ -1,111 +1,144 @@
-// This will be for home page
-// Important to not move this page.tsx into any other folders or to a different location
-
-// monthly news letter updating ppl what's going on at the time
-// officer's position updating the news letter
 "use client";
-// 
-import { useEffect, useState } from 'react';
-import { fetchSheetData } from './googlesheetservices'; // Update import as needed
 
-//import HomePicture from './img/homePicture.svg';
-import Image from 'next/image';
+import { useEffect, useState } from "react";
+import { fetchSheetData } from "./googlesheetservices";
 
-// helper home page
 export default function Home() {
-    const [sheetData, setSheetData] = useState<string[][] | null>(null);
+    const [sheetData, setSheetData] = useState<string[] | null>(null);  
     const [error, setError] = useState<string | null>(null);
-    const [currentIndex, setCurrentIndex] = useState(1);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isSliding, setIsSliding] = useState(false);
+    const [direction, setDirection] = useState<"left" | "right">("right");
 
     useEffect(() => {
+        // fetching data from Google Sheets
         const getData = async () => {
-            try{
-
-                const data = await fetchSheetData();
-                if (data) {
-                    setSheetData(data);
-                }else{
+            try {
+                const data = await fetchSheetData(); 
+                if (data) { // if data not null, filter out only image URLs
+                    const imageUrls = data
+                        .filter((row) => row[0]?.startsWith("http")) // assumes image url is in first column
+                        .map((row) => row[0]);
+                    setSheetData(imageUrls);
+                } else {
                     setSheetData([]);
                 }
-                console.log(sheetData);
-                
-
-            } catch (err){
-                console.error('Error fetching sheet data:', err);
-                setError('Failed to fetch data');
+            } catch (err) {
+                console.error("Error fetching sheet data:", err);
+                setError("Failed to fetch data");
             }
-            
         };
 
         getData();
     }, []);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if (sheetData && sheetData.length > 1) {
-                setCurrentIndex((prevIndex) => (prevIndex + 1) % sheetData.length);
-                setCurrentIndex((prevIndex) => (prevIndex === 0 ? 1 : prevIndex));
-            }
-        }, 3000); // Change image every 2 seconds
-
-        return () => clearInterval(interval);
-    }, [sheetData]);
+    const startSlide = (newIndex: number, dir: "left" | "right") => {
+        setIsSliding(true);
+        setDirection(dir);
+        setTimeout(() => {
+            setCurrentIndex(newIndex);
+            setIsSliding(false);
+        }, 300); // Duration of the slide effect in ms
+    };
 
     const handleNext = () => {
         if (sheetData) {
-            setCurrentIndex((prevIndex) => (prevIndex + 1) % sheetData.length);
-            setCurrentIndex((prevIndex) => (prevIndex === 0 ? 1 : prevIndex));
+            const nextIndex = (currentIndex + 1) % sheetData.length;
+            startSlide(nextIndex, "right");
         }
     };
 
     const handlePrev = () => {
         if (sheetData) {
-            setCurrentIndex((prevIndex) => (prevIndex - 1 + sheetData.length) % sheetData.length);
-            setCurrentIndex((prevIndex) => (prevIndex === 0 ? 1 : prevIndex));
+            const prevIndex = (currentIndex - 1 + sheetData.length) % sheetData.length;
+            startSlide(prevIndex, "left");
         }
     };
 
+    const showPrevImage = currentIndex > 0;
+    const showNextImage = sheetData && currentIndex < sheetData.length - 1;
+
     return (
         <div className="min-h-screen flex flex-col">
-
             <main className="flex-grow">
-                {/* Hero Section */}
-                {/* bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white */}
-                <section className="bg-white py-28">
-                    <div className="w-full flex justify-center">
-                       {/* Image here */}
-                       {/* Image here */}
-                       {!error && sheetData && sheetData.length > 1 && (
-                            <img 
-                                src={sheetData[currentIndex][0]} // Adjusted to get the image from the first column
-                                alt={`Image ${currentIndex}`} 
-                                width={1200} 
-                                height={800} 
-                                className="object-cover w-full h-[800px] rounded-md"
-                            />
+                <section className="bg-white">
+                    <div className="w-full flex justify-center relative overflow-hidden">
+                        {!error && sheetData && sheetData.length > 1 && (
+                            <div className="relative w-full flex justify-center items-center">
+                                {/* Previous Image */}
+                                {showPrevImage && (
+                                    <div // how we do transition between images
+                                        className={`absolute left-0 transition-transform duration-300 transform ${isSliding && direction === "left"
+                                            ? "translate-x-full"
+                                            : isSliding && direction === "right"
+                                                ? "-translate-x-full"
+                                                : "translate-x-0"
+                                            } opacity-50 scale-75`}
+                                    >
+                                        <img
+                                            src={sheetData[currentIndex - 1]}
+                                            alt="Previous Image"
+                                            className="object-cover w-[600px] h-[400px] rounded-md"
+                                        />
+                                    </div>
+                                )}
+
+                                {/* Current Image */}
+                                <div
+                                    className={`transition-transform duration-300 transform ${isSliding && direction === "right"
+                                        ? "-translate-x-full"
+                                        : isSliding && direction === "left"
+                                            ? "translate-x-full"
+                                            : "translate-x-0"
+                                        } z-10`}
+                                >
+                                    <img
+                                        src={sheetData[currentIndex]}
+                                        alt="Current Image"
+                                        className="object-cover w-[800px] h-[500px] rounded-md scale-100"
+                                    />
+                                </div>
+
+                                {/* Next Image */}
+                                {showNextImage && (
+                                    <div
+                                        className={`absolute right-0 transition-transform duration-300 transform ${isSliding && direction === "right"
+                                            ? "translate-x-full"
+                                            : isSliding && direction === "left"
+                                                ? "-translate-x-full"
+                                                : "translate-x-0"
+                                            } opacity-50 scale-75`}
+                                    >
+                                        <img
+                                            src={sheetData[currentIndex + 1]}
+                                            alt="Next Image"
+                                            className="object-cover w-[600px] h-[400px] rounded-md"
+                                        />
+                                    </div>
+                                )}
+                            </div>
                         )}
+
                         {/* Left Arrow */}
-                        <button 
+                        <button
                             onClick={handlePrev}
-                         
-                            
                             className="absolute left-4 top-2/3 transform -translate-y-1/2 bg-transparent border border-gray-200 p-4 rounded-full shadow-md hover:bg-gray-200 transition duration-300"
+                            disabled={!showPrevImage} // disables left/right arrows if no previous image
                         >
-                            &#9664; {/* Left Arrow */}
+                            &#9664;
                         </button>
+
                         {/* Right Arrow */}
-                        <button 
+                        <button
                             onClick={handleNext}
                             className="absolute right-4 top-2/3 transform -translate-y-1/2 bg-transparent border border-gray-200 p-4 rounded-full shadow-md hover:bg-gray-200 transition duration-300"
+                            disabled={!showNextImage} // disables left/right arrows if no next image
                         >
-                            &#9654; {/* Right Arrow */}
+                            &#9654;
                         </button>
                     </div>
 
-                    
-
                     <div className="container mx-auto text-center flex flex-col justify-center items-center min-h-[70vh]">
-                        {/* Add photo of Skibama team */}
                         <h1 className="text-6xl font-extrabold mb-6 text-[#9E1B32]">
                             TEMP WELCOME MESSAGE
                         </h1>
@@ -121,25 +154,19 @@ export default function Home() {
                     </div>
                 </section>
 
-                {/* Horizontal Line */}
                 <div className="w-full border-t-4 border-[#49A097]"></div>
 
-                {/* Projects Section */}
                 <section id="projects" className="py-20 bg-gray-100 text-gray-800">
                     <div className="container mx-auto text-center">
                         <h2 className="text-4xl font-bold mb-6 text-[#49A097]">
                             TEMP SECTION
                         </h2>
-                        <p className="text-lg mb-8 max-w-2xl mx-auto">
-                            TEMP 
-                        </p>
+                        <p className="text-lg mb-8 max-w-2xl mx-auto">TEMP</p>
                     </div>
                 </section>
 
-                {/* Horizontal Line */}
                 <div className="w-full border-t-4 border-[#49A097]"></div>
             </main>
         </div>
     );
 }
-
