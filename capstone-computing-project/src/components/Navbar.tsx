@@ -15,13 +15,14 @@ export default function Navbar() {
                 {/* Photo / Logo */}
                 {/* Navigation Links */}
                 <div className="flex items-center">
-                    <Image src={HeaderWLAM} alt="Header WLAM image" width={300} height={300}/>
+                    <Image src={HeaderWLAM} alt="Header WLAM image" width={300} height={300} />
                 </div>
                 <div className="space-x-6">
                     <Link href="/" className="text-white text-lg hover:text-gray-400 transition duration-300">
                         Home
                     </Link>
                     {/* can and should remove about, navbar is cluttered */}
+                    {/* will restructure with dropdown menus to declutter */}
                     <Link href="/about-me-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
                         About
                     </Link>
@@ -39,7 +40,7 @@ export default function Navbar() {
                     </Link>
                     {/*will need to restructure navbar so that officer resources only shows up for officers */}
                     <Link href="/officer-resources-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
-                        Officer Resources 
+                        Officer Resources
                     </Link>
                 </div>
                 <div>
