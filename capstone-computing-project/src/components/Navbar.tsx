@@ -17,18 +17,29 @@ export default function Navbar() {
                 <div className="flex items-center">
                     <Image src={HeaderWLAM} alt="Header WLAM image" width={300} height={300}/>
                 </div>
-                <div className="space-x-8">
+                <div className="space-x-6">
                     <Link href="/" className="text-white text-lg hover:text-gray-400 transition duration-300">
                         Home
                     </Link>
+                    {/* can and should remove about, navbar is cluttered */}
                     <Link href="/about-me-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
                         About
                     </Link>
-                    <Link href="/page-3" className="text-white text-lg hover:text-gray-400 transition duration-300">
-                        Page 3
+                    <Link href="/set-list-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
+                        Set List
                     </Link>
-                    <Link href="/contact-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
-                        Contact
+                    <Link href="/roster-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
+                        Roster
+                    </Link>
+                    <Link href="/merch-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
+                        Merch
+                    </Link>
+                    <Link href="/club-information-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
+                        Club Info
+                    </Link>
+                    {/*will need to restructure navbar so that officer resources only shows up for officers */}
+                    <Link href="/officer-resources-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
+                        Officer Resources 
                     </Link>
                 </div>
                 <div>
