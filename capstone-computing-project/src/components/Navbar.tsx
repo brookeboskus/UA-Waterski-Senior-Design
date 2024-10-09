@@ -17,16 +17,24 @@ export default function Navbar() {
                     </Link>
                 </div>
                 <div className="space-x-10 flex items-center">
-                    <Link href="/" className="text-white text-lg hover:text-gray-400 transition duration-300">
+                    <Link href="/" className="text-white text-lg hover:text-black hover:underline transition duration-300">
                         Home
                     </Link>
-                    <Link href="/set-list-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
+                    <Link href="/set-list-page" className="text-white text-lg hover:text-black hover:underline transition duration-300">
                         Set List
                     </Link>
                     {/* About Dropdown */}
                     <div className='cursor-pointer items-center gap-1 group relative'>
-                        <div className='flex flex-row text-white text-lg hover:text-gray-400 transition duration-300'>
-                            About
+                        <div className='flex flex-row text-white text-lg hover:text-black hover:underline transition duration-300'>
+                            <Link
+                                href='/about-me-page'
+                                className='flex items-center py-2 px-4'
+                            >
+                                About 
+                                <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
+                                </svg>
+                            </Link>
                         </div>
                         <ul className='left-1/2 transform -translate-x-1/2 hidden absolute pt-4 w-40 rounded-lg group-hover:block border-bg-black text-center'>
                             <li className='border-2 hover:bg-[#D44122] hover:text-white text-black bg-white'>
@@ -55,7 +63,7 @@ export default function Navbar() {
                             </li>
                         </ul>
                     </div>
-                    <Link href="/officer-resources-page" className="text-white text-lg hover:text-gray-400 transition duration-300">
+                    <Link href="/officer-resources-page" className="text-white text-lg hover:text-black hover:underline transition duration-300">
                         Officer Resources
                     </Link>
                 </div>
