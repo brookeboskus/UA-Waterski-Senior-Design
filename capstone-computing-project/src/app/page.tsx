@@ -2,19 +2,21 @@
 
 import { useEffect, useState } from "react";
 import { fetchSheetData } from "./googlesheetservices";
+import placeholderhomepageimage from "./img/placeholderhomepage.svg";
 
 export default function Home() {
-    const [sheetData, setSheetData] = useState<string[] | null>(null);  
+    const [sheetData, setSheetData] = useState<string[] | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isSliding, setIsSliding] = useState(false);
     const [direction, setDirection] = useState<"left" | "right">("right");
+    const [loading, setLoading] = useState(true);  
 
     useEffect(() => {
         // fetching data from Google Sheets
         const getData = async () => {
             try {
-                const data = await fetchSheetData(); 
+                const data = await fetchSheetData();
                 if (data) { // if data not null, filter out only image URLs
                     const imageUrls = data
                         .filter((row) => row[0]?.startsWith("http")) // assumes image url is in first column
@@ -23,9 +25,11 @@ export default function Home() {
                 } else {
                     setSheetData([]);
                 }
+                setLoading(false); 
             } catch (err) {
                 console.error("Error fetching sheet data:", err);
                 setError("Failed to fetch data");
+                setLoading(false);  
             }
         };
 
@@ -38,7 +42,7 @@ export default function Home() {
         setTimeout(() => {
             setCurrentIndex(newIndex);
             setIsSliding(false);
-        }, 300); // Duration of the slide effect in ms
+        }, 300); // 
     };
 
     const handleNext = () => {
@@ -63,67 +67,78 @@ export default function Home() {
             <main className="flex-grow">
                 <section className="bg-white">
                     <div className="w-full flex justify-center relative overflow-hidden">
-                        {!error && sheetData && sheetData.length > 1 && (
+                        {/* placeholder image when loading or on error */}
+                        {loading || error ? (
                             <div className="relative w-full flex justify-center items-center">
-                                {/* Previous Image */}
-                                {showPrevImage && (
-                                    <div // how we do transition between images
-                                        className={`absolute left-0 transition-transform duration-300 transform ${isSliding && direction === "left"
-                                            ? "translate-x-full"
-                                            : isSliding && direction === "right"
-                                                ? "-translate-x-full"
-                                                : "translate-x-0"
-                                            } opacity-50 scale-75`}
-                                    >
-                                        <img
-                                            src={sheetData[currentIndex - 1]}
-                                            alt="Previous Image"
-                                            className="object-cover w-[600px] h-[400px] rounded-md"
-                                        />
-                                    </div>
-                                )}
-
-                                {/* Current Image */}
-                                <div
-                                    className={`transition-transform duration-300 transform ${isSliding && direction === "right"
-                                        ? "-translate-x-full"
-                                        : isSliding && direction === "left"
-                                            ? "translate-x-full"
-                                            : "translate-x-0"
-                                        } z-10`}
-                                >
-                                    <img
-                                        src={sheetData[currentIndex]}
-                                        alt="Current Image"
-                                        className="object-cover w-[800px] h-[500px] rounded-md scale-100"
-                                    />
-                                </div>
-
-                                {/* Next Image */}
-                                {showNextImage && (
-                                    <div
-                                        className={`absolute right-0 transition-transform duration-300 transform ${isSliding && direction === "right"
-                                            ? "translate-x-full"
-                                            : isSliding && direction === "left"
-                                                ? "-translate-x-full"
-                                                : "translate-x-0"
-                                            } opacity-50 scale-75`}
-                                    >
-                                        <img
-                                            src={sheetData[currentIndex + 1]}
-                                            alt="Next Image"
-                                            className="object-cover w-[600px] h-[400px] rounded-md"
-                                        />
-                                    </div>
-                                )}
+                                <img
+                                    src={placeholderhomepageimage}
+                                    alt="Placeholder Image"
+                                    className="object-cover w-[800px] h-[500px] rounded-md scale-100"
+                                />
                             </div>
+                        ) : (
+                            !error && sheetData && sheetData.length > 1 && (
+                                <div className="relative w-full flex justify-center items-center">
+                                    {/* Previous Image */}
+                                    {showPrevImage && (
+                                        <div
+                                            className={`absolute left-0 transition-transform duration-300 transform ${isSliding && direction === "left"
+                                                ? "translate-x-full"
+                                                : isSliding && direction === "right"
+                                                    ? "-translate-x-full"
+                                                    : "translate-x-0"
+                                                } opacity-50 scale-75`}
+                                        >
+                                            <img
+                                                src={sheetData[currentIndex - 1]}
+                                                alt="Previous Image"
+                                                className="object-cover w-[600px] h-[400px] rounded-md"
+                                            />
+                                        </div>
+                                    )}
+
+                                    {/* Current Image */}
+                                    <div
+                                        className={`transition-transform duration-300 transform ${isSliding && direction === "right"
+                                            ? "-translate-x-full"
+                                            : isSliding && direction === "left"
+                                                ? "translate-x-full"
+                                                : "translate-x-0"
+                                            } z-10`}
+                                    >
+                                        <img
+                                            src={sheetData[currentIndex]}
+                                            alt="Current Image"
+                                            className="object-cover w-[800px] h-[500px] rounded-md scale-100"
+                                        />
+                                    </div>
+
+                                    {/* Next Image */}
+                                    {showNextImage && (
+                                        <div
+                                            className={`absolute right-0 transition-transform duration-300 transform ${isSliding && direction === "right"
+                                                ? "translate-x-full"
+                                                : isSliding && direction === "left"
+                                                    ? "-translate-x-full"
+                                                    : "translate-x-0"
+                                                } opacity-50 scale-75`}
+                                        >
+                                            <img
+                                                src={sheetData[currentIndex + 1]}
+                                                alt="Next Image"
+                                                className="object-cover w-[600px] h-[400px] rounded-md"
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            )
                         )}
 
                         {/* Left Arrow */}
                         <button
                             onClick={handlePrev}
                             className="absolute left-4 top-2/3 transform -translate-y-1/2 bg-transparent border border-gray-200 p-4 rounded-full shadow-md hover:bg-gray-200 transition duration-300"
-                            disabled={!showPrevImage} // disables left/right arrows if no previous image
+                            disabled={!showPrevImage || loading} // disables left/right arrows if no previous image or loading
                         >
                             &#9664;
                         </button>
@@ -132,7 +147,7 @@ export default function Home() {
                         <button
                             onClick={handleNext}
                             className="absolute right-4 top-2/3 transform -translate-y-1/2 bg-transparent border border-gray-200 p-4 rounded-full shadow-md hover:bg-gray-200 transition duration-300"
-                            disabled={!showNextImage} // disables left/right arrows if no next image
+                            disabled={!showNextImage || loading} // disables left/right arrows if no next image or loading
                         >
                             &#9654;
                         </button>
