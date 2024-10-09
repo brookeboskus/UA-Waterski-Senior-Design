@@ -28,7 +28,7 @@ export default function Navbar() {
                         <div className='flex flex-row text-white text-lg hover:text-gray-400 transition duration-300'>
                             About
                         </div>
-                        <ul className='left-1/2 transform -translate-x-1/2 hidden absolute pt-0 w-40 rounded-lg group-hover:block border-bg-black text-center'>
+                        <ul className='left-1/2 transform -translate-x-1/2 hidden absolute pt-4 w-40 rounded-lg group-hover:block border-bg-black text-center'>
                             <li className='border-2 hover:bg-[#D44122] hover:text-white text-black bg-white'>
                                 <Link
                                     href='/roster-page'
