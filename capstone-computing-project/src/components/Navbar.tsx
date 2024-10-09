@@ -12,9 +12,11 @@ export default function Navbar() {
         <nav className="bg-[#9E1B32] p-4 shadow-md sticky top-0 z-50">
             <div className="container mx-auto flex justify-between items-center">
                 <div className="flex items-center">
-                    <Image src={HeaderWLAM} alt="Header WLAM image" width={300} height={300} />
+                    <Link href="/"> {/* lets the image be clickable and lead back to homepage */}
+                        <Image src={HeaderWLAM} alt="Header WLAM image" width={300} height={300} />
+                    </Link>
                 </div>
-                <div className="space-x-6 flex items-center">
+                <div className="space-x-10 flex items-center">
                     <Link href="/" className="text-white text-lg hover:text-gray-400 transition duration-300">
                         Home
                     </Link>
@@ -22,12 +24,12 @@ export default function Navbar() {
                         Set List
                     </Link>
                     {/* About Dropdown */}
-                    <div className='cursor-pointer items-center gap-2 group relative'>
+                    <div className='cursor-pointer items-center gap-1 group relative'>
                         <div className='flex flex-row text-white text-lg hover:text-gray-400 transition duration-300'>
                             About
                         </div>
-                        <ul className='hidden absolute right-0 pt-4 w-40 rounded-lg group-hover:block border-collapse'>
-                            <li className='border-secondary hover:bg-[#D44122] hover:text-white text-black bg-white rounded-t-lg'>
+                        <ul className='left-1/2 transform -translate-x-1/2 hidden absolute pt-0 w-40 rounded-lg group-hover:block border-bg-black text-center'>
+                            <li className='border-2 hover:bg-[#D44122] hover:text-white text-black bg-white'>
                                 <Link
                                     href='/roster-page'
                                     className='block py-2 px-4'
@@ -35,7 +37,7 @@ export default function Navbar() {
                                     Roster
                                 </Link>
                             </li>
-                            <li className='hover:bg-[#D44122] hover:text-white text-black bg-white rounded-t-lg'>
+                            <li className='border-2 hover:bg-[#D44122] hover:text-white text-black bg-white'>
                                 <Link
                                     href='/club-information-page'
                                     className='block py-2 px-4'
@@ -43,7 +45,7 @@ export default function Navbar() {
                                     Club Info
                                 </Link>
                             </li>
-                            <li className='border-t-0 border-secondary hover:bg-[#D44122] hover:text-white text-black bg-white rounded-b-lg'>
+                            <li className='border-2 hover:bg-[#D44122] hover:text-white text-black bg-white'>
                                 <Link
                                     href='/merch-page'
                                     className='block py-2 px-4'
