@@ -32,12 +32,12 @@ export default function Navbar() {
                             >
                                 About 
                                 <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
+                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
                                 </svg>
                             </Link>
                         </div>
                         <ul className='left-1/2 transform -translate-x-1/2 hidden absolute pt-4 w-40 rounded-lg group-hover:block border-bg-black text-center'>
-                            <li className='border-2 hover:bg-[#D44122] hover:text-white text-black bg-white'>
+                            <li className='border-2 hover:bg-[#DE3333] hover:text-white text-black bg-white'>
                                 <Link
                                     href='/roster-page'
                                     className='block py-2 px-4'
@@ -45,7 +45,7 @@ export default function Navbar() {
                                     Roster
                                 </Link>
                             </li>
-                            <li className='border-2 hover:bg-[#D44122] hover:text-white text-black bg-white'>
+                            <li className='border-2 hover:bg-[#DE3333] hover:text-white text-black bg-white'>
                                 <Link
                                     href='/club-information-page'
                                     className='block py-2 px-4'
@@ -53,7 +53,7 @@ export default function Navbar() {
                                     Club Info
                                 </Link>
                             </li>
-                            <li className='border-2 hover:bg-[#D44122] hover:text-white text-black bg-white'>
+                            <li className='border-2 hover:bg-[#DE3333] hover:text-white text-black bg-white'>
                                 <Link
                                     href='/merch-page'
                                     className='block py-2 px-4'
