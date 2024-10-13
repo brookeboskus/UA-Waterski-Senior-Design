@@ -22,16 +22,16 @@ export default function Navbar() {
     };
 
     return (
-        <nav className="bg-[#9E1B32] p-4 shadow-md sticky top-0 z-50">
-            <div className="container mx-auto flex justify-between items-center">
+        <nav className="bg-[#9E1B32] shadow-md sticky top-0 z-50 w-full">
+            <div className="container mx-auto flex justify-between items-center px-4">
                 {/* where legends are made logo */}
                 <Link href="/">
                     <Image 
                         src={HeaderWLAM} 
                         alt="Header WLAM image" 
-                        width={300} 
-                        height={300} 
-                        className="w-24 h-24 md:w-40 md:h-40" // handles different screen sizes
+                        width={100} 
+                        height={100} 
+                        className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28"
                     />
                 </Link>
 
@@ -65,17 +65,17 @@ export default function Navbar() {
                 </div>
 
                 {/* navigation links only for desktop screen sizes */}
-                <div className="hidden md:flex space-x-10 items-center">
-                    <Link href="/" className="text-white text-lg hover:text-black hover:underline transition duration-300">
+                <div className="hidden md:flex space-x-6 items-center">
+                    <Link href="/" className="text-white text-base hover:text-black hover:underline transition duration-300">
                         Home
                     </Link>
-                    <Link href="/set-list-page" className="text-white text-lg hover:text-black hover:underline transition duration-300">
+                    <Link href="/set-list-page" className="text-white text-base hover:text-black hover:underline transition duration-300">
                         Set List
                     </Link>
 
                     {/* about dropdown only for desktop screen sizes */}
                     <div className='cursor-pointer items-center gap-1 group relative'>
-                        <div className='flex flex-row text-white text-lg hover:text-black hover:underline transition duration-300'>
+                        <div className='flex flex-row text-white text-base hover:text-black hover:underline transition duration-300'>
                             <Link href="/about-me-page" className='flex items-center py-2 px-4'>
                                 About 
                                 <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
@@ -83,7 +83,7 @@ export default function Navbar() {
                                 </svg>
                             </Link>
                         </div>
-                        <ul className='left-1/2 transform -translate-x-1/2 hidden absolute pt-4 w-40 rounded-lg group-hover:block border-bg-black text-center'>
+                        <ul className='z-50 left-1/2 transform -translate-x-1/2 hidden absolute pt-4 w-40 rounded-lg group-hover:block border-bg-black text-center'>
                             <li className='border-2 hover:bg-[#DE3333] hover:text-white text-black bg-white'>
                                 <Link href="/roster-page" className='block py-2 px-4'>
                                     Roster
@@ -102,14 +102,14 @@ export default function Navbar() {
                         </ul>
                     </div>
 
-                    <Link href="/officer-resources-page" className="text-white text-lg hover:text-black hover:underline transition duration-300">
+                    <Link href="/officer-resources-page" className="text-white text-base hover:text-black hover:underline transition duration-300">
                         Officer Resources
                     </Link>
                 </div>
 
                 {/* login button only for desktop screen sizes */}
                 <div className="hidden md:block">
-                    <Link href="/login-page" className="bg-white-500 text-white text-lg py-2 px-4 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300">
+                    <Link href="/login-page" className="bg-white-500 text-white text-base py-2 px-4 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300">
                         Login
                     </Link>
                 </div>
@@ -124,7 +124,7 @@ export default function Navbar() {
                     Set List
                 </Link>
 
-                {/* about dropdown for mobile sreen sizes */}
+                {/* about dropdown for mobile screen sizes */}
                 <div>
                     <button onClick={toggleDropdown} className="flex justify-between items-center w-full text-white text-lg hover:text-black transition duration-300">
                         About 
