@@ -18,9 +18,9 @@ export default function Home() {
         const getData = async () => {
             try {
                 const data = await fetchSheetData();
-                if (data) { // if data not null, filter out only image URLs
+                if (data) {
                     const imageUrls = data
-                        .filter((row) => row[0]?.startsWith("http")) // assumes image url is in first column
+                        .filter((row) => row[0]?.startsWith("http"))
                         .map((row) => row[0]);
                     setSheetData(imageUrls);
                 } else {
@@ -43,7 +43,7 @@ export default function Home() {
         setTimeout(() => {
             setCurrentIndex(newIndex);
             setIsSliding(false);
-        }, 300); // 
+        }, 300);
     };
 
     const handleNext = () => {
@@ -68,7 +68,6 @@ export default function Home() {
             <main className="flex-grow">
                 <section className="bg-white">
                     <div className="w-full flex justify-center relative overflow-hidden">
-                        {/* placeholder image when loading or on error */}
                         {loading || error ? (
                             <div className="relative w-full flex justify-center items-center">
                                 <div className="flex justify-center mb-12">
@@ -77,11 +76,9 @@ export default function Home() {
                                         alt="Jeongbin Son"
                                         width={1000}
                                         height={1000}
-                                        className="rounded-full"
+                                        className="rounded-full w-48 h-48 md:w-80 md:h-80"
                                     />
                                 </div>
-
-
                             </div>
                         ) : (
                             !error && sheetData && sheetData.length > 1 && (
@@ -99,7 +96,7 @@ export default function Home() {
                                             <img
                                                 src={sheetData[currentIndex - 1]}
                                                 alt="Previous Image"
-                                                className="object-cover w-[600px] h-[400px] rounded-md"
+                                                className="object-cover w-[200px] h-[150px] md:w-[600px] md:h-[400px] rounded-md"
                                             />
                                         </div>
                                     )}
@@ -116,7 +113,7 @@ export default function Home() {
                                         <img
                                             src={sheetData[currentIndex]}
                                             alt="Current Image"
-                                            className="object-cover w-[800px] h-[500px] rounded-md scale-100"
+                                            className="object-cover w-[300px] h-[200px] md:w-[800px] md:h-[500px] rounded-md"
                                         />
                                     </div>
 
@@ -133,7 +130,7 @@ export default function Home() {
                                             <img
                                                 src={sheetData[currentIndex + 1]}
                                                 alt="Next Image"
-                                                className="object-cover w-[600px] h-[400px] rounded-md"
+                                                className="object-cover w-[200px] h-[150px] md:w-[600px] md:h-[400px] rounded-md"
                                             />
                                         </div>
                                     )}
@@ -144,8 +141,8 @@ export default function Home() {
                         {/* Left Arrow */}
                         <button
                             onClick={handlePrev}
-                            className="absolute left-4 top-2/3 transform -translate-y-1/2 bg-transparent border border-gray-200 p-4 rounded-full shadow-md hover:bg-gray-200 transition duration-300"
-                            disabled={!showPrevImage || loading} // disables left/right arrows if no previous image or loading
+                            className={`absolute left-2 md:left-6 top-1/2 transform -translate-y-1/2 bg-[#DE3333] text-white p-4 md:p-6 rounded-full shadow-lg ${showPrevImage && !loading ? 'opacity-80 hover:opacity-100 hover:bg-[#DE3333]' : 'opacity-50 cursor-not-allowed'} transition duration-300`}
+                            disabled={!showPrevImage || loading}
                         >
                             &#9664;
                         </button>
@@ -153,23 +150,24 @@ export default function Home() {
                         {/* Right Arrow */}
                         <button
                             onClick={handleNext}
-                            className="absolute right-4 top-2/3 transform -translate-y-1/2 bg-transparent border border-gray-200 p-4 rounded-full shadow-md hover:bg-gray-200 transition duration-300"
-                            disabled={!showNextImage || loading} // disables left/right arrows if no next image or loading
+                            className={`absolute right-2 md:right-6 top-1/2 transform -translate-y-1/2 bg-[#DE3333] text-white p-4 md:p-6 rounded-full shadow-lg ${showNextImage && !loading ? 'opacity-80 hover:opacity-100 hover:bg-[#DE3333]' : 'opacity-50 cursor-not-allowed'} transition duration-300`}
+                            disabled={!showNextImage || loading}
                         >
                             &#9654;
                         </button>
+
                     </div>
 
-                    <div className="container mx-auto text-center flex flex-col justify-center items-center min-h-[70vh]">
-                        <h1 className="text-6xl font-extrabold mb-6 text-[#9E1B32]">
+                    <div className="container mx-auto text-center flex flex-col justify-center items-center min-h-[50vh] md:min-h-[70vh] px-4">
+                        <h1 className="text-4xl md:text-6xl font-extrabold mb-6 text-[#9E1B32]">
                             TEMP WELCOME MESSAGE
                         </h1>
-                        <p className="text-2xl mb-12 text-black-300 max-w-3xl mx-auto">
+                        <p className="text-lg md:text-2xl mb-12 text-black-300 max-w-3xl mx-auto">
                             TEMP STATEMENT
                         </p>
                         <a
                             href="#projects"
-                            className="bg-[#D45031] text-white px-8 py-4 rounded-full hover:bg-[#3d857c] transition duration-300"
+                            className="bg-[#D45031] text-white px-6 py-3 md:px-8 md:py-4 rounded-full hover:bg-[#3d857c] transition duration-300"
                         >
                             TEMP
                         </a>
@@ -178,12 +176,12 @@ export default function Home() {
 
                 <div className="w-full border-t-4 border-[#D45031]"></div>
 
-                <section id="projects" className="py-20 bg-gray-100 text-gray-800">
-                    <div className="container mx-auto text-center">
-                        <h2 className="text-4xl font-bold mb-6 text-[#D45031]">
+                <section id="projects" className="py-10 md:py-20 bg-gray-100 text-gray-800">
+                    <div className="container mx-auto text-center px-4">
+                        <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#D45031]">
                             TEMP SECTION
                         </h2>
-                        <p className="text-lg mb-8 max-w-2xl mx-auto">TEMP</p>
+                        <p className="text-base md:text-lg mb-8 max-w-2xl mx-auto">TEMP</p>
                     </div>
                 </section>
 
