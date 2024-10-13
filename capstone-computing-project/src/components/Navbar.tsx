@@ -23,15 +23,15 @@ export default function Navbar() {
 
     return (
         <nav className="bg-[#9E1B32] shadow-md sticky top-0 z-50 w-full">
-            <div className="container mx-auto flex justify-between items-center px-4">
+            <div className="container mx-auto flex justify-between items-center px-4 h-20 md:h-24 lg:h-28"> 
                 {/* where legends are made logo */}
                 <Link href="/">
                     <Image 
                         src={HeaderWLAM} 
                         alt="Header WLAM image" 
-                        width={100} 
-                        height={100} 
-                        className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28"
+                        width={80} 
+                        height={80} 
+                        className="h-20 w-20 md:h-28 md:w-28 lg:h-48 lg:w-48 object-contain" // image scales within navbar height and width with different screen sizes
                     />
                 </Link>
 
