@@ -76,7 +76,7 @@ export default function Home() {
                                         alt="Jeongbin Son"
                                         width={1000}
                                         height={1000}
-                                        className="rounded-full w-48 h-48 md:w-80 md:h-80"
+                                        className="rounded-full w-48 h-48 md:w-100 md:h-100"
                                     />
                                 </div>
                             </div>
