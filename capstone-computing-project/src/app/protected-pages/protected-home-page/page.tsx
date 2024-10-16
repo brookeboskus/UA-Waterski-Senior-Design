@@ -1,21 +1,22 @@
 // This will be for home page after loging in]
 "use client"
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 export default function HomeAfterLogin() {
-  //  const router = useRouter();
+    const router = useRouter();
 
     const handleProfileNavigation = () => {
-        //router.push('/protected-profile-page');
+    //    router.push('/protected-profile-page');
+        router.push('/protected-home-page');
     }
     return (
         <div className="min-h-screen flex flex-col">
             <div 
-                className="absolute top-5 right-5 w-12 h-12 bg-green-500 rounded-full shadow-lg flex justify-center items-center cursor-pointer"
+                className="absolute top-5 right-5 w-12 h-12 bg-green-500 rounded-full shadow-lg flex justify-center items-center cursor-pointer z-50"
                 onClick={handleProfileNavigation}
                 title="Go to Profile"
             >
-                <span className="text-white font-bold">P</span> {/* You can put an icon or initial here */}
+                <span className="text-black font-bold">PFP</span> {/* You can put an icon or initial here */}
             </div>
 
             <main className="flex-grow">
