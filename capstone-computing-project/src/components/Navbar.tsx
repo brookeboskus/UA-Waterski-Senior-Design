@@ -23,7 +23,7 @@ export default function Navbar() {
 
     return (
         <nav className="bg-[#9E1B32] shadow-md sticky top-0 z-50 w-full">
-            <div className="container mx-auto flex justify-between items-center px-4 h-20 md:h-24 lg:h-28"> 
+            <div className="container mx-auto flex justify-between items-center px-4 h-20 md:h-14 lg:h-15"> 
                 {/* where legends are made logo */}
                 <Link href="/">
                     <Image 
@@ -31,7 +31,7 @@ export default function Navbar() {
                         alt="Header WLAM image" 
                         width={80} 
                         height={80} 
-                        className="h-20 w-20 md:h-28 md:w-28 lg:h-48 lg:w-48 object-contain" // image scales within navbar height and width with different screen sizes
+                        className="h-40 w-40 md:h-55 md:w-55 lg:h-80 lg:w-80 object-contain" // image scales within navbar height and width with different screen sizes
                     />
                 </Link>
 
@@ -84,17 +84,17 @@ export default function Navbar() {
                             </Link>
                         </div>
                         <ul className='z-50 left-1/2 transform -translate-x-1/2 hidden absolute pt-4 w-40 rounded-lg group-hover:block border-bg-black text-center'>
-                            <li className='border-2 hover:bg-[#DE3333] hover:text-white text-black bg-white'>
+                            <li className='border-2 hover:bg-[#9E1B32] hover:text-white text-black bg-white'>
                                 <Link href="/roster-page" className='block py-2 px-4'>
                                     Roster
                                 </Link>
                             </li>
-                            <li className='border-2 hover:bg-[#DE3333] hover:text-white text-black bg-white'>
+                            <li className='border-2 hover:bg-[#9E1B32] hover:text-white text-black bg-white'>
                                 <Link href="/club-information-page" className='block py-2 px-4'>
                                     Club Info
                                 </Link>
                             </li>
-                            <li className='border-2 hover:bg-[#DE3333] hover:text-white text-black bg-white'>
+                            <li className='border-2 hover:bg-[#9E1B32] hover:text-white text-black bg-white'>
                                 <Link href="/merch-page" className='block py-2 px-4'>
                                     Merch
                                 </Link>
