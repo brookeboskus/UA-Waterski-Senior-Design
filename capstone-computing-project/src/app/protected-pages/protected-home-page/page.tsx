@@ -1,9 +1,22 @@
-// This will be for home page after loging in
-
+// This will be for home page after loging in]
+"use client"
+import { useRouter } from 'next/router';
 
 export default function HomeAfterLogin() {
+  //  const router = useRouter();
+
+    const handleProfileNavigation = () => {
+        //router.push('/protected-profile-page');
+    }
     return (
         <div className="min-h-screen flex flex-col">
+            <div 
+                className="absolute top-5 right-5 w-12 h-12 bg-green-500 rounded-full shadow-lg flex justify-center items-center cursor-pointer"
+                onClick={handleProfileNavigation}
+                title="Go to Profile"
+            >
+                <span className="text-white font-bold">P</span> {/* You can put an icon or initial here */}
+            </div>
 
             <main className="flex-grow">
                 {/* Hero Section */}
