@@ -15,7 +15,7 @@ interface TeamMember {
 
 export default function RosterPage() {
     const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
-    const [loading, setLoading] = useState<boolean>(true); 
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchRoster = async () => {
