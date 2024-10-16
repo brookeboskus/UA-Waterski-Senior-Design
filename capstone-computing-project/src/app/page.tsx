@@ -189,21 +189,20 @@ export default function Home() {
                         >
                             TEMP
                         </a>
+
                     </div>
                 </section>
 
-                <div className="w-full border-t-4 border-[#D45031]"></div>
 
-                <section id="projects" className="py-10 md:py-20 bg-gray-100 text-gray-800">
+                <section id="projects" className="py-10 md:py-20 text-gray-800">
                     <div className="container mx-auto text-center px-4">
-                        <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#D45031]">
+                        <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#9E1B32]">
                             TEMP SECTION
                         </h2>
                         <p className="text-base md:text-lg mb-8 max-w-2xl mx-auto">TEMP</p>
                     </div>
                 </section>
-
-                <div className="w-full border-t-4 border-[#D45031]"></div>
+                
             </main>
         </div>
     );
