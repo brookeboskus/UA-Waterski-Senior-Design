@@ -2,24 +2,28 @@
 "use client"
 import Image from 'next/image';  // Make sure to import Image from 'next/image'
 import ellipseImage from '../../img/DefaultPFP.svg';  // Adjust the path as necessary
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+;
 
 export default function HomeAfterLogin() {
-    const router = useRouter();
-
-    const handleProfileNavigation = () => {
-        router.push('/protected-home-page');
-    }
 
     return (
         <div>
-            <div 
-                className="w-[50px] h-[50px] right-[30px] top-[25px] absolute rounded-full shadow z-50" 
-                onClick={handleProfileNavigation} 
-                title="Go to Profile"
-            >
-                <Image src={ellipseImage} alt="DefaultPFP" />  
+            <div>
+        
+
+            <Link href="/protected-pages/protected-profile-page">
+                <Image 
+                    src={ellipseImage} 
+                    alt="Header WLAM image" 
+                    width={80} 
+                    height={80} 
+                    className="h-20 w-20 md:h-28 md:w-28 lg:h-48 lg:w-48 object-contain" // image scales within navbar height and width with different screen sizes
+                />
+            </Link>
             </div>
+     
+            
 
             <main className="flex-grow">
                 {/* Hero Section */}

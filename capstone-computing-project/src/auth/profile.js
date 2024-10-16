@@ -1,35 +1,13 @@
-const bcrypt = require('bcrypt');
-const db = require('../../db');  // MySQL connection
+const express = require('express');
+const router = express.Router();
+const db = require('../../db');
 
 module.exports.profile = async (req, res) => {
-    const { email } = req.body;  // Assuming the user provides the email
-
-    // Query to get user information
-    db.query('SELECT * FROM User WHERE Email = ?', [email], async (err, results) => {
+    db.query('SELECT Fname, Lname, GradYear, MemberType, Major, Phone, Email, CWID FROM User WHERE Email = ?', ['akspencer1@crimson.ua.edu'], (err, results) => {
         if (err) {
-            console.log("database error");
-
-            console.error('Database query error:', err);
             return res.status(500).json({ message: 'Database error' });
-          
         }
-
-        // Check if the user exists
-        if (results.length === 0) {
-            console.log("user not found");
-            return res.status(404).json({ message: 'User not found' });
-            
-        }
-
-        const user = results[0];
-        res.status(200).json({
-            fname: user.FirstName,
-            lname: user.LastName,
-            cwid: user.CWID,
-            phone: user.Phone,
-            email: user.Email,
-            gradYear: user.GradYear,
-            major: user.Major
-        });
+        
+        res.status(200).json(results);
     });
 };

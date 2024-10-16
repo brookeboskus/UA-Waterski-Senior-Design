@@ -34,6 +34,7 @@ export default function LoginPage() {
             if (isLogin) {
                 localStorage.setItem('token', response.data.token);
                 router.push('/protected-pages/protected-home-page');
+                //save state of whos logged in
             } else {
                 setIsLogin(true);
             }
