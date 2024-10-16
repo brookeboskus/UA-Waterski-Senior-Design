@@ -15,34 +15,53 @@ export default function LoginPage() {
     const [cwid, setCwid] = useState('');
     const [phone, setPhone] = useState('');
     const [gradYear, setGradYear] = useState('Freshman');
-    // const [memberType, setMemberType] = useState('Athlete'); //not in use right now
     const [major, setMajor] = useState('');
     const [PfpImage, setProfilePicture] = useState(null);
     const [isLogin, setIsLogin] = useState(true);
     const router = useRouter();
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (file.size > 4 * 1024 * 1024) {
+                alert("File size exceeds 4 MB limit. Please choose a smaller image.");
+                return;
+            }
+
+            const img = new window.Image();
+            img.src = URL.createObjectURL(file);
+            img.onload = () => {
+                if (img.width > 1536 || img.height > 1536) {
+                    alert("Image dimensions exceed 1536 x 1536 pixels. Please choose a smaller image.");
+                } else {
+                    setProfilePicture(file); 
+                }
+            };
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         const endpoint = isLogin ? 'http://localhost:4000/auth/login' : 'http://localhost:4000/auth/signup';
-    
+
         if (isLogin) {
             const payload = {
                 email,
                 password,
             };
-    
+
             try {
                 const response = await axios.post(endpoint, payload);
                 localStorage.setItem('token', response.data.token);
                 router.push('/protected-pages/protected-home-page');
             } catch (error) {
                 console.error('Error:', error.response?.data?.message || error.message);
-                document.getElementById('errorBox')?.setAttribute("style", "display: block;"); 
-                document.getElementById('errorText').innerText = "Invalid email or password. Please try again."; 
+                document.getElementById('errorBox')?.setAttribute("style", "display: block;");
+                document.getElementById('errorText').innerText = "Invalid email or password. Please try again.";
             }
         } else {
-            const formData = new FormData(); // need to send a multipart form data for the profile image
+            const formData = new FormData();
             formData.append('email', email);
             formData.append('password', password);
             formData.append('fname', fname);
@@ -51,37 +70,33 @@ export default function LoginPage() {
             formData.append('phone', phone);
             formData.append('gradYear', gradYear);
             formData.append('major', major);
+
             if (PfpImage) {
-                formData.append('pfpimage', PfpImage); 
+                formData.append('pfpimage', PfpImage);
             }
-    
+
             try {
                 const response = await axios.post(endpoint, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
                 });
-    
-                setIsLogin(true); 
+
+                setIsLogin(true);
             } catch (error) {
                 console.error('Error:', error.response?.data?.message || error.message);
             }
         }
     };
-    
-    
-
 
     return (
-        <div className='login-page flex items-center justify-center min-h-screen bg-[#ffffff]'> {/* bg-[#f4f4f9] */}
+        <div className='login-page flex items-center justify-center min-h-screen bg-[#ffffff]'>
             <div className="flex flex-row w-full max-w-6xl">
                 <div className="flex flex-col justify-center items-center w-1/2 pr-8">
-                    {/* Ski Bama Logo */}
                     <div className="mb-8">
                         <Image src={SkiBamaLogo} alt="Ski Bama Logo" width={300} height={300} />
                     </div>
 
-                    {/* Login Form */}
                     <div className='bg-white p-8 rounded-lg shadow-lg w-full max-w-md text-black mt-[-40px]'>
 
                         <div className='bg-[#ffaaaa] rounded-lg p-2 mt-2 mb-2 hidden' id="errorBox">
@@ -109,7 +124,7 @@ export default function LoginPage() {
                                 placeholder='Email Address'
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                pattern=".+@+(.+\.)?ua\.edu" // Allows for emails ending in ua.edu, cs.ua.edu, crimson.ua.edu, but not blahua.edu
+                                pattern=".+@+(.+\.)?ua\.edu"
                                 title="Email must be a valid University of Alabama address (i.e. ending in ua.edu)"
                                 className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]'
                                 required
@@ -168,15 +183,6 @@ export default function LoginPage() {
                                         <option value='Junior'>Junior</option>
                                         <option value='Senior'>Senior</option>
                                     </select>
-                                    {/* <select
-                                        value={memberType}
-                                        onChange={(e) => setMemberType(e.target.value)}
-                                        className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]'
-                                        required
-                                    >
-                                        <option value='Athlete'>Athlete</option>
-                                        <option value='Officer'>Officer</option>
-                                    </select> */}
                                     <input
                                         type='text'
                                         placeholder='Major'
@@ -185,13 +191,20 @@ export default function LoginPage() {
                                         className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]'
                                         required
                                     />
-                                    <input
-                                        type='file'
-                                        accept='.png, .jpg, .jpeg, .webp'
-                                        onChange={(e) => setProfilePicture(e.target.files[0])}
-                                        className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]'
-                                        required
-                                    />
+                                    <div className='flex items-center mb-4'>
+                                        <label className='w-full cursor-pointer border-2 border-[#49A097] rounded-lg p-2 flex justify-between items-center'>
+                                            <span className='text-gray-700'>Upload Profile Picture</span>
+                                            <input
+                                                type='file'
+                                                accept='.png, .jpg, .jpeg, .webp'
+                                                //onChange={(e) => setProfilePicture(e.target.files[0])}
+                                                onChange= {handleFileChange} 
+                                                className='hidden'
+                                            />
+                                        </label>
+                                        {PfpImage && <span className='ml-2 text-gray-600'>{PfpImage.name}</span>}
+                                    </div>
+                                    <p className='text-xs text-gray-500'>Accepted file types: PNG, JPG, JPEG, WEBP. <br></br>Max size: 4 MB. Max dimensions: 1536 x 1536 pixels.</p>
                                 </>
                             )}
 
@@ -210,7 +223,6 @@ export default function LoginPage() {
                     </div>
                 </div>
 
-                {/* Right side for the team/lake picture */}
                 <div className="w-1/2 flex justify-center items-center">
                     <Image src={WaterskiImage} alt="Water ski image" width={600} height={600} />
                 </div>
