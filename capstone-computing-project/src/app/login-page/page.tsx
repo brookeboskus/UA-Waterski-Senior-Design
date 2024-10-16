@@ -17,38 +17,60 @@ export default function LoginPage() {
     const [gradYear, setGradYear] = useState('Freshman');
     // const [memberType, setMemberType] = useState('Athlete'); //not in use right now
     const [major, setMajor] = useState('');
+    const [PfpImage, setProfilePicture] = useState(null);
     const [isLogin, setIsLogin] = useState(true);
     const router = useRouter();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         const endpoint = isLogin ? 'http://localhost:4000/auth/login' : 'http://localhost:4000/auth/signup';
-
-        const payload = isLogin
-            ? { email, password }
-            : { email, password, fname, lname, cwid, phone, gradYear, major };
-
-        try {
-            const response = await axios.post(endpoint, payload);
-            if (isLogin) {
+    
+        if (isLogin) {
+            const payload = {
+                email,
+                password,
+            };
+    
+            try {
+                const response = await axios.post(endpoint, payload);
                 localStorage.setItem('token', response.data.token);
                 router.push('/protected-pages/protected-home-page');
-                //save state of whos logged in
-            } else {
-                setIsLogin(true);
+            } catch (error) {
+                console.error('Error:', error.response?.data?.message || error.message);
+                document.getElementById('errorBox')?.setAttribute("style", "display: block;"); 
+                document.getElementById('errorText').innerText = "Invalid email or password. Please try again."; 
             }
-        } catch (error) {
-            console.error('Error:', error.response?.data?.message || error.message);
-            if (isLogin) {
-                document.getElementById('errorBox')?.setAttribute("style", "display: block;") // Show error box
-                document.getElementById('errorText')!.innerText = "Invalid email or password. Please try again." // Change text of error. Keep text vague to not give away if account exists.
-            } else {
-                // Handle additional error cases
-                // What error cases could happen when signing up for an account?
+        } else {
+            const formData = new FormData(); // need to send a multipart form data for the profile image
+            formData.append('email', email);
+            formData.append('password', password);
+            formData.append('fname', fname);
+            formData.append('lname', lname);
+            formData.append('cwid', cwid);
+            formData.append('phone', phone);
+            formData.append('gradYear', gradYear);
+            formData.append('major', major);
+            if (PfpImage) {
+                formData.append('pfpimage', PfpImage); 
+            }
+    
+            try {
+                const response = await axios.post(endpoint, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+    
+                setIsLogin(true); 
+            } catch (error) {
+                console.error('Error:', error.response?.data?.message || error.message);
             }
         }
     };
+    
+    
+
 
     return (
         <div className='login-page flex items-center justify-center min-h-screen bg-[#ffffff]'> {/* bg-[#f4f4f9] */}
@@ -160,6 +182,13 @@ export default function LoginPage() {
                                         placeholder='Major'
                                         value={major}
                                         onChange={(e) => setMajor(e.target.value)}
+                                        className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]'
+                                        required
+                                    />
+                                    <input
+                                        type='file'
+                                        accept='.png, .jpg, .jpeg, .webp'
+                                        onChange={(e) => setProfilePicture(e.target.files[0])}
                                         className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]'
                                         required
                                     />

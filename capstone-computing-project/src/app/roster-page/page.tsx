@@ -11,6 +11,9 @@ interface TeamMember {
     GradYear: string;
     MemberType: string;
     Major: string;
+    // Email: string; // not yet implemented, need back side of card
+    // Phone: string; 
+    PfpImage: string; 
 }
 
 export default function RosterPage() {
@@ -48,7 +51,7 @@ export default function RosterPage() {
                                     {/* Profile Picture */}
                                     <div className='relative w-full h-64 mb-4'>
                                         <Image
-                                            src={BlankPfp}
+                                            src={member.PfpImage || BlankPfp} // Use PfpImage or fallback to BlankPfp
                                             alt={`${member.Fname} ${member.Lname}'s profile image`}
                                             layout='fill'
                                             objectFit='cover'
