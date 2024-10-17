@@ -8,7 +8,7 @@ import Image from 'next/image';
 import WaterskiImage from '../img/loginSkiIMG.svg';
 import SkiBamaLogo from '../img/skibamalogo.svg';
 
-// list of majors offered by UA
+// list of majors offered by UA, think we should take out minors for now. our database only holds one major, but ppl can have multiple as well.
 const majors = [
     { value: 'Accounting, BS', label: 'Accounting, BS' },
     { value: 'Accounting, MMA', label: 'Accounting, MMA' },
@@ -32,10 +32,7 @@ const majors = [
     { value: 'Architectural Engineering, BS', label: 'Architectural Engineering, BS' },
     { value: 'Art History, BA', label: 'Art History, BA' },
     { value: 'Art History, MA', label: 'Art History, MA' },
-    { value: 'Asian Studies, Minor', label: 'Asian Studies, Minor' },
-    { value: 'Astronomy, Minor', label: 'Astronomy, Minor' }, 
     { value: 'Athletic Training, MS', label: 'Athletic Training, MS' },
-    { value: 'Automotive, Minor', label: 'Automotive, Minor' },
     { value: 'Biology, BS', label: 'Biology, BS' },
     { value: 'Biological Sciences, MA', label: 'Biological Sciences, MA' },
     { value: 'Biology, MS', label: 'Biology, MS' },
@@ -75,7 +72,6 @@ const majors = [
     { value: 'Elementary Education, BSE', label: 'Elementary Education, BSE' },
     { value: 'English, BA', label: 'English, BA' },
     { value: 'English, MA', label: 'English, MA' },
-    { value: 'Entrepreneurship, Minor', label: 'Entrepreneurship, Minor' },
     { value: 'Environmental Engineering, BS', label: 'Environmental Engineering, BS' },
     { value: 'Environmental Science, BS', label: 'Environmental Science, BS' },
     { value: 'Finance, BS', label: 'Finance, BS' },
@@ -108,7 +104,6 @@ const majors = [
     { value: 'Sociology, BA', label: 'Sociology, BA' },
     { value: 'Spanish, BA', label: 'Spanish, BA' },
     { value: 'Theatre, BA', label: 'Theatre, BA' },
-    { value: 'Water Science and Sustainability, Minor', label: 'Water Science and Sustainability, Minor' }, // Note: Minor included for context
     { value: 'Women\'s Studies, BA', label: 'Women\'s Studies, BA' },
 ];
 

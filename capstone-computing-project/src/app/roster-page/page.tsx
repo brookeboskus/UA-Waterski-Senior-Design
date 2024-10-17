@@ -19,7 +19,7 @@ interface TeamMember {
 export default function RosterPage() {
     const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [searchQuery, setSearchQuery] = useState<string>(''); 
+    const [searchQuery, setSearchQuery] = useState<string>('');
 
     useEffect(() => {
         const fetchRoster = async () => {
@@ -40,8 +40,8 @@ export default function RosterPage() {
     const filteredMembers = teamMembers.filter((member) => {
         const fullName = `${member.Fname} ${member.Lname}`.toLowerCase();
         const major = member.Major?.toLowerCase() || '';  // added null check in case they didn't fill this out
-        const gradYear = member.GradYear?.toLowerCase() || ''; 
-        const memberType = member.MemberType?.toLowerCase() || ''; 
+        const gradYear = member.GradYear?.toLowerCase() || '';
+        const memberType = member.MemberType?.toLowerCase() || '';
 
         return (
             fullName.includes(searchQuery.toLowerCase()) ||
