@@ -11,11 +11,15 @@ interface TeamMember {
     GradYear: string;
     MemberType: string;
     Major: string;
+    // Email: string; // not yet implemented, need back side of card
+    // Phone: string; 
+    PfpImage: string;
 }
 
 export default function RosterPage() {
     const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [searchQuery, setSearchQuery] = useState<string>(''); 
 
     useEffect(() => {
         const fetchRoster = async () => {
@@ -32,41 +36,69 @@ export default function RosterPage() {
         fetchRoster();
     }, []);
 
+    // filter team members based on the search query
+    const filteredMembers = teamMembers.filter((member) => {
+        const fullName = `${member.Fname} ${member.Lname}`.toLowerCase();
+        const major = member.Major?.toLowerCase() || '';  // added null check in case they didn't fill this out
+        const gradYear = member.GradYear?.toLowerCase() || ''; 
+        const memberType = member.MemberType?.toLowerCase() || ''; 
+
+        return (
+            fullName.includes(searchQuery.toLowerCase()) ||
+            major.includes(searchQuery.toLowerCase()) ||
+            gradYear.includes(searchQuery.toLowerCase()) ||
+            memberType.includes(searchQuery.toLowerCase())
+        );
+    });
+
     return (
         <div className='container mx-auto px-4 py-8 bg-gray-50 min-h-screen'>
-            <h1 className='text-4xl font-bold mb-6 text-center text-[#0F766E]'>Team Roster</h1>
+            <h1 className='text-4xl font-bold mb-6 text-center text-[#9E1B32]'>Team Roster</h1>
+
+            {/* search bar to find team members based on inputs like name, major, year, etc */}
+            <div className='mb-6'>
+                <input
+                    type='text'
+                    placeholder='Search for Team Members...'
+                    className='w-full p-2 border border-gray-300 rounded-md text-black'
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                />
+            </div>
+
             {loading ? (
                 <p className='text-gray-500 text-center'>Loading roster...</p>
             ) : (
-                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8'>
-                    {teamMembers && teamMembers.length > 0 ? (
-                        teamMembers.map((member, index) => (
+                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8'>
+                    {filteredMembers && filteredMembers.length > 0 ? (
+                        filteredMembers.map((member, index) => (
                             <div
                                 key={index}
-                                className='bg-white shadow-md hover:shadow-2xl rounded-lg overflow-hidden transition-all duration-300 border border-gray-200 transform hover:scale-105 hover:bg-[#C7C7C7]'>
-                                <div className='p-6'>
+                                className='bg-white shadow-md hover:shadow-lg rounded-lg overflow-hidden transition-all duration-300 border border-gray-200 transform hover:scale-105 hover:border-[#9E1B32]'>
+                                <div className='p-4'>
                                     {/* Profile Picture */}
-                                    <div className='relative w-full h-64 mb-4'>
+                                    <div className='relative w-24 h-24 mb-4 mx-auto'>
                                         <Image
-                                            src={BlankPfp}
+                                            src={member.PfpImage || BlankPfp}
                                             alt={`${member.Fname} ${member.Lname}'s profile image`}
                                             layout='fill'
                                             objectFit='cover'
-                                            className='rounded-full'
+                                            className='rounded-full border shadow'
                                         />
                                     </div>
 
-                                    <h2 className='text-2xl font-semibold text-gray-900 mb-2'>
+                                    <h2 className='text-xl font-semibold text-gray-900 mb-1 text-center'>
                                         {member.Fname} {member.Lname}
                                     </h2>
-                                    <p className='text-blue-400'><strong>Major:</strong> {member.Major ? member.Major : 'N/A'}</p>
-                                    <p className='text-blue-400'><strong>Graduation Year:</strong> {member.GradYear}</p>
-                                    <p className='text-blue-400'><strong>Member Type:</strong> {member.MemberType}</p>
+                                    <br></br>
+                                    <p className='text-gray-700'><strong>Member Type:</strong> {member.MemberType}</p>
+                                    <p className='text-gray-700'><strong>Graduation Year:</strong> {member.GradYear}</p>
+                                    <p className='text-gray-700'><strong>Major:</strong> {member.Major || 'N/A'}</p>
                                 </div>
                             </div>
                         ))
                     ) : (
-                        <p className='text-gray-500 text-center'>No team members found.</p>
+                        <p className='text-black-500 text-center'>No team members found.</p>
                     )}
                 </div>
             )}
