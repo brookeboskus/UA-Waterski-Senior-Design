@@ -14,6 +14,8 @@ export default function Home() {
     const [isSliding, setIsSliding] = useState(false);
     const [direction, setDirection] = useState<"left" | "right">("right");
     const [loading, setLoading] = useState(true);
+    const [image8B, setImage8B] = useState<string | null>(null);
+    const [textFrom8C, setTextFrom8C] = useState<string | null>(null);
 
     useEffect(() => {
         // fetching data from Google Sheets
@@ -25,6 +27,21 @@ export default function Home() {
                         .filter((row) => row[0]?.startsWith("http"))
                         .map((row) => row[0]);
                     setSheetData(imageUrls);
+
+                    const image8BUrl = data[7][1];
+                    if (image8BUrl?.startsWith("http")){
+                        setImage8B(image8BUrl);
+                    } else {
+                        setImage8B(null);
+                    }
+                    
+                    const textFrom8C = data[7][2];
+                    if (textFrom8C){
+                        setTextFrom8C(textFrom8C);
+                    } else {
+                        setTextFrom8C("No content available.");
+                    }
+
                 } else {
                     setSheetData([]);
                 }
@@ -171,16 +188,28 @@ export default function Home() {
                                 className="h-200 w-200 md:h-100 md:w-100 lg:h-200 lg:w-200 object-contain" // image scales within navbar height and width with different screen sizes
                             />
                         </Link>
-                        {/* Blank */}
-                        <h1 className="text-4xl md:text-6xl font-extrabold mb-6 text-[#9E1B32]">
-                            
-                        </h1>
 
-                        {/* About Us snippet */}
-                        <p className="text-lg md:text-1xl mb-12 text-black max-w-3xl mx-auto">
-                        The University of Alabama Waterski Team was started in 1976, when a group of four students with a passion for competitive waterskiing decided to bring Alabama into the collegiate realm of waterskiing. Since then, the ski team has placed in the top four at the National Championships in 18 of the last 23 years. In the past seven years, we have had 18 members of our team earn a medal at The World Championships, with 9 of them currently skiing for Alabama. 
-                        Our team is full of top-ranked water skiers who are proud to represent The University of Alabama. something something something
-                        </p>
+                        <div className="flex flex-col md:flex-row items-center md:items-start mt-8 mx-15">
+
+                            {/* Picture from cell 8B */}
+                        <Link href="/">
+                            {image8B && (
+                                <img 
+                                    src={image8B}
+                                    alt="Image from 8B"
+                                    
+                                    className="h-200px w-200px md:h-250px md:w-250px lg:h-300px lg:w-300px max-w-full object-contain"
+                                />
+                            )}
+                        </Link>
+                             {/* About Us snippet */}
+                             <div className = "flex flex-col md:flex-row items-center md:items-start mt-8">
+                                <p className="text-lg md:text-1xl mb-12 text-black max-w-3xl mx-auto">
+                                    {textFrom8C ? textFrom8C : "Loading content..."}
+                                </p>
+
+                             </div>
+                        </div>
 
                         {/* Temp Button */}
                         <a
@@ -189,21 +218,10 @@ export default function Home() {
                         >
                             TEMP
                         </a>
+                        
                     </div>
                 </section>
-
-                <div className="w-full border-t-4 border-[#D45031]"></div>
-
-                <section id="projects" className="py-10 md:py-20 bg-gray-100 text-gray-800">
-                    <div className="container mx-auto text-center px-4">
-                        <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#D45031]">
-                            TEMP SECTION
-                        </h2>
-                        <p className="text-base md:text-lg mb-8 max-w-2xl mx-auto">TEMP</p>
-                    </div>
-                </section>
-
-                <div className="w-full border-t-4 border-[#D45031]"></div>
+            
             </main>
         </div>
     );
