@@ -1,11 +1,116 @@
 "use client";
 
 import { useState } from 'react';
+import Select from 'react-select';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import WaterskiImage from '../img/loginSkiIMG.svg';
 import SkiBamaLogo from '../img/skibamalogo.svg';
+
+// list of majors offered by UA
+const majors = [
+    { value: 'Accounting, BS', label: 'Accounting, BS' },
+    { value: 'Accounting, MMA', label: 'Accounting, MMA' },
+    { value: 'Accounting, Ph.D.', label: 'Accounting, Ph.D.' },
+    { value: 'Addiction and Recovery, BS', label: 'Addiction and Recovery, BS' },
+    { value: 'Advertising and Public Relations, MA', label: 'Advertising and Public Relations, MA' },
+    { value: 'Advertising, BA', label: 'Advertising, BA' },
+    { value: 'Aerospace Engineering and Mechanics, MS', label: 'Aerospace Engineering and Mechanics, MS' },
+    { value: 'Aerospace Engineering and Mechanics, Ph.D.', label: 'Aerospace Engineering and Mechanics, Ph.D.' },
+    { value: 'Aerospace Engineering, BS', label: 'Aerospace Engineering, BS' },
+    { value: 'African American Studies, BA', label: 'African American Studies, BA' },
+    { value: 'American Studies, BA', label: 'American Studies, BA' },
+    { value: 'American Studies, MA', label: 'American Studies, MA' },
+    { value: 'Anthropology, BA', label: 'Anthropology, BA' },
+    { value: 'Anthropology, MA', label: 'Anthropology, MA' },
+    { value: 'Apparel and Textiles, BS', label: 'Apparel and Textiles, BS' },
+    { value: 'Applied Liberal Arts and Sciences, BA', label: 'Applied Liberal Arts and Sciences, BA' },
+    { value: 'Applied Mathematics, PhD', label: 'Applied Mathematics, PhD' },
+    { value: 'Applied Statistics, MS', label: 'Applied Statistics, MS' },
+    { value: 'Applied Statistics, Ph.D.', label: 'Applied Statistics, Ph.D.' },
+    { value: 'Architectural Engineering, BS', label: 'Architectural Engineering, BS' },
+    { value: 'Art History, BA', label: 'Art History, BA' },
+    { value: 'Art History, MA', label: 'Art History, MA' },
+    { value: 'Asian Studies, Minor', label: 'Asian Studies, Minor' },
+    { value: 'Astronomy, Minor', label: 'Astronomy, Minor' }, 
+    { value: 'Athletic Training, MS', label: 'Athletic Training, MS' },
+    { value: 'Automotive, Minor', label: 'Automotive, Minor' },
+    { value: 'Biology, BS', label: 'Biology, BS' },
+    { value: 'Biological Sciences, MA', label: 'Biological Sciences, MA' },
+    { value: 'Biology, MS', label: 'Biology, MS' },
+    { value: 'Biology, Ph.D.', label: 'Biology, Ph.D.' },
+    { value: 'Business Administration, MBA', label: 'Business Administration, MBA' },
+    { value: 'Business Analytics, MSBA', label: 'Business Analytics, MSBA' },
+    { value: 'Business Cyber Security, BS', label: 'Business Cyber Security, BS' },
+    { value: 'Chemical Engineering, BSChE', label: 'Chemical Engineering, BSChE' },
+    { value: 'Chemical Engineering, MS', label: 'Chemical Engineering, MS' },
+    { value: 'Chemical Engineering, Ph.D.', label: 'Chemical Engineering, Ph.D.' },
+    { value: 'Chemistry, BCH', label: 'Chemistry, BCH' },
+    { value: 'Chemistry, BS', label: 'Chemistry, BS' },
+    { value: 'Chemistry, MSC', label: 'Chemistry, MSC' },
+    { value: 'Chemistry, Ph.D.', label: 'Chemistry, Ph.D.' },
+    { value: 'Civil Engineering, BS', label: 'Civil Engineering, BS' },
+    { value: 'Civil Engineering, MS', label: 'Civil Engineering, MS' },
+    { value: 'Civil Engineering, Ph.D.', label: 'Civil Engineering, Ph.D.' },
+    { value: 'Communication & Information Sciences (CIS), PhD', label: 'Communication & Information Sciences (CIS), PhD' },
+    { value: 'Communication Studies, BAC', label: 'Communication Studies, BAC' },
+    { value: 'Communication Studies, MA', label: 'Communication Studies, MA' },
+    { value: 'Computer Engineering, BS', label: 'Computer Engineering, BS' },
+    { value: 'Computer Science, BS', label: 'Computer Science, BS' },
+    { value: 'Computer Science, MS', label: 'Computer Science, MS' },
+    { value: 'Computer Science, Ph.D.', label: 'Computer Science, Ph.D.' },
+    { value: 'Cyber Security, BS', label: 'Cyber Security, BS' },
+    { value: 'Dance, BA', label: 'Dance, BA' },
+    { value: 'Dance, MFA', label: 'Dance, MFA' },
+    { value: 'Data Science, BS', label: 'Data Science, BS' },
+    { value: 'Doctor of Nursing Practice (DNP)', label: 'Doctor of Nursing Practice (DNP)' },
+    { value: 'Early Childhood Education, BS', label: 'Early Childhood Education, BS' },
+    { value: 'Economics, BA', label: 'Economics, BA' },
+    { value: 'Economics, BS', label: 'Economics, BS' },
+    { value: 'Educational Leadership, Ed.D.', label: 'Educational Leadership, Ed.D.' },
+    { value: 'Electrical Engineering, BS', label: 'Electrical Engineering, BS' },
+    { value: 'Electrical Engineering, MS', label: 'Electrical Engineering, MS' },
+    { value: 'Electrical Engineering, Ph.D.', label: 'Electrical Engineering, Ph.D.' },
+    { value: 'Elementary Education, BSE', label: 'Elementary Education, BSE' },
+    { value: 'English, BA', label: 'English, BA' },
+    { value: 'English, MA', label: 'English, MA' },
+    { value: 'Entrepreneurship, Minor', label: 'Entrepreneurship, Minor' },
+    { value: 'Environmental Engineering, BS', label: 'Environmental Engineering, BS' },
+    { value: 'Environmental Science, BS', label: 'Environmental Science, BS' },
+    { value: 'Finance, BS', label: 'Finance, BS' },
+    { value: 'Finance, MS', label: 'Finance, MS' },
+    { value: 'Finance, Ph.D.', label: 'Finance, Ph.D.' },
+    { value: 'Food and Nutrition, BS', label: 'Food and Nutrition, BS' },
+    { value: 'Foreign Languages and Literature, BA', label: 'Foreign Languages and Literature, BA' },
+    { value: 'General Business, BS', label: 'General Business, BS' },
+    { value: 'Geography, BA', label: 'Geography, BA' },
+    { value: 'Geography, BS', label: 'Geography, BS' },
+    { value: 'Geology, BA', label: 'Geology, BA' },
+    { value: 'Geology, BS', label: 'Geology, BS' },
+    { value: 'History, BA', label: 'History, BA' },
+    { value: 'History, MA', label: 'History, MA' },
+    { value: 'Hospitality Management, BS', label: 'Hospitality Management, BS' },
+    { value: 'Human Development and Family Studies, BS', label: 'Human Development and Family Studies, BS' },
+    { value: 'Human Nutrition, MS', label: 'Human Nutrition, MS' },
+    { value: 'Kinesiology, BS', label: 'Kinesiology, BS' },
+    { value: 'Marine Science, BS', label: 'Marine Science, BS' },
+    { value: 'Marketing, BS', label: 'Marketing, BS' },
+    { value: 'Mathematics, BS', label: 'Mathematics, BS' },
+    { value: 'Mechanical Engineering, BS', label: 'Mechanical Engineering, BS' },
+    { value: 'Nursing, BSN', label: 'Nursing, BSN' },
+    { value: 'Philosophy, BA', label: 'Philosophy, BA' },
+    { value: 'Physics, BS', label: 'Physics, BS' },
+    { value: 'Political Science, BA', label: 'Political Science, BA' },
+    { value: 'Psychology, BA', label: 'Psychology, BA' },
+    { value: 'Public Health, BS', label: 'Public Health, BS' },
+    { value: 'Social Work, BSW', label: 'Social Work, BSW' },
+    { value: 'Sociology, BA', label: 'Sociology, BA' },
+    { value: 'Spanish, BA', label: 'Spanish, BA' },
+    { value: 'Theatre, BA', label: 'Theatre, BA' },
+    { value: 'Water Science and Sustainability, Minor', label: 'Water Science and Sustainability, Minor' }, // Note: Minor included for context
+    { value: 'Women\'s Studies, BA', label: 'Women\'s Studies, BA' },
+];
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -15,7 +120,8 @@ export default function LoginPage() {
     const [cwid, setCwid] = useState('');
     const [phone, setPhone] = useState('');
     const [gradYear, setGradYear] = useState('Freshman');
-    const [major, setMajor] = useState('');
+    const [selectedMajor, setSelectedMajor] = useState(null);
+    // const [major, setMajor] = useState('');
     const [PfpImage, setProfilePicture] = useState(null);
     const [isLogin, setIsLogin] = useState(true);
     const router = useRouter();
@@ -34,7 +140,7 @@ export default function LoginPage() {
                 if (img.width > 1536 || img.height > 1536) {
                     alert("Image dimensions exceed 1536 x 1536 pixels. Please choose a smaller image.");
                 } else {
-                    setProfilePicture(file); 
+                    setProfilePicture(file);
                 }
             };
         }
@@ -69,7 +175,7 @@ export default function LoginPage() {
             formData.append('cwid', cwid);
             formData.append('phone', phone);
             formData.append('gradYear', gradYear);
-            formData.append('major', major);
+            formData.append('major', selectedMajor.value);
 
             if (PfpImage) {
                 formData.append('pfpimage', PfpImage);
@@ -183,12 +289,20 @@ export default function LoginPage() {
                                         <option value='Junior'>Junior</option>
                                         <option value='Senior'>Senior</option>
                                     </select>
-                                    <input
+                                    {/* <input
                                         type='text'
                                         placeholder='Major'
                                         value={major}
                                         onChange={(e) => setMajor(e.target.value)}
                                         className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]'
+                                        required
+                                    /> */}
+                                    <Select
+                                        placeholder="Select your Major"
+                                        value={selectedMajor}
+                                        onChange={setSelectedMajor}
+                                        options={majors}
+                                        className="w-full"
                                         required
                                     />
                                     <div className='flex items-center mb-4'>
@@ -198,7 +312,7 @@ export default function LoginPage() {
                                                 type='file'
                                                 accept='.png, .jpg, .jpeg, .webp'
                                                 //onChange={(e) => setProfilePicture(e.target.files[0])}
-                                                onChange= {handleFileChange} 
+                                                onChange={handleFileChange}
                                                 className='hidden'
                                             />
                                         </label>
