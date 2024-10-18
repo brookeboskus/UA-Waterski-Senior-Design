@@ -73,13 +73,13 @@ export default function ProfilePage() {
         <div className="absolute left-0 top-0 w-full h-[320px] bg-[#9e1b32] z-10"></div> 
 
         {/* User Profile Image */}
-        <div className="absolute left-[50%] top-[5%] w-[230px] h-[230px]  z-20 transform -translate-x-[50%] overflow-hidden">
+        <div className="absolute left-[50%] top-[5%] w-[230px] h-[230px] rounded-full z-20 transform -translate-x-[50%] overflow-hidden">
         <Image
                     src={teamMember.PfpImage ? teamMember.PfpImage : DefaultPFP}
                     alt={`${teamMember.Fname} ${teamMember.Lname}'s profile image`}
                     layout="fill"
                     objectFit="cover"
-                    className=""
+                    className="rounded-full"
                 />
         </div>
     </div>

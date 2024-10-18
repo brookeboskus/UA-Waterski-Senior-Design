@@ -3,7 +3,7 @@ import Image from 'next/image';  // Make sure to import Image from 'next/image'
 import ellipseImage from '../../img/DefaultPFP.svg';  // Adjust the path as necessary
 import Link from 'next/link';
 import { useState } from 'react';
-import ProtectedProfilePage from '../protected-profile-page/page'; 
+import ProtectedProfilePage from '../protected-profile-edit-page/page'; 
 
 export default function HomeAfterLogin() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to manage sidebar visibility
@@ -29,6 +29,8 @@ export default function HomeAfterLogin() {
                 </button>
             </div>
      
+
+        
             {/* Sidebar */}
             {isSidebarOpen && (
            
