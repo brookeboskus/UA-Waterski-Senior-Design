@@ -2,7 +2,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import ellipseImage from '../../img/DefaultPFP.svg';
+import DefaultPFP from '../../img/DefaultPFP.svg';
 import FirstNameImage from '../../img/Text (1).svg';
 import LastNameImage from '../../img/Text (2).svg';
 import GradYearImage from '../../img/Text (3).svg';
@@ -22,17 +22,30 @@ interface TeamMember {
     Phone: string;
     Email: string;
     CWID: string;
+    PfpImage: string;
 }
 
 export default function ProfilePage() {
-    const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
-    const [loading, setLoading] = useState<boolean>(true); 
+    const [teamMember, setTeamMember] = useState<TeamMember | null>(null); 
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const response = await axios.get<TeamMember[]>('http://localhost:4000/auth/profile');
-                setTeamMembers(response.data);
+                const token = localStorage.getItem('token'); 
+                if (!token) {
+                    throw new Error('No token found'); 
+                }
+
+                const response = await axios.get<TeamMember>('http://localhost:4000/auth/profile', {
+                    headers: {
+                        Authorization: `Bearer ${token}` // send the token in the request headers to authenticate
+                    }
+                });
+
+                console.log('Profile data:', response.data); 
+
+                setTeamMember(response.data); // store profile data in state
             } catch (error) {
                 console.error('Failed to fetch team roster:', error);
             } finally {
@@ -48,7 +61,9 @@ export default function ProfilePage() {
     }
 
     // Ensure teamMembers array has at least one member
-    const teamMember = teamMembers.length > 0 ? teamMembers[0] : undefined;
+    if (!teamMember) {
+        return <div>No team member data available.</div>; // no data available then say this
+    }
 
     return (
         <div className="relative w-[417px] h-[787px] bg-white rounded-[5px] z-40" style={{ top: '0px', right: '5px', borderLeft: '3px solid black' }}>
@@ -59,7 +74,13 @@ export default function ProfilePage() {
 
         {/* User Profile Image */}
         <div className="absolute left-[50%] top-[5%] w-[230px] h-[230px]  z-20 transform -translate-x-[50%] overflow-hidden">
-            <Image src={ellipseImage} alt="DefaultPFP" layout="fill" objectFit="cover"  />
+        <Image
+                    src={teamMember.PfpImage ? teamMember.PfpImage : DefaultPFP}
+                    alt={`${teamMember.Fname} ${teamMember.Lname}'s profile image`}
+                    layout="fill"
+                    objectFit="cover"
+                    className=""
+                />
         </div>
     </div>
 
