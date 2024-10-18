@@ -11,15 +11,16 @@ interface TeamMember {
     GradYear: string;
     MemberType: string;
     Major: string;
-    // Email: string; // not yet implemented, need back side of card
-    // Phone: string; 
     PfpImage: string;
+    Email?: string;
+    Phone?: string;
 }
 
 export default function RosterPage() {
     const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [searchQuery, setSearchQuery] = useState<string>('');
+    const [flipped, setFlipped] = useState<number | null>(null);
 
     useEffect(() => {
         const fetchRoster = async () => {
@@ -36,10 +37,9 @@ export default function RosterPage() {
         fetchRoster();
     }, []);
 
-    // filter team members based on the search query
     const filteredMembers = teamMembers.filter((member) => {
         const fullName = `${member.Fname} ${member.Lname}`.toLowerCase();
-        const major = member.Major?.toLowerCase() || '';  // added null check in case they didn't fill this out
+        const major = member.Major?.toLowerCase() || '';
         const gradYear = member.GradYear?.toLowerCase() || '';
         const memberType = member.MemberType?.toLowerCase() || '';
 
@@ -51,11 +51,21 @@ export default function RosterPage() {
         );
     });
 
+    const handleFlip = (index: number) => {
+        setFlipped(index); // flip the card on click
+    };
+
+    const handleMouseLeave = (index: number) => {
+        if (flipped === index) {
+            setFlipped(null); // reset the flip state when the cursor leaves the card
+        }
+    };
+
     return (
         <div className='container mx-auto px-4 py-8 bg-gray-50 min-h-screen'>
             <h1 className='text-4xl font-bold mb-6 text-center text-[#9E1B32]'>Team Roster</h1>
 
-            {/* search bar to find team members based on inputs like name, major, year, etc */}
+            {/* Search bar */}
             <div className='mb-6'>
                 <input
                     type='text'
@@ -74,26 +84,51 @@ export default function RosterPage() {
                         filteredMembers.map((member, index) => (
                             <div
                                 key={index}
-                                className='bg-white shadow-md hover:shadow-lg rounded-lg overflow-hidden transition-all duration-300 border border-gray-200 transform hover:scale-105 hover:border-[#9E1B32]'>
-                                <div className='p-4'>
-                                    {/* Profile Picture */}
-                                    <div className='relative w-24 h-24 mb-4 mx-auto'>
-                                        <Image
-                                            src={member.PfpImage || BlankPfp}
-                                            alt={`${member.Fname} ${member.Lname}'s profile image`}
-                                            layout='fill'
-                                            objectFit='cover'
-                                            className='rounded-full border shadow'
-                                        />
+                                className={`relative perspective w-full h-72 border border-gray-200 transform hover:scale-105`}
+                                onClick={() => handleFlip(index)}
+                                onMouseLeave={() => handleMouseLeave(index)} // flips card back if the cursor leaves the card
+                            >
+                                <div className={`flip-card ${flipped === index ? 'flipped' : ''}`}>
+                                    {/* Front side of the card */}
+                                    <div className='flip-card-front bg-white shadow-md hover:shadow-lg rounded-lg overflow-hidden h-full'>
+                                        <div className='p-4'>
+                                            {/* Profile Picture */}
+                                            <div className='relative w-24 h-24 mb-4 mx-auto'>
+                                                <Image
+                                                    src={member.PfpImage || BlankPfp}
+                                                    alt={`${member.Fname} ${member.Lname}'s profile image`}
+                                                    layout='fill'
+                                                    objectFit='cover'
+                                                    className='rounded-full border shadow'
+                                                />
+                                            </div>
+                                            <h2 className='text-xl font-semibold text-gray-900 mb-1 text-center'>
+                                                {member.Fname} {member.Lname}
+                                            </h2>
+                                            <p className='text-gray-700'><strong>Member Type:</strong> {member.MemberType}</p>
+                                            <p className='text-gray-700'><strong>Graduation Year:</strong> {member.GradYear}</p>
+                                            <p className='text-gray-700'><strong>Major:</strong> {member.Major || 'N/A'}</p>
+                                        </div>
                                     </div>
 
-                                    <h2 className='text-xl font-semibold text-gray-900 mb-1 text-center'>
-                                        {member.Fname} {member.Lname}
-                                    </h2>
-                                    <br></br>
-                                    <p className='text-gray-700'><strong>Member Type:</strong> {member.MemberType}</p>
-                                    <p className='text-gray-700'><strong>Graduation Year:</strong> {member.GradYear}</p>
-                                    <p className='text-gray-700'><strong>Major:</strong> {member.Major || 'N/A'}</p>
+                                    {/* Back side of the card */}
+                                    <div className='flip-card-back bg-white shadow-md hover:shadow-lg rounded-lg overflow-hidden p-4 text-black h-full'>
+                                        {/* Profile Picture */}
+                                        <div className='relative w-24 h-24 mb-4 mx-auto'>
+                                            <Image
+                                                src={member.PfpImage || BlankPfp}
+                                                alt={`${member.Fname} ${member.Lname}'s profile image`}
+                                                layout='fill'
+                                                objectFit='cover'
+                                                className='rounded-full border shadow'
+                                            />
+                                        </div>
+                                        <h2 className='text-xl font-semibold text-center mb-4'>
+                                            {member.Fname} {member.Lname}
+                                        </h2>
+                                        <p><strong>Email:</strong> {member.Email || 'N/A'}</p>
+                                        <p><strong>Phone:</strong> {member.Phone || 'N/A'}</p>
+                                    </div>
                                 </div>
                             </div>
                         ))
