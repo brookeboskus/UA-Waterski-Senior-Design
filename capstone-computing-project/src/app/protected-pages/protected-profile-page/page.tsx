@@ -43,16 +43,28 @@ export default function ProfilePage() {
     const teamMember = teamMembers.length > 0 ? teamMembers[0] : undefined;
 
     return (
-        <div className="w-[428px] h-[926px] relative bg-white rounded-[5px]">
-            <div className="w-[428px] h-[328px] left-0 top-0 absolute bg-[#9e1b32]"></div> 
-            <div className="w-[227px] h-[227px] left-[100px] top-[70px] absolute rounded-full shadow">
-                <Image src={ellipseImage} alt="DefaultPFP" />
-            </div>
-            <div className="w-[191px] h-[26px] left-[-8px] top-[358px] absolute text-center text-black text-xl font-bold">Your Information</div>
+        <div className="relative w-[417px] h-[787px] bg-white rounded-[5px] z-40" style={{ top: '0px', right: '5px', borderLeft: '3px solid black' }}>
+    {/* Container for the red header and profile image */}
+    <div className="relative w-full h-full">
+        {/* Red Header Section */}
+        <div className="absolute left-0 top-0 w-full h-[320px] bg-[#9e1b32] z-10"></div> 
+
+        {/* User Profile Image */}
+        <div className="absolute left-[50%] top-[5%] w-[230px] h-[230px] rounded-full z-20 transform -translate-x-[50%] overflow-hidden">
+            <Image src={ellipseImage} alt="DefaultPFP" layout="fill" objectFit="cover" className="rounded-full" />
+        </div>
+    </div>
+
+
+
+
 
             {/* Conditionally render the team member info only if teamMember is defined */}
             {teamMember ? (
                 <>
+                <div className="absolute left-[25%] top-[45%] w-[191px] h-[26px] text-center text-black text-xl font-bold transform -translate-x-[50%]">
+            Your Information
+        </div>
                     <div className="w-[101px] h-3.5 left-[99px] top-[397px] absolute text-black text-[15px] font-bold">First Name</div>
                     <div className="w-[220px] h-7 left-[99px] top-[418px] absolute text-[#b9b9b9] text-[15px] font-bold">{teamMember.Fname}</div>
 

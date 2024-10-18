@@ -14,16 +14,16 @@ export default function HomeAfterLogin() {
 
     return (
         <div>
-            <div>
+             <div className="fixed top-0  p-2 z-50" style={{ top: '1px', right: '-40px' }}> {/* Added classes to position the button */}
                 {/* Button to open the sidebar */}
                 <button onClick={toggleSidebar}>
                     <Link href="#">
                         <Image 
                             src={ellipseImage} 
                             alt="Header WLAM image" 
-                            width={80} 
+                            width={90} 
                             height={80} 
-                            className="h-20 w-20 md:h-28 md:w-28 lg:h-48 lg:w-48 object-contain" 
+                            className="h-20 w-50 md:h-28 md:w-28 lg:h-10 lg:w-48 object-contain" 
                         />
                     </Link>
                 </button>
@@ -31,7 +31,9 @@ export default function HomeAfterLogin() {
      
             {/* Sidebar */}
             {isSidebarOpen && (
-                <div className="fixed right-0 top-0 w-90 h-full bg-white shadow-lg z-50">
+           
+                <div className="fixed right-5 h-full" style={{ top: '15px', width: '27%' }}>
+
                     <button onClick={toggleSidebar} className="p-2">Close</button>
                     {/* Render the profile page content here */}
                     <ProtectedProfilePage />
@@ -40,7 +42,7 @@ export default function HomeAfterLogin() {
             )}
 
             {/* Background overlay when sidebar is open */}
-            {isSidebarOpen && <div className="fixed inset-0 bg-black opacity-50 z-40" onClick={toggleSidebar} />}
+            {isSidebarOpen && <div className="fixed inset-0 bg-black opacity-40 z-40" style={{ top: '15px', width: '71.5%' }} onClick={toggleSidebar} />}
 
             <main className="flex-grow">
                 {/* Hero Section */}
