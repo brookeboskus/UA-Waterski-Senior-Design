@@ -23,16 +23,18 @@ export default function Navbar() {
 
     return (
         <nav className="bg-[#9E1B32] shadow-md sticky top-0 z-50 w-full">
-            <div className="container mx-auto flex justify-between items-center px-4 h-20 md:h-14 lg:h-15"> 
+            <div className="container mx-auto flex justify-between items-center px-4 h-20 md:h-14 lg:h-15">
                 {/* where legends are made logo */}
                 <Link href="/">
-                    <Image 
-                        src={HeaderWLAM} 
-                        alt="Header WLAM image" 
-                        width={80} 
-                        height={80} 
-                        className="h-40 w-40 md:h-55 md:w-55 lg:h-80 lg:w-80 object-contain" // image scales within navbar height and width with different screen sizes
-                    />
+                    <div className="relative">
+                        <Image
+                            src={HeaderWLAM}
+                            alt="Header WLAM image"
+                            width={250}
+                            height={250} 
+                            className="object-contain cursor-pointer"
+                        />
+                    </div>
                 </Link>
 
                 {/* dropdown for mobile view */}
@@ -64,7 +66,7 @@ export default function Navbar() {
                     </button>
                 </div>
 
-                {/* navigation links only for desktop screen sizes */}
+                {/* navigation links for desktop */}
                 <div className="hidden md:flex space-x-6 items-center">
                     <Link href="/" className="text-white text-base hover:text-black hover:underline transition duration-300">
                         Home
@@ -73,11 +75,11 @@ export default function Navbar() {
                         Set List
                     </Link>
 
-                    {/* about dropdown only for desktop screen sizes */}
+                    {/* about dropdown */}
                     <div className='cursor-pointer items-center gap-1 group relative'>
                         <div className='flex flex-row text-white text-base hover:text-black hover:underline transition duration-300'>
                             <Link href="/about-me-page" className='flex items-center py-2 px-4'>
-                                About 
+                                About
                                 <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
                                 </svg>
@@ -107,7 +109,7 @@ export default function Navbar() {
                     </Link>
                 </div>
 
-                {/* login button only for desktop screen sizes */}
+                {/* login button */}
                 <div className="hidden md:block">
                     <Link href="/login-page" className="bg-white-500 text-white text-base py-2 px-4 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300">
                         Login
@@ -115,7 +117,7 @@ export default function Navbar() {
                 </div>
             </div>
 
-            {/* navbar for mobile screens */}
+            {/* mobile menu */}
             <div className={`md:hidden ${isOpen ? 'block' : 'hidden'} mt-4 space-y-4`}>
                 <Link href="/" className="block text-white text-lg hover:text-black transition duration-300" onClick={closeMenu}>
                     Home
@@ -124,10 +126,10 @@ export default function Navbar() {
                     Set List
                 </Link>
 
-                {/* about dropdown for mobile screen sizes */}
+                {/* about dropdown for mobile */}
                 <div>
                     <button onClick={toggleDropdown} className="flex justify-between items-center w-full text-white text-lg hover:text-black transition duration-300">
-                        About 
+                        About
                         <svg className="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
                         </svg>
@@ -161,5 +163,6 @@ export default function Navbar() {
                 </Link>
             </div>
         </nav>
+
     );
 }

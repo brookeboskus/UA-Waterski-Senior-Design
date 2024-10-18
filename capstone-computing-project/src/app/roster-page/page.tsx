@@ -4,6 +4,20 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
 import BlankPfp from '../img/blankpfp.svg';
+import React from 'react'
+import Select from 'react-select'
+
+const yearOptions = [
+    { value: 'Freshman', label: 'Freshman' },
+    { value: 'Sophomore', label: 'Sophomore' },
+    { value: 'Junior', label: 'Junior' },
+    { value: 'Senior', label: 'Senior' },
+];
+
+const roleOptions = [
+    { value: 'Athlete', label: 'Athlete' },
+    { value: 'Officer', label: 'Officer' },
+];
 
 interface TeamMember {
     Fname: string;
@@ -20,7 +34,13 @@ export default function RosterPage() {
     const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [searchQuery, setSearchQuery] = useState<string>('');
+    const [classYear, setClassYear] = useState<string>('');  
+    const [role, setRole] = useState<string>('');            
+    const [sortBy, setSortBy] = useState<string>('');        
     const [flipped, setFlipped] = useState<number | null>(null);
+    const [selectedYears, setSelectedYears] = useState<any[]>([]);
+    const [selectedRoles, setSelectedRoles] = useState<any[]>([]);
+
 
     useEffect(() => {
         const fetchRoster = async () => {
@@ -37,19 +57,37 @@ export default function RosterPage() {
         fetchRoster();
     }, []);
 
-    const filteredMembers = teamMembers.filter((member) => {
-        const fullName = `${member.Fname} ${member.Lname}`.toLowerCase();
-        const major = member.Major?.toLowerCase() || '';
-        const gradYear = member.GradYear?.toLowerCase() || '';
-        const memberType = member.MemberType?.toLowerCase() || '';
+    const handleYearChange = (selectedOptions: any) => {
+        setSelectedYears(selectedOptions || []);
+    };
 
-        return (
-            fullName.includes(searchQuery.toLowerCase()) ||
-            major.includes(searchQuery.toLowerCase()) ||
-            gradYear.includes(searchQuery.toLowerCase()) ||
-            memberType.includes(searchQuery.toLowerCase())
-        );
-    });
+    const handleRoleChange = (selectedOptions: any) => {
+        setSelectedRoles(selectedOptions || []);
+    }
+
+
+    // filters and sorts members based on dropdown selections
+    const filteredMembers = teamMembers
+        .filter((member) => {
+            const fullName = `${member.Fname} ${member.Lname}`.toLowerCase();
+            const major = member.Major?.toLowerCase() || '';
+            const gradYear = member.GradYear?.toLowerCase() || '';
+            const memberType = member.MemberType?.toLowerCase() || '';
+
+            const matchesClassYear = classYear ? gradYear.includes(classYear.toLowerCase()) : true;
+            const matchesRole = role ? memberType.includes(role.toLowerCase()) : true;
+            const matchesSearchQuery = fullName.includes(searchQuery.toLowerCase()) || major.includes(searchQuery.toLowerCase());
+
+            return matchesClassYear && matchesRole && matchesSearchQuery;
+        })
+        .sort((a, b) => { // alphabetically sort by first or last name
+            if (sortBy === 'firstName') {
+                return a.Fname.localeCompare(b.Fname);
+            } else if (sortBy === 'lastName') {
+                return a.Lname.localeCompare(b.Lname);
+            }
+            return 0;
+        });
 
     const handleFlip = (index: number) => {
         setFlipped(index); // flip the card on click
@@ -74,6 +112,37 @@ export default function RosterPage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
+            </div>
+
+            {/* Filters for searching members*/}
+            <div className='mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
+                {/* Class Year */}
+                <Select
+                    isMulti
+                    options={yearOptions}
+                    value={selectedYears}
+                    onChange={handleYearChange}
+                    className='text-black'
+                />
+
+                {/* MemberType */}
+                <Select
+                    isMulti
+                    options={roleOptions}
+                    value={selectedRoles}
+                    onChange={(selectedOptions) => setSelectedRoles(selectedOptions || [])}
+                    className='text-black'
+                />
+
+                {/* First Name Last Name Alphabetical */}
+                <select
+                    className='w-full p-2 border border-gray-300 rounded-md text-black'
+                    onChange={(e) => setSortBy(e.target.value)}
+                >
+                    <option value=''>No Sorting</option>
+                    <option value='firstName'>Sort by First Name</option>
+                    <option value='lastName'>Sort by Last Name</option>
+                </select>
             </div>
 
             {loading ? (
