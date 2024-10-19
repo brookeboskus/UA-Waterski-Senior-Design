@@ -24,7 +24,7 @@ export default function RootLayout({
             <body className={dmSans.className}>
                 <div className='min-h-screen flex flex-col'>
                     <Navbar />
-                    <div className='flex-grow md:pt-20 pt-6'>
+                    <div className='flex-grow md:pt-0 pt-0'>
                         {children}
                     </div>
                     <Footer />

@@ -192,8 +192,8 @@ export default function LoginPage() {
 
     return (
         <div className='login-page flex items-center justify-center min-h-screen bg-[#ffffff]'>
-            <div className="flex flex-row w-full max-w-6xl">
-                <div className="flex flex-col justify-center items-center w-1/2 pr-8">
+            <div className="flex flex-row w-full h-full"> {/* Full height for both sides */}
+                <div className="flex flex-col justify-center items-center w-1/2 pr-0">
                     <div className="mb-8">
                         <Image src={SkiBamaLogo} alt="Ski Bama Logo" width={300} height={300} />
                     </div>
@@ -330,11 +330,22 @@ export default function LoginPage() {
                             </p>
                         )}
                     </div>
+
                 </div>
 
-                <div className="w-1/2 flex justify-center items-center">
-                    <Image src={WaterskiImage} alt="Water ski image" width={600} height={600} />
-                </div>
+               {/* Right side containing the image */}
+        <div className=" rounded-tl-[55px] rounded-bl-[55px]  "> {/* Right side */}
+            <Image 
+                src={WaterskiImage} 
+                alt="Water ski image" 
+                width={800}
+                height={8000}
+                //className="object-cover  rounded-tl-[55px] rounded-bl-[55px]" // Ensure image covers full div
+            />
+        </div>
+
+
+
             </div>
         </div>
     );

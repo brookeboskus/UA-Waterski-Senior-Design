@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 export default function Footer() {
     return (
-        <footer className="bg-[#9E1B32] text-white py-4 mt-8">
+        <footer className="bg-[#9E1B32] text-white py-4 mt-0">
             <div className="container mx-auto flex flex-col md:flex-row items-center justify-between text-center md:text-left">
                 
                 {/* 'Alabama Sports Club' logo needed for copyright */}

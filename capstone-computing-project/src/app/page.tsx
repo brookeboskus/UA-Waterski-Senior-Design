@@ -10,7 +10,7 @@ import placeholderhomepageimage from "../app/img/placeholderhomepage.svg";
 export default function Home() {
     const [sheetData, setSheetData] = useState<string[] | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const [currentIndex, setCurrentIndex] = useState(2);
     const [isSliding, setIsSliding] = useState(false);
     const [direction, setDirection] = useState<"left" | "right">("right");
     const [loading, setLoading] = useState(true);
@@ -115,7 +115,7 @@ export default function Home() {
                                             <img
                                                 src={sheetData[currentIndex - 1]}
                                                 alt="Previous Image"
-                                                className="object-cover w-[200px] h-[150px] md:w-[600px] md:h-[400px] rounded-md"
+                                                className="object-cover w-[1000px] h-[150px] md:w-[400px] md:h-[400px] rounded-md"
                                             />
                                         </div>
                                     )}
@@ -132,7 +132,7 @@ export default function Home() {
                                         <img
                                             src={sheetData[currentIndex]}
                                             alt="Current Image"
-                                            className="object-cover w-[300px] h-[200px] md:w-[800px] md:h-[500px] rounded-md"
+                                            className="object-cover w-[300px] h-[200px] md:w-[1100px] mt-10 md:h-[500px] rounded-md"
                                         />
                                     </div>
 
