@@ -1,15 +1,22 @@
 import axios from 'axios';
+import dotenv from 'dotenv';
 
-const API_KEY = 'AIzaSyDPIUXDDaAX_z4iA7423TtrmMSh0ZUYsDA'
-const SPREADSHEET_ID = '1XxrLrv2y1YcQHswXKIG_yo-8WpX57zONek7PjeYMCG8'
-const RANGE = 'Sheet1!A1:D10';
+dotenv.config(); // this loads the defined variables in .env file
+
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+const SPREADSHEET_ID = process.env.NEXT_PUBLIC_SPREADSHEET_ID;
+const RANGE = process.env.NEXT_PUBLIC_RANGE;
+
+console.log('API_KEY:', API_KEY);
+console.log('SPREADSHEET_ID:', SPREADSHEET_ID);
+console.log('RANGE:', RANGE);
 
 export const fetchSheetData = async (): Promise<string[][] | null> => {
     try {
         const response = await axios.get(
             `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${RANGE}?key=${API_KEY}`
         );
-        return response.data.values; // Returns the data from the sheet
+        return response.data.values; 
     } catch (error) {
         console.error('Error fetching data from Google Sheets:', error);
         return null;
