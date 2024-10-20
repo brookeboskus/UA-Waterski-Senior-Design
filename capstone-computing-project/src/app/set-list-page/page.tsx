@@ -14,8 +14,27 @@ export default function SetListPage() {
     const [loading, setLoading] = useState<boolean>(true);
     const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
+
+    function RegisterHandler(registerDate: Date) {
+        // Handle registration when clicked
+        // This will get CWID of current user and make a database query to register for the requested time
+        // for now it just pops up an alert box for testing purposes
+        alert(registerDate);
+    }
+
     function TimeTableBody() {
         var rows = [];
+
+        var currentWeekDropDown = document.getElementById("dateRangeDropDown") as HTMLInputElement;
+
+        // Drop down must be created before table can be returned, so return nothing until drop down exists on document
+        if (currentWeekDropDown == null) {
+            return;
+        }
+
+        var currentWeekStartDate = new Date(Number(currentWeekDropDown.value) * 1000);
+
+        console.log("Current week: " + currentWeekStartDate);
 
         for (var hour = 7; hour <= 17; hour++) {
             // From :00 to :45
@@ -24,6 +43,9 @@ export default function SetListPage() {
                 if (hour == 17 && minutes != 0) {
                     continue;
                 }
+
+                console.log("row_" + hour + "_" + minutes)
+
                 var cells = [];
                 
                 // Handle 12 hour logic
@@ -38,8 +60,19 @@ export default function SetListPage() {
                 // Initialize empty table cells for later modification
                 for (var day = 1; day <= 5; day++) {
                     // Doesn't quite work as you'd expect... need to look into this
-                    cells.push(<td key={day + "_" + hour + "_" + minutes}><button className="openReservation" onClick={() => alert("Register for " + dayNames[day] + " at " + timeString)}>Slot available. Click to reserve</button></td>);
+                    
+                    //cells.push(<td key={day + "_" + hour + "_" + minutes}><button className="openReservation" onClick={() => alert("Register for {dayNames[day]} at {timeString}")}>Slot available. Click to reserve</button></td>);
+                    // This prints the expected date for the given button...
+                    console.log(new Date(new Date(currentWeekStartDate).setDate(currentWeekStartDate.getDate() + (day - 1))))
+                    // But here, every single button seemingly receives the same time?
+                    // Tried looking into this, apparently the way to fix this is with a closer. Below I've commented out an attempt at this, but this didn't work.
+                    cells.push(<td key={new Date(currentWeekStartDate).setDate(currentWeekStartDate.getDate() + (day - 1))}><button className="openReservation" onClick={() => {RegisterHandler(new Date(new Date(currentWeekStartDate).setDate(currentWeekStartDate.getDate() + (day - 1))))}}>Slot available. Click to reserve</button></td>);
+                    
+                    // () => {
+                    //     cells.push(<td key={day + "_" + hour + "_" + minutes}><button className="openReservation" onClick={() => {RegisterHandler(day)}}>Slot available. Click to reserve</button></td>);
+                    // }
                 }
+                
                 rows.push(<tr key={"row_" + hour + "_" + minutes}>{cells}</tr>);
             }
         }
@@ -63,6 +96,10 @@ export default function SetListPage() {
 
         var optionsList = [];
 
+        var thisWeekMonday = new Date();
+        thisWeekMonday.setDate(today.getDate() - today.getDay() + 1);
+        console.log(thisWeekMonday);
+
         for (var i = 0; i < (weekRange * 2) + 1; i++) {
             // Each item in dateRange is an array consisting of a start and end day for the week
             dateRanges.push([new Date(), new Date()]);
@@ -72,20 +109,20 @@ export default function SetListPage() {
 
         // Previous (weekRange) weeks
         for (var i = 0; i < weekRange; i++) {
-            optionsList.push(<option key={"prevWeek" + i} value={i}>{dateRanges[i][0].toLocaleDateString("en-US") + " - " + dateRanges[i][1].toLocaleDateString("en-US")}</option>);
+            optionsList.push(<option key={"prevWeek" + i} value={dateRanges[i][0].getTime() / 1000}>{dateRanges[i][0].toLocaleDateString("en-US") + " - " + dateRanges[i][1].toLocaleDateString("en-US")}</option>);
         }
 
         // Current week
-        optionsList.push(<option key="currentWeek" value={weekRange}>{dateRanges[Math.floor(weekRange / 2) + 1][0].toLocaleDateString("en-US") + " - " + dateRanges[Math.floor(weekRange / 2) + 1][1].toLocaleDateString("en-US")}</option>);
+        optionsList.push(<option key="currentWeek" value={thisWeekMonday.getTime() / 1000}>{dateRanges[Math.floor(weekRange / 2) + 1][0].toLocaleDateString("en-US") + " - " + dateRanges[Math.floor(weekRange / 2) + 1][1].toLocaleDateString("en-US")}</option>);
 
         // Next (weekRange) weeks
         for (var i = 0; i < weekRange; i++) {
-            optionsList.push(<option key={"nextWeek" + i} value={i + weekRange + 1}>{dateRanges[i + weekRange + 1][0].toLocaleDateString("en-US") + " - " + dateRanges[i + weekRange + 1][1].toLocaleDateString("en-US")}</option>);
+            optionsList.push(<option key={"nextWeek" + i} value={dateRanges[i + weekRange + 1][0].getTime() / 1000}>{dateRanges[i + weekRange + 1][0].toLocaleDateString("en-US") + " - " + dateRanges[i + weekRange + 1][1].toLocaleDateString("en-US")}</option>);
         }
 
         // Need to set an onChange handler apparently?
         return (
-            <select id="dateRangeDropDown" defaultValue={weekRange}>
+            <select id="dateRangeDropDown" defaultValue={thisWeekMonday.getTime() / 1000}>
                 {optionsList}
             </select>
         )
@@ -133,15 +170,8 @@ export default function SetListPage() {
     
     return (
         <div className="relative bg-white rounded-[5px]">
+            {/* NOTE!!! On change of weekDropDown, we need to re-render TimeTableBody so that buttons contain correct values, or perhaps look into another way to handle this */}
             {weekDropDown()}
-            {/* <select id="dateRangeDropDown">
-                {dropDownOptions()}
-                <option>Sept. 30, 2024 - Oct. 4, 2024</option>
-                <option>Oct. 7, 2024 - Oct. 11, 2024</option>
-                <option>Oct. 14, 2024 - Oct. 18, 2024</option>
-                <option>Oct. 21, 2024 - Oct. 25, 2024</option>
-                <option>Oct. 28, 2024 - Nov. 1, 2024</option>
-            </select> */}
             
             <table id="setListTable">
                 <thead>
