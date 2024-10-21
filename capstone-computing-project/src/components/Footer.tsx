@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 import uabrandingstandard from '../../src/app/img/uabrandingstandard.svg';
 import Image from 'next/image';
 
@@ -40,10 +40,10 @@ export default function Footer() {
                     {/* Right Column */}
                     <div className="flex flex-col">
                         <a
-                            href="mailto:fakeemail@crimson.ua.edu"
+                            href="mailto:skibama18@gmail.com"
                             className="text-white hover:text-black transition duration-300 hover:underline"
                         >
-                            Email: fakeemail@crimson.ua.edu
+                            Email: skibama18@gmail.com
                         </a>
                         <a
                             href="https://www.facebook.com/AlabamaWaterskiTeam/"

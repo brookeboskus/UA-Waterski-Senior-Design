@@ -1,4 +1,5 @@
-//a. Depth Chart (i. Skier rankings for our team) b. fundraising addresses c. alumni contacts d. meeting notes
+// //a. Depth Chart (i. Skier rankings for our team) b. fundraising addresses c. alumni contacts d. meeting notes
+
 
 "use client";
 import { useState, useEffect } from "react";
@@ -6,7 +7,6 @@ import axios from "axios";
 
 function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: any) {
     const [newNote, setNewNote] = useState({ title: "", content: "" });
-    const [file, setFile] = useState<File | null>(null);
     const [openNoteId, setOpenNoteId] = useState<number | null>(null);
 
     const fetchNotes = async () => {
@@ -34,30 +34,25 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: any) {
         }
 
         try {
-            const formData = new FormData();
-            formData.append('title', newNote.title);
-            formData.append('content', newNote.content || '');
+            const noteData = {
+                title: newNote.title,
+                content: newNote.content || '',
+            };
 
-            if (file) {
-                formData.append('file', file);
-            }
-
-            await axios.post('http://localhost:4000/auth/meetingnotes', formData, {
+            await axios.post('http://localhost:4000/auth/meetingnotes', noteData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
+                    'Content-Type': 'application/json',
                 },
             });
 
             await fetchNotes();
 
             setNewNote({ title: '', content: '' });
-            setFile(null);
             setIsEditing(false);
         } catch (error) {
             console.error('Error adding note:', error);
         }
     };
-
 
     const deleteNote = async (id: number) => {
         try {
@@ -92,12 +87,6 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: any) {
                             onChange={(e) => setNewNote({ ...newNote, content: e.target.value })}
                             className="w-full mb-4 p-2 border border-gray-300 text-black rounded"
                         ></textarea>
-                        <label className="block mb-2 text-[#793540]">Upload PDF (optional):</label>
-                        <input
-                            type="file"
-                            onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
-                            className="block mb-4 text-[#4DE0C7]"
-                        />
                         <button
                             className="bg-[#9E1B32] text-white px-4 py-2 rounded-lg hover:bg-[#7E1626]"
                             onClick={addNewNote}
@@ -135,13 +124,11 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: any) {
                                 )}
                             </div>
 
-
                             {openNoteId === note.id && (
                                 <div className="mt-4 text-gray-800">
                                     <pre>{note.content}</pre>
                                 </div>
                             )}
-
                         </div>
                     ))}
                 </div>
@@ -164,7 +151,6 @@ export default function OfficerResourcesPage() {
             <main className="flex-grow container mx-auto px-4 py-8">
                 <h1 className="text-4xl font-bold text-center text-[#9E1B32] mb-8">Officer Resources</h1>
 
-                {/* Depth Chart Section */}
                 <section
                     className="mb-8 p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer border-2 border-transparent hover:border-[#9E1B32]"
                     onClick={() => toggleSection("depth-chart")}
@@ -181,7 +167,6 @@ export default function OfficerResourcesPage() {
                     )}
                 </section>
 
-                {/* Fundraising Section */}
                 <section
                     className="mb-8 p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer border-2 border-transparent hover:border-[#9E1B32]"
                     onClick={() => toggleSection("fundraising")}
@@ -198,7 +183,6 @@ export default function OfficerResourcesPage() {
                     )}
                 </section>
 
-                {/* Alumni Contacts Section */}
                 <section
                     className="mb-8 p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer border-2 border-transparent hover:border-[#9E1B32]"
                     onClick={() => toggleSection("alumni-contacts")}
@@ -215,7 +199,6 @@ export default function OfficerResourcesPage() {
                     )}
                 </section>
 
-                {/* Meeting Notes Section */}
                 <section
                     className="mb-8 p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer border-2 border-transparent hover:border-[#9E1B32]"
                     onClick={() => toggleSection("meeting-notes")}
