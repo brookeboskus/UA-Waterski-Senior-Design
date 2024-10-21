@@ -9,18 +9,6 @@ const { profile } = require('../auth/profile');
 const { getMeetingNotes, addMeetingNote, deleteMeetingNote } = require('../auth/meetingnotes');
 
 
-console.log({
-    login,
-    signup,
-    getRoster,
-    getSetList,
-    profile,
-    getMeetingNotes,
-    addMeetingNote,
-    deleteMeetingNote
-});
-
-
 // multer is the middleware for handling file uploads
 const storage = multer.memoryStorage(); 
 const upload = multer({ storage });

@@ -7,10 +7,6 @@ const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 const SPREADSHEET_ID = process.env.NEXT_PUBLIC_SPREADSHEET_ID;
 const RANGE = process.env.NEXT_PUBLIC_RANGE;
 
-console.log('API_KEY:', API_KEY);
-console.log('SPREADSHEET_ID:', SPREADSHEET_ID);
-console.log('RANGE:', RANGE);
-
 export const fetchSheetData = async (): Promise<string[][] | null> => {
     try {
         const response = await axios.get(
