@@ -6,7 +6,19 @@ const { signup } = require('../auth/signup');
 const { getRoster } = require('../auth/roster');
 const { getSetList } = require('../auth/setlist');
 const { profile } = require('../auth/profile');
-const { getMeetingNotes, addMeetingNote, deleteMeetingNote } = require('../auth/meetingNotes');
+const { getMeetingNotes, addMeetingNote, deleteMeetingNote } = require('../auth/meetingnotes');
+
+
+console.log({
+    login,
+    signup,
+    getRoster,
+    getSetList,
+    profile,
+    getMeetingNotes,
+    addMeetingNote,
+    deleteMeetingNote
+});
 
 
 // multer is the middleware for handling file uploads

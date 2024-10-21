@@ -18,7 +18,7 @@ exports.getMeetingNotes = (req, res) => {
 };
 
 
-const addMeetingNote = async (req, res) => {
+exports.addMeetingNote = async (req, res) => {
     const { title, content } = req.body;
     let parsedText = content;
 
