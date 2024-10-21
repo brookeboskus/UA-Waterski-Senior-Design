@@ -41,6 +41,7 @@ export default function Footer() {
                     <div className="flex flex-col">
                         <a
                             href="mailto:skibama18@gmail.com"
+                            target="_blank"
                             className="text-white hover:text-black transition duration-300 hover:underline"
                         >
                             Email: skibama18@gmail.com
