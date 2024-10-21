@@ -33,14 +33,19 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: any) {
         }
 
         try {
-            const noteData = {
-                title: newNote.title,
-                content: newNote.content || '',
-                fileName: file ? file.name : '', 
-                fileData: file ? await file.text() : '', 
-            };
+            const formData = new FormData();
+            formData.append('title', newNote.title);
+            formData.append('content', newNote.content || '');
 
-            await axios.post('http://localhost:4000/auth/meetingNotes', noteData);
+            if (file) {
+                formData.append('file', file);
+            }
+
+            await axios.post('http://localhost:4000/auth/meetingnotes', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
 
             await fetchNotes();
 
@@ -51,6 +56,7 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: any) {
             console.error('Error adding note:', error);
         }
     };
+
 
     const deleteNote = async (id: number) => {
         try {
@@ -71,25 +77,25 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: any) {
             <div className="container mx-auto px-4">
                 {isEditing && (
                     <div className="mb-6 p-4 bg-white rounded-lg shadow-lg">
-                        <h3 className="text-xl font-semibold mb-4">Add New Meeting Note</h3>
+                        <h3 className="text-xl font-semibold mb-4 text-[#DA425D]">Add New Meeting Note</h3>
                         <input
                             type="text"
                             placeholder="Title"
                             value={newNote.title}
                             onChange={(e) => setNewNote({ ...newNote, title: e.target.value })}
-                            className="w-full mb-4 p-2 border border-gray-300 rounded"
+                            className="w-full mb-4 p-2 border border-gray-300 rounded text-black"
                         />
                         <textarea
                             placeholder="Content (optional)"
                             value={newNote.content}
                             onChange={(e) => setNewNote({ ...newNote, content: e.target.value })}
-                            className="w-full mb-4 p-2 border border-gray-300 rounded"
+                            className="w-full mb-4 p-2 border border-gray-300 text-black rounded"
                         ></textarea>
-                        <label className="block mb-2">Upload PDF (optional):</label>
+                        <label className="block mb-2 text-[#793540]">Upload PDF (optional):</label>
                         <input
                             type="file"
                             onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
-                            className="block mb-4"
+                            className="block mb-4 text-[#4DE0C7]"
                         />
                         <button
                             className="bg-[#9E1B32] text-white px-4 py-2 rounded-lg hover:bg-[#7E1626]"
