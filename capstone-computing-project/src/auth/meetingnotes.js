@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const pdfParse = require('pdf-parse');
 const multer = require('multer');
-const db = require('../../db'); 
+const db = require('../../db');
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -13,7 +13,7 @@ exports.getMeetingNotes = (req, res) => {
         if (err) {
             return res.status(500).json({ error: 'Database query error' });
         }
-        res.json(results); 
+        res.json(results);
     });
 };
 
@@ -31,8 +31,8 @@ exports.addMeetingNote = async (req, res) => {
         }
     }
 
-    const currentDate = new Date(); 
-    const formattedDate = currentDate.toISOString().split('T')[0]; 
+    const currentDate = new Date();
+    const formattedDate = currentDate.toISOString().split('T')[0];
 
     const query = 'INSERT INTO meeting_notes (title, content, date) VALUES (?, ?, ?)';
     db.query(query, [title, parsedText, formattedDate], (err, result) => {
@@ -43,9 +43,10 @@ exports.addMeetingNote = async (req, res) => {
             id: result.insertId,
             title: title,
             content: parsedText,
-            date: formattedDate, 
+            date: formattedDate,
         });
     });
+    console.log("Sucess adding new note");
 };
 
 
@@ -60,5 +61,4 @@ exports.deleteMeetingNote = (req, res) => {
         res.json({ message: 'Note deleted successfully' });
     });
 };
-
 

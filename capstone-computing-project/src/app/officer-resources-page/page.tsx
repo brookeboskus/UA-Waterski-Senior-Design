@@ -11,11 +11,12 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: any) {
 
     const fetchNotes = async () => {
         try {
-            const response = await axios.get("http://localhost:4000/auth/meetingNotes");
+            const response = await axios.get("http://localhost:4000/auth/meetingnotes");
             const formattedNotes = response.data.map((note: any) => ({
                 ...note,
-                date: new Date(note.date) 
+                date: new Date(note.date)
             }));
+            console.log("Received Notes:", formattedNotes);
             setNotes(formattedNotes);
         } catch (error) {
             console.error("Error fetching meeting notes:", error);
@@ -50,7 +51,7 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: any) {
             await fetchNotes();
 
             setNewNote({ title: '', content: '' });
-            setFile(null); 
+            setFile(null);
             setIsEditing(false);
         } catch (error) {
             console.error('Error adding note:', error);
@@ -60,8 +61,8 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: any) {
 
     const deleteNote = async (id: number) => {
         try {
-            await axios.delete(`http://localhost:4000/auth/meetingNotes/${id}`);
-            fetchNotes(); 
+            await axios.delete(`http://localhost:4000/auth/meetingnotes/${id}`);
+            fetchNotes();
         } catch (error) {
             console.error("Error deleting note:", error);
         }
@@ -134,11 +135,13 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: any) {
                                 )}
                             </div>
 
+
                             {openNoteId === note.id && (
                                 <div className="mt-4 text-gray-800">
-                                    <p>{note.content}</p>
+                                    <pre>{note.content}</pre>
                                 </div>
                             )}
+
                         </div>
                     ))}
                 </div>
