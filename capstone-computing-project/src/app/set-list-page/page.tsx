@@ -9,13 +9,54 @@ interface SetListReservation {
     Lname: string;
 }
 
+const Button = ({ onClick, className, children }) => {
+    return (
+      <button className={className} onClick={onClick}>
+        {children}
+      </button>
+    );
+  };
+
+const SetListButton = ({date, reservationState, reservationName}) => {
+    const handleClick = () => {
+        // In here, we need to get the CWID of the current user
+        alert('Button clicked! Date: ' + date.toString());
+    };
+    
+    if (date < Date.now()) { // If date is before current time, disallow registration
+        return (
+            <div>
+              <Button className="pastReservation" onClick={handleClick}>Past reservation, cannot register</Button>
+            </div>
+        ); 
+    } else if (reservationState == "open") { // open slot
+        return (
+            <div>
+              <Button className="openReservation" onClick={handleClick}>Slot available. Click to reserve</Button>
+            </div>
+        ); 
+    } else if (reservationState == "reservedByYou") { // reserved by current user
+        return (
+            <div>
+              <Button className="reservedByYou" onClick={handleClick}>Slot registered. Click to cancel</Button>
+            </div>
+        ); 
+    } else { // reserved by someone else
+        return (
+            <div>
+              <Button className="reservedBySomeoneElse" onClick={handleClick}>Reserved by {reservationName}</Button>
+            </div>
+        ); 
+    }
+  };
+
 export default function SetListPage() {
     const [reservations, setReservations] = useState<SetListReservation[]>([]); 
     const [loading, setLoading] = useState<boolean>(true);
     const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 
-    function RegisterHandler(registerDate: Date) {
+    function RegisterHandler(registerDate: any) {
         // Handle registration when clicked
         // This will get CWID of current user and make a database query to register for the requested time
         // for now it just pops up an alert box for testing purposes
@@ -58,19 +99,16 @@ export default function SetListPage() {
                 // Set id for right-align styling
                 cells.push(<td key={"timeCell_" + hour + "_" + minutes}className="timeCell">{timeString}</td>);
                 // Initialize empty table cells for later modification
-                for (var day = 1; day <= 5; day++) {
-                    // Doesn't quite work as you'd expect... need to look into this
+                for (var day = 0; day <= 6; day++) {
+
+                    var thisButtonDate = new Date(new Date(currentWeekStartDate).setDate(currentWeekStartDate.getDate() + (day - 1)));
+                    thisButtonDate.setHours(hour);
+                    thisButtonDate.setMinutes(minutes);
+                    thisButtonDate.setSeconds(0);
+                    console.log(thisButtonDate);
                     
-                    //cells.push(<td key={day + "_" + hour + "_" + minutes}><button className="openReservation" onClick={() => alert("Register for {dayNames[day]} at {timeString}")}>Slot available. Click to reserve</button></td>);
-                    // This prints the expected date for the given button...
-                    console.log(new Date(new Date(currentWeekStartDate).setDate(currentWeekStartDate.getDate() + (day - 1))))
-                    // But here, every single button seemingly receives the same time?
-                    // Tried looking into this, apparently the way to fix this is with a closer. Below I've commented out an attempt at this, but this didn't work.
-                    cells.push(<td key={new Date(currentWeekStartDate).setDate(currentWeekStartDate.getDate() + (day - 1))}><button className="openReservation" onClick={() => {RegisterHandler(new Date(new Date(currentWeekStartDate).setDate(currentWeekStartDate.getDate() + (day - 1))))}}>Slot available. Click to reserve</button></td>);
-                    
-                    // () => {
-                    //     cells.push(<td key={day + "_" + hour + "_" + minutes}><button className="openReservation" onClick={() => {RegisterHandler(day)}}>Slot available. Click to reserve</button></td>);
-                    // }
+                    // Here, we should change reservationState depending on results from database
+                    cells.push(<td key={day + "_" + hour + "_" + minutes}><SetListButton date={thisButtonDate} reservationState={"open"} reservationName={"blah"}></SetListButton></td>);
                 }
                 
                 rows.push(<tr key={"row_" + hour + "_" + minutes}>{cells}</tr>);
@@ -96,15 +134,15 @@ export default function SetListPage() {
 
         var optionsList = [];
 
-        var thisWeekMonday = new Date();
-        thisWeekMonday.setDate(today.getDate() - today.getDay() + 1);
-        console.log(thisWeekMonday);
+        var thisWeekSunday = new Date();
+        thisWeekSunday.setDate(today.getDate() - today.getDay());
+        console.log(thisWeekSunday);
 
         for (var i = 0; i < (weekRange * 2) + 1; i++) {
             // Each item in dateRange is an array consisting of a start and end day for the week
             dateRanges.push([new Date(), new Date()]);
-            dateRanges[i][0].setDate(today.getDate() - today.getDay() + (7 * (i - weekRange)) + 1);
-            dateRanges[i][1].setDate(today.getDate() - today.getDay() + (7 * (i - weekRange)) + 5);
+            dateRanges[i][0].setDate(today.getDate() - today.getDay() + (7 * (i - weekRange)));
+            dateRanges[i][1].setDate(today.getDate() - today.getDay() + (7 * (i - weekRange)) + 6);
         }
 
         // Previous (weekRange) weeks
@@ -113,7 +151,7 @@ export default function SetListPage() {
         }
 
         // Current week
-        optionsList.push(<option key="currentWeek" value={thisWeekMonday.getTime() / 1000}>{dateRanges[Math.floor(weekRange / 2) + 1][0].toLocaleDateString("en-US") + " - " + dateRanges[Math.floor(weekRange / 2) + 1][1].toLocaleDateString("en-US")}</option>);
+        optionsList.push(<option key="currentWeek" value={thisWeekSunday.getTime() / 1000}>{dateRanges[Math.floor(weekRange / 2) + 1][0].toLocaleDateString("en-US") + " - " + dateRanges[Math.floor(weekRange / 2) + 1][1].toLocaleDateString("en-US")}</option>);
 
         // Next (weekRange) weeks
         for (var i = 0; i < weekRange; i++) {
@@ -122,7 +160,7 @@ export default function SetListPage() {
 
         // Need to set an onChange handler apparently?
         return (
-            <select id="dateRangeDropDown" defaultValue={thisWeekMonday.getTime() / 1000}>
+            <select id="dateRangeDropDown" defaultValue={thisWeekSunday.getTime() / 1000}>
                 {optionsList}
             </select>
         )
@@ -177,11 +215,13 @@ export default function SetListPage() {
                 <thead>
                     <tr>
                         <th className="timeCell">Time</th>
+                        <th>Sunday</th>
                         <th>Monday</th>
                         <th>Tuesday</th>
                         <th>Wednesday</th>
                         <th>Thursday</th>
                         <th>Friday</th>
+                        <th>Saturday</th>
                     </tr>
                 </thead>
                 {TimeTableBody()}
