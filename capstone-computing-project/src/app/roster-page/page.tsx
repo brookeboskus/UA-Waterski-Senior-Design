@@ -1,4 +1,4 @@
-"use client";
+"use client"; 
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -6,6 +6,7 @@ import Image from 'next/image';
 import BlankPfp from '../img/blankpfp.svg';
 import React from 'react';
 import Select from 'react-select';
+import { useRouter } from 'next/navigation';
 
 const yearOptions = [
     { value: 'Freshman', label: 'Freshman' },
@@ -43,21 +44,55 @@ export default function RosterPage() {
     const [selectedRoles, setSelectedRoles] = useState<any[]>([]);
     const [selectedSortOption, setSelectedSortOption] = useState<any>(null);
     const [flipped, setFlipped] = useState<number | null>(null);
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null); // initial state as null to represent loading
+    const router = useRouter();
+
+    // Show a loading spinner or screen while checking the login status
+    const [isCheckingLogin, setIsCheckingLogin] = useState(true); // Track if checking login status
+
+    // Check if the user is logged in by looking for the token in localStorage
+    useEffect(() => {
+        const checkToken = () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setIsLoggedIn(false);
+                router.push('/login-page'); // Redirect to login page if not logged in
+            } else {
+                setIsLoggedIn(true); // Set logged-in status
+            }
+            setIsCheckingLogin(false); // Done checking login status
+        };
+
+        checkToken(); // Initial check when the component mounts
+    }, [router]);
 
     useEffect(() => {
         const fetchRoster = async () => {
             try {
-                const response = await axios.get<TeamMember[]>('http://localhost:4000/auth/roster');
-                setTeamMembers(response.data);
+                const token = localStorage.getItem('token'); // Get the token from localStorage
+                if (!token) {
+                    throw new Error('No token available');
+                }
+
+                const response = await axios.get<TeamMember[]>('http://localhost:4000/auth/roster', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`, // Send token in request headers
+                    },
+                });
+
+                setTeamMembers(response.data); // Set the team members data
             } catch (error) {
                 console.error('Failed to fetch team roster:', error);
+                router.push('/login-page'); // Redirect to login if fetch fails
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchRoster();
-    }, []);
+        if (isLoggedIn) {
+            fetchRoster(); // Only fetch the roster if the user is logged in
+        }
+    }, [isLoggedIn, router]);
 
     const handleYearChange = (selectedOptions: any) => {
         setSelectedYears(selectedOptions || []);
@@ -66,6 +101,16 @@ export default function RosterPage() {
     const handleRoleChange = (selectedOptions: any) => {
         setSelectedRoles(selectedOptions || []);
     };
+
+    // Only render when login status has been determined
+    if (isCheckingLogin || isLoggedIn === null) {
+        return null; // Don't render anything while checking login status
+    }
+
+    if (!isLoggedIn) {
+        // If not logged in, redirect immediately (without rendering)
+        return null;
+    }
 
     // filters and sorts members based on dropdown selections
     const filteredMembers = teamMembers
@@ -96,7 +141,6 @@ export default function RosterPage() {
             }
             return 0;
         });
-
 
     const handleFlip = (index: number) => {
         setFlipped(index); // flip the card on click

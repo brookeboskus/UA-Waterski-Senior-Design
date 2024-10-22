@@ -1,13 +1,17 @@
+// v3
 "use client";
 
 import Link from 'next/link';
 import Image from 'next/image';
 import HeaderWLAM from './img/headerWLAM.svg';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false); // for mobile menu toggle
     const [isDropdownOpen, setIsDropdownOpen] = useState(false); // for about's dropdown toggle
+    const [isLoggedIn, setIsLoggedIn] = useState(false); // track login status
+    const router = useRouter();
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -21,8 +25,30 @@ export default function Navbar() {
         setIsDropdownOpen(!isDropdownOpen);
     };
 
+    // checks if the user is logged in by looking for the token in localStorage
+    useEffect(() => {
+        const checkToken = () => {
+            const token = localStorage.getItem('token');
+            setIsLoggedIn(!!token);
+        };
+
+        checkToken(); // the initial check when component mounts
+
+        const intervalId = setInterval(checkToken, 1000); // check token every second
+
+        return () => clearInterval(intervalId); // cleans up the interval on component unmount
+    }, []);
+
+    // the log out function
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        setIsLoggedIn(false);
+        router.push('/'); // redirects to login page after logout
+        console.log('Logged out and redirected to home page');
+    };
+
     return (
-        <nav className="bg-[#9E1B32] shadow-md sticky top-0 z-50 w-full">
+        <nav className="bg-[#9E1B32] shadow-md sticky top-0 z-[9999] w-full">
             <div className="container mx-auto flex justify-between items-center px-4 h-20 md:h-14 lg:h-15">
                 {/* where legends are made logo */}
                 <Link href="/">
@@ -31,7 +57,7 @@ export default function Navbar() {
                             src={HeaderWLAM}
                             alt="Header WLAM image"
                             width={250}
-                            height={250} 
+                            height={250}
                             className="object-contain cursor-pointer"
                         />
                     </div>
@@ -71,49 +97,76 @@ export default function Navbar() {
                     <Link href="/" className="text-white text-base hover:text-black hover:underline transition duration-300">
                         Home
                     </Link>
-                    <Link href="/set-list-page" className="text-white text-base hover:text-black hover:underline transition duration-300">
-                        Set List
-                    </Link>
+                    {isLoggedIn && (
+                        <Link href="/set-list-page" className="text-white text-base hover:text-black hover:underline transition duration-300">
+                            Set List
+                        </Link>
+                    )}
 
                     {/* about dropdown */}
-                    <div className='cursor-pointer items-center gap-1 group relative'>
-                        <div className='flex flex-row text-white text-base hover:text-black hover:underline transition duration-300'>
-                            <Link href="/about-me-page" className='flex items-center py-2 px-4'>
+                    <div className="cursor-pointer items-center gap-1 group relative">
+                        <div className="flex flex-row text-white text-base hover:text-black hover:underline transition duration-300">
+                            <Link href="/about-me-page" className="flex items-center py-2 px-4">
                                 About
                                 <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
                                 </svg>
                             </Link>
                         </div>
-                        <ul className='z-50 left-1/2 transform -translate-x-1/2 hidden absolute pt-4 w-40 rounded-lg group-hover:block border-bg-black text-center'>
-                            <li className='border-2 hover:bg-[#9E1B32] hover:text-white text-black bg-white'>
-                                <Link href="/roster-page" className='block py-2 px-4'>
-                                    Roster
-                                </Link>
-                            </li>
-                            <li className='border-2 hover:bg-[#9E1B32] hover:text-white text-black bg-white'>
-                                <Link href="/club-information-page" className='block py-2 px-4'>
-                                    Club Info
-                                </Link>
-                            </li>
-                            <li className='border-2 hover:bg-[#9E1B32] hover:text-white text-black bg-white'>
-                                <Link href="/merch-page" className='block py-2 px-4'>
-                                    Merch
-                                </Link>
-                            </li>
+                        <ul className="z-50 left-1/2 transform -translate-x-1/2 hidden absolute pt-4 w-40 rounded-lg group-hover:block border-bg-black text-center">
+                            {isLoggedIn ? (
+                                <>
+                                    <li className="border-2 hover:bg-[#9E1B32] hover:text-white text-black bg-white">
+                                        <Link href="/roster-page" className="block py-2 px-4">
+                                            Roster
+                                        </Link>
+                                    </li>
+                                    <li className="border-2 hover:bg-[#9E1B32] hover:text-white text-black bg-white">
+                                        <Link href="/club-information-page" className="block py-2 px-4">
+                                            Club Info
+                                        </Link>
+                                    </li>
+                                    <li className="border-2 hover:bg-[#9E1B32] hover:text-white text-black bg-white">
+                                        <Link href="/merch-page" className="block py-2 px-4">
+                                            Merch
+                                        </Link>
+                                    </li>
+                                </>
+                            ) : (
+                                <>
+                                    <li className="border-2 hover:bg-[#9E1B32] hover:text-white text-black bg-white">
+                                        <Link href="/club-information-page" className="block py-2 px-4">
+                                            Club Info
+                                        </Link>
+                                    </li>
+                                    <li className="border-2 hover:bg-[#9E1B32] hover:text-white text-black bg-white">
+                                        <Link href="/merch-page" className="block py-2 px-4">
+                                            Merch
+                                        </Link>
+                                    </li>
+                                </>
+                            )}
                         </ul>
                     </div>
 
-                    <Link href="/officer-resources-page" className="text-white text-base hover:text-black hover:underline transition duration-300">
-                        Officer Resources
-                    </Link>
+                    {isLoggedIn && (
+                        <Link href="/officer-resources-page" className="text-white text-base hover:text-black hover:underline transition duration-300">
+                            Officer Resources
+                        </Link>
+                    )}
                 </div>
 
-                {/* login button */}
+                {/* login/logout button */}
                 <div className="hidden md:block">
-                    <Link href="/login-page" className="bg-white-500 text-white text-base py-2 px-4 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300">
-                        Login
-                    </Link>
+                    {isLoggedIn ? (
+                        <button onClick={handleLogout} className="bg-white-500 text-white text-base py-2 px-4 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300">
+                            Log Out
+                        </button>
+                    ) : (
+                        <Link href="/login-page" className="bg-white-500 text-white text-base py-2 px-4 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300">
+                            Login
+                        </Link>
+                    )}
                 </div>
             </div>
 
@@ -122,9 +175,11 @@ export default function Navbar() {
                 <Link href="/" className="block text-white text-lg hover:text-black transition duration-300" onClick={closeMenu}>
                     Home
                 </Link>
-                <Link href="/set-list-page" className="block text-white text-lg hover:text-black transition duration-300" onClick={closeMenu}>
-                    Set List
-                </Link>
+                {isLoggedIn && (
+                    <Link href="/set-list-page" className="block text-white text-lg hover:text-black transition duration-300" onClick={closeMenu}>
+                        Set List
+                    </Link>
+                )}
 
                 {/* about dropdown for mobile */}
                 <div>
@@ -136,33 +191,62 @@ export default function Navbar() {
                     </button>
                     {isDropdownOpen && (
                         <ul className="space-y-2 mt-2 bg-[#D67D7D]">
-                            <li>
-                                <Link href="/roster-page" className="block text-white text-lg hover:text-black transition duration-300" onClick={closeMenu}>
-                                    Roster
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/club-information-page" className="block text-white text-lg hover:text-black transition duration-300" onClick={closeMenu}>
-                                    Club Info
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/merch-page" className="block text-white text-lg hover:text-black transition duration-300" onClick={closeMenu}>
-                                    Merch
-                                </Link>
-                            </li>
+                            {isLoggedIn ? (
+                                <>
+                                    <li>
+                                        <Link href="/roster-page" className="block text-white text-lg hover:text-black transition duration-300" onClick={closeMenu}>
+                                            Roster
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link href="/club-information-page" className="block text-white text-lg hover:text-black transition duration-300" onClick={closeMenu}>
+                                            Club Info
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link href="/merch-page" className="block text-white text-lg hover:text-black transition duration-300" onClick={closeMenu}>
+                                            Merch
+                                        </Link>
+                                    </li>
+                                </>
+                            ) : (
+                                <>
+                                    <li>
+                                        <Link href="/club-information-page" className="block text-white text-lg hover:text-black transition duration-300" onClick={closeMenu}>
+                                            Club Info
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link href="/merch-page" className="block text-white text-lg hover:text-black transition duration-300" onClick={closeMenu}>
+                                            Merch
+                                        </Link>
+                                    </li>
+                                </>
+                            )}
                         </ul>
                     )}
                 </div>
 
-                <Link href="/officer-resources-page" className="block text-white text-lg hover:text-black transition duration-300" onClick={closeMenu}>
-                    Officer Resources
-                </Link>
-                <Link href="/login-page" className="block text-white text-lg hover:text-black transition duration-300" onClick={closeMenu}>
-                    Login
-                </Link>
+                {isLoggedIn && (
+                    <Link href="/officer-resources-page" className="block text-white text-lg hover:text-black transition duration-300" onClick={closeMenu}>
+                        Officer Resources
+                    </Link>
+                )}
+
+                <div className="hidden md:block">
+                    {isLoggedIn ? (
+                        // Added "pl-8" to push the button to the left
+                        <button onClick={handleLogout} className="bg-white-500 text-white text-base py-2 px-4 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300 pl-8">
+                            Log Out
+                        </button>
+                    ) : (
+                        <Link href="/login-page" className="bg-white-500 text-white text-base py-2 px-4 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300">
+                            Login
+                        </Link>
+                    )}
+                </div>
+
             </div>
         </nav>
-
     );
 }
