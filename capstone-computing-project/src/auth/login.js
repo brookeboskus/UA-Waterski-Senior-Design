@@ -17,7 +17,7 @@ module.exports.login = async (req, res) => {
         const user = results[0];
         const validPassword = await bcrypt.compare(password, user.Password);
         if (!validPassword) {
-            return res.status(400).json({ message: 'Invalid password' });
+            return res.status(400).json({ message: 'Invalid password or email' }); //we know it's invalid password but to not let malicious hackers know
         }
 
         // generates a JWT token and send it to the client //need to figure out how to use .env and bring it in here
