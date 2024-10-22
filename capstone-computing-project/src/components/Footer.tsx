@@ -22,12 +22,7 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 md:gap-y-0 md:space-x-4 text-sm md:text-base">
                     {/* Left Column*/}
                     <div className="flex flex-col">
-                        <a
-                            href="tel:1234567890"
-                            className="text-white hover:text-black transition duration-300 hover:underline"
-                        >
-                            Phone: 123-456-7890
-                        </a>
+                        
                         <a
                             href="https://www.instagram.com/alabama_waterski/"
                             target="_blank"
@@ -46,13 +41,7 @@ export default function Footer() {
                         >
                             Email: skibama18@gmail.com
                         </a>
-                        <a
-                            href="https://www.facebook.com/AlabamaWaterskiTeam/"
-                            target="_blank"
-                            className="text-white hover:text-black transition duration-300 hover:underline"
-                        >
-                            Link to our Facebook
-                        </a>
+                        
                     </div>
                 </div>
             </div>

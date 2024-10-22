@@ -198,26 +198,20 @@ export default function Home() {
                                     src={image8B}
                                     alt="Image from 8B"
                                     
-                                    className="h-200px w-200px md:h-250px md:w-250px lg:h-300px lg:w-300px max-w-full object-contain"
+                                    className="h-200px w-200px md:h-250px md:w-250px lg:h-300px lg:w-300px max-w-full object-contain mr-20"
                                 />
                             )}
                         </Link>
                              {/* About Us snippet */}
-                             <div className = "flex flex-col md:flex-row items-center md:items-start mt-8">
-                                <p className="text-lg md:text-1xl mb-12 text-black max-w-3xl mx-auto">
+                             <div className = "flex flex-col md:flex-row items-center justify-center md:items-start min-h-screen mt-8">
+                                <p className="text-lg md:text-1xl mb-12 text-black max-w-3xl mx-auto mt-20 mb-200">
                                     {textFrom8C ? textFrom8C : "Loading content..."}
                                 </p>
 
                              </div>
                         </div>
 
-                        {/* Temp Button */}
-                        <a
-                            href="#projects"
-                            className="bg-[#9E1B32] text-white px-6 py-3 md:px-8 md:py-4 rounded-full hover:bg-[#3d857c] transition duration-300"
-                        >
-                            TEMP
-                        </a>
+                    
                     </div>
                 </section>
 
