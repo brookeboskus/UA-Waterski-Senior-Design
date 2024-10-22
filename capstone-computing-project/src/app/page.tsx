@@ -21,21 +21,21 @@ export default function Home() {
         // fetching data from Google Sheets
         const getData = async () => {
             try {
-                const data = await fetchSheetData();
+                const data = await fetchSheetData("HomePage");
                 if (data) {
                     const imageUrls = data
                         .filter((row) => row[0]?.startsWith("http"))
                         .map((row) => row[0]);
                     setSheetData(imageUrls);
 
-                    const image8BUrl = data[7][1];
+                    const image8BUrl = data[7]?.[1];
                     if (image8BUrl?.startsWith("http")){
                         setImage8B(image8BUrl);
                     } else {
                         setImage8B(null);
                     }
                     
-                    const textFrom8C = data[7][2];
+                    const textFrom8C = data[7]?.[2];
                     if (textFrom8C){
                         setTextFrom8C(textFrom8C);
                     } else {

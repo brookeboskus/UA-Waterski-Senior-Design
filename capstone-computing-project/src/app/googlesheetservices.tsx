@@ -7,8 +7,9 @@ const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 const SPREADSHEET_ID = process.env.NEXT_PUBLIC_SPREADSHEET_ID;
 const RANGE = process.env.NEXT_PUBLIC_RANGE;
 
-export const fetchSheetData = async (): Promise<string[][] | null> => {
+export const fetchSheetData = async (sheetName: string): Promise<string[][] | null> => {
     try {
+        const RANGE = `${sheetName}`;
         const response = await axios.get(
             `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${RANGE}?key=${API_KEY}`
         );
