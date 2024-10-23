@@ -1,5 +1,5 @@
 
-// v4
+// v5
 "use client";
 
 import Link from 'next/link';
@@ -15,7 +15,6 @@ import axios from 'axios';
 interface TeamMember {
     PfpImage: string;
 }
-
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false); // for mobile menu toggle
     const [isDropdownOpen, setIsDropdownOpen] = useState(false); // for about's dropdown toggle
@@ -35,7 +34,7 @@ export default function Navbar() {
         setIsDropdownOpen(!isDropdownOpen);
     };
 
-    // fetch the profile data for the PfpImage, too lazy to make another .js for just the PfpImage
+    // fetch the profile data for the PfpImage
     const fetchProfile = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -78,6 +77,7 @@ export default function Navbar() {
             }
         } else {
             setIsLoggedIn(false);
+            setProfilePic(defaultPfpImage); // reset profile picture when not logged in
         }
     };
 
@@ -99,6 +99,7 @@ export default function Navbar() {
     const handleLogout = () => {
         localStorage.removeItem('token');
         setIsLoggedIn(false);
+        setProfilePic(defaultPfpImage); // reset profile image to default bc user logged out
         router.push('/'); // redirects to login page after logout
         console.log('Logged out and redirected to home page');
     };
@@ -108,6 +109,15 @@ export default function Navbar() {
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
+
+    // fetches profile every time `isLoggedIn` changes
+    useEffect(() => {
+        if (isLoggedIn) {
+            fetchProfile(); 
+        } else {
+            setProfilePic(defaultPfpImage);
+        }
+    }, [isLoggedIn]);
 
     return (
         <nav className="bg-[#9E1B32] shadow-md sticky top-0 z-[9999] w-full">
@@ -251,7 +261,6 @@ export default function Navbar() {
                     </div>
                 )}
 
-
                 {/* sidebar */}
                 {isSidebarOpen && (
                     <div
@@ -335,7 +344,6 @@ export default function Navbar() {
 
                 <div className="hidden md:block">
                     {isLoggedIn ? (
-                        // Added "pl-8" to push the button to the left
                         <button onClick={handleLogout} className="bg-white-500 text-white text-base py-2 px-4 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300 pl-8">
                             Log Out
                         </button>
