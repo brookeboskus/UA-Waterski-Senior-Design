@@ -73,18 +73,19 @@ export default function MerchPage() {
             {/* Section for smaller images */}
             <div className="flex flex-wrap justify-center space-x-20 mt-10">
                 {!error && sheetData && sheetData.length > 0 && sheetData.slice(0).map((imageUrl, index) => (
-                    <Link key={index} href="/" className="flex-shrink-0 w-1/4">
+                    <Link key={index} href="/" className="flex flex-col flex-shrink-0 w-1/4">
                         
                         <img 
                             src={imageUrl} 
                             alt={`Image ${index + 2}`} 
-                            className="h-100px w-100px md:h-150px md:w-150px object-contain" // Adjust sizes as needed
+                            className="h-full w-auto object-contain" // Adjust sizes as needed
                         />
-
+                    <div className="flex flex-col">
                         <p className="mt-2 text-md text-black">{merchLabels [index + 1]}</p> {/* Label under each image */}
                         <p className="mt-2 mb-20 text-md text-black">{merchPrices [index + 1]}</p> {/* Label under each image */}
-
+                    </div>
                     </Link>
+                    
                 ))}
             </div>
 
