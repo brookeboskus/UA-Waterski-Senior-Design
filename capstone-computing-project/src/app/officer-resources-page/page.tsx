@@ -1,9 +1,10 @@
-// //a. Depth Chart (i. Skier rankings for our team) b. fundraising addresses c. alumni contacts d. meeting notes
+// // //a. Depth Chart (i. Skier rankings for our team) b. fundraising addresses c. alumni contacts d. meeting notes
 
 
 "use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: any) {
     const [newNote, setNewNote] = useState({ title: "", content: "" });
@@ -141,6 +142,51 @@ export default function OfficerResourcesPage() {
     const [openSection, setOpenSection] = useState<string | null>(null);
     const [isEditing, setIsEditing] = useState(false);
     const [notes, setNotes] = useState<any[]>([]);
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+    const [isOfficer, setIsOfficer] = useState<boolean>(false); 
+    const [isCheckingLogin, setIsCheckingLogin] = useState(true);
+    const router = useRouter();
+
+    // chck user if they are logged in + they are officer or not
+    useEffect(() => {
+        const checkLoginStatus = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                router.push('/login-page'); // not logged in
+                return;
+            }
+
+            try {
+                const response = await axios.get('http://localhost:4000/auth/profile', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                const { MemberType } = response.data;
+                setIsLoggedIn(true);
+                setIsOfficer(MemberType === 'Officer'); 
+                if (MemberType !== 'Officer') {
+                    router.push('/'); // not officer, then go back to homepage
+                }
+            } catch (error) {
+                console.error('Error fetching user profile:', error);
+                router.push('/login-page'); 
+            } finally {
+                setIsCheckingLogin(false); 
+            }
+        };
+
+        checkLoginStatus(); 
+    }, [router]);
+
+    if (isCheckingLogin) { // if checking login status, then return null
+        return null;
+    }
+
+    if (!isLoggedIn || !isOfficer) { // if not logged in or not an officer, then return null
+        return null; 
+    }
 
     const toggleSection = (section: string) => {
         setOpenSection(openSection === section ? null : section);
