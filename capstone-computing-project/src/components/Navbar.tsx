@@ -1,4 +1,5 @@
-// v3
+
+// v4
 "use client";
 
 import Link from 'next/link';
@@ -7,15 +8,19 @@ import HeaderWLAM from './img/headerWLAM.svg';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from "jwt-decode"; // needed this for token expiration!!
-import defaultPfpImage from './img/DefaultPFP.svg';
-// import ProtectedProfilePage from '../app/protected-pages/protected-profile-edit-page/page';
 import ProtectedProfilePage from '../app/protected-pages/protected-profile-page/page';
+import defaultPfpImage from './img/DefaultPFP.svg';
+import axios from 'axios';
 
+interface TeamMember {
+    PfpImage: string;
+}
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false); // for mobile menu toggle
     const [isDropdownOpen, setIsDropdownOpen] = useState(false); // for about's dropdown toggle
     const [isLoggedIn, setIsLoggedIn] = useState(false); // track login status
+    const [profilePic, setProfilePic] = useState<string>(defaultPfpImage); // default pfp image
     const router = useRouter();
 
     const toggleMenu = () => {
@@ -30,6 +35,26 @@ export default function Navbar() {
         setIsDropdownOpen(!isDropdownOpen);
     };
 
+    // fetch the profile data for the PfpImage, too lazy to make another .js for just the PfpImage
+    const fetchProfile = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+
+            const response = await axios.get<TeamMember>('http://localhost:4000/auth/profile', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            setProfilePic(response.data.PfpImage || defaultPfpImage); // use profile image or default if not available
+        } catch (error) {
+            console.error('Failed to fetch profile picture:', error);
+            setProfilePic(defaultPfpImage); // fallback to default image
+        }
+    };
 
     const checkTokenExpiration = () => {
         const token = localStorage.getItem('token');
@@ -44,6 +69,7 @@ export default function Navbar() {
                     console.log('Token expired. Redirected to login page.');
                 } else {
                     setIsLoggedIn(true);
+                    fetchProfile(); // fetch the profile image if token is valid
                 }
             } catch (error) {
                 console.error('Error decoding token:', error);
@@ -54,9 +80,8 @@ export default function Navbar() {
             setIsLoggedIn(false);
         }
     };
-    // checks if the user is logged in by looking for the token in localStorage
-    useEffect(() => {
 
+    useEffect(() => {
         checkTokenExpiration(); // checks token expiration when component mounts
 
         const checkToken = () => {
@@ -69,10 +94,8 @@ export default function Navbar() {
         const intervalId = setInterval(checkToken, 1000); // check token every second
 
         return () => clearInterval(intervalId); // cleans up the interval on component unmount
-
     }, []);
 
-    // the log out function
     const handleLogout = () => {
         localStorage.removeItem('token');
         setIsLoggedIn(false);
@@ -209,32 +232,38 @@ export default function Navbar() {
                 </div>
 
                 {isLoggedIn && (
-                    <div className="fixed top-0 p-2 z-[9999]" style={{ top: '-5px', right: '10px' }}>
+                    <div
+                        className={`fixed top-0 p-2 ${isSidebarOpen ? 'z-0' : 'z-[9999]'}`}
+                        style={{ top: '-5px', right: '10px' }}
+                    >
                         {/* open the sidebar */}
                         <button onClick={toggleSidebar} className="p-0 m-0" style={{ width: 'auto', height: 'auto' }}>
                             <Link href="#">
                                 <Image
-                                    src={defaultPfpImage}
-                                    alt="Header WLAM image"
+                                    src={profilePic}
+                                    alt="Profile picture"
                                     width={50}
                                     height={50}
-                                    className="object-contain h-12 w-12"
+                                    className="object-cover h-12 w-12 rounded-full border-2 border-white shadow-lg hover:shadow-xl transition-shadow duration-300"
                                 />
                             </Link>
                         </button>
                     </div>
                 )}
-                {/* Sidebar */}
+
+
+                {/* sidebar */}
                 {isSidebarOpen && (
-
-                    <div className="fixed right-5 h-full bg-white" style={{ top: '15px', width: '27%' }}>
-
+                    <div
+                        className="fixed right-5 h-full bg-white z-[9998]"  // Adjust z-index for sidebar
+                        style={{ top: '15px', width: '27%' }}
+                    >
                         <button onClick={toggleSidebar} className="p-2 text-black">Close</button>
                         {/* render the profile page content */}
                         <ProtectedProfilePage />
-                        
                     </div>
                 )}
+
                 {/* background overlay when sidebar is open */}
                 {isSidebarOpen && <div className="fixed inset-0 bg-black opacity-40 z-40" style={{ top: '15px', width: '71.5%' }} onClick={toggleSidebar} />}
 
