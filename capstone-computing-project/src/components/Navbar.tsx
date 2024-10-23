@@ -32,11 +32,11 @@ export default function Navbar() {
         if (token) {
             try {
                 const decoded = jwtDecode(token);
-                const currentTime = Date.now() / 1000; 
+                const currentTime = Date.now() / 1000;
                 if (decoded.exp < currentTime) {
-                    localStorage.removeItem('token'); 
+                    localStorage.removeItem('token');
                     setIsLoggedIn(false);
-                    router.push('/login-page'); 
+                    router.push('/login-page');
                     console.log('Token expired. Redirected to login page.');
                 } else {
                     setIsLoggedIn(true);
@@ -65,6 +65,7 @@ export default function Navbar() {
         const intervalId = setInterval(checkToken, 1000); // check token every second
 
         return () => clearInterval(intervalId); // cleans up the interval on component unmount
+
     }, []);
 
     // the log out function

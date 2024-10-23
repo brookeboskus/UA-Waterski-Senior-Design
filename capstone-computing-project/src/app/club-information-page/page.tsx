@@ -21,6 +21,21 @@ export default function ClubInfo() {
                 <p className="text-gray-700 leading-relaxed">
                     The executive body consists of a President, Vice-President, Secretary, Treasurer, and Team Captain. Each role holds specific responsibilities critical to the team’s success.
                 </p>
+                <br></br>
+                <br></br>
+                <p className="pl-4"><span style={{ color: '#F11C1C' }}>The President </span>will be appointed by a majority vote of the Water Ski Team members. The President must have held a previous leadership position. They shall preside at all team meetings. He/she is responsible for calling all team meetings and may call unscheduled meetings at their discretion. They are the mediator between the Water Ski Team and Sports Clubs and SGA and are expected to abide by all rules and attend mandatory meetings and trainings. President is responsible for being in communication with Lyman about what needs to be done out at the lake and delegating to team members. </p>
+                <br></br>
+                <p className="pl-4"><span style={{ color: '#F11C1C' }}>Vice President </span>, during the absence and/or inability of the President to render and perform his duties or exercise his powers, the same will be performed and exercised by the Vice President, and when so acting, he shall have all the powers and be subject to all the responsibilities hereby given to or imposed upon the President. </p>
+                <br></br>
+                <p className="pl-4"><span style={{ color: '#F11C1C' }}>Secretary </span>shall keep all records of absences, excused, points and meeting minutes. The Secretary will send the meeting overview to members who missed the meeting with an excused absence. The Secretary maintains a Google document with each member’s points for the semester.  The secretary will promote the Water Ski Team via social media and community outreach and volunteer opportunities as well as t-shirts and stickers. </p>
+                <br></br>
+                <p className="pl-4"><span style={{ color: '#F11C1C' }}>Treasurer </span>is the chief financial officer of the team and shall be responsible for the control of funds. The treasurer shall present and maintain a budget each year for the finances of the team and its operations. The treasurer is responsible for collecting team dues at the first meeting of every new season/semester. In addition, the treasurer will seek out fund raising opportunities for the team. </p>
+                <br></br>
+                <p className="pl-4"><span style={{ color: '#F11C1C' }}>Team Captain </span>is in charge of representing the team at all tournaments and events and coordinating with the officials before each tournament. If any tournament decisions or changes must be made the Captain will vote and represent the team in its entirety. The Team Captain must confirm the ski team roster before each tournament. Team captain must keep track of practice records during tournament season.</p>
+                <br></br>
+                <div className="border-t border-[#9E1B32] border-2 my-2"></div>
+                <br></br>
+                <p className="pl-4">In the event of a vacancy within the Executive Body, a new member will be elected, by popular vote, at the next scheduled team meeting.</p>
             </div>
         ),
         bilaws: (
@@ -214,7 +229,7 @@ export default function ClubInfo() {
 
                         <div className="space-y-2 bg-white shadow-md p-4 rounded-lg border-l-4 border-[#9E1B32] hover:shadow-lg transition-shadow duration-300">
                             <h3 className="text-2xl font-bold text-[#EA3131]">Article XI—Amendments</h3>
-                            <p className="pl-4">An amendment to this constitution may be presented by any member of the team. The amendment shall be presented by distributing a copy of said amendment to each member of the team. An amendment can be ratified if 2/3 of the team approves the amendment by popular vote, after at least one week’s time is left for consideration. 
+                            <p className="pl-4">An amendment to this constitution may be presented by any member of the team. The amendment shall be presented by distributing a copy of said amendment to each member of the team. An amendment can be ratified if 2/3 of the team approves the amendment by popular vote, after at least one week’s time is left for consideration.
 
                             </p>
                         </div>
