@@ -9,7 +9,8 @@ export default function MerchPage() {
     const [loading, setLoading] = useState(true);
     const [sheetData, setSheetData] = useState<string[] | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const currentIndex = 4;
+    const [merchLabels, setMerchLabels] = useState<string[]>([]);
+    const [merchPrices, setMerchPrices] = useState<string[]>([]);
 
     useEffect(() => {
         // fetching data from Google Sheets
@@ -22,6 +23,12 @@ export default function MerchPage() {
                         .filter((row) => row[0]?.startsWith("http"))
                         .map((row) => row[0])
                     setSheetData(imageUrls.slice(1));
+
+                    const merchLabels = data.map((row) => row[1]);
+                    setMerchLabels(merchLabels.slice(3));
+
+                    const merchPrices = data.map((row) => row[2]);
+                    setMerchPrices(merchPrices.slice(3));
 
                     console.log(sheetData);
 
@@ -50,7 +57,7 @@ export default function MerchPage() {
 
     return (
         <div className="min-h-screen flex flex-col">
-
+            
             <Link href = "/">
                 {image2A && (
                     <img 
@@ -61,9 +68,11 @@ export default function MerchPage() {
                 )}
             </Link>
 
+            <h2 className="text-2xl font-bold text-center mt-10" style={{ color: '#9E1B32' }}>Alabama Waterski Team Merchandise</h2>
+
             {/* Section for smaller images */}
-            <div className="flex flex-wrap justify-center space-x-4 mt-4">
-                {!error && sheetData && sheetData.length > 0 && sheetData.slice(1).map((imageUrl, index) => (
+            <div className="flex flex-wrap justify-center space-x-20 mt-10">
+                {!error && sheetData && sheetData.length > 0 && sheetData.slice(0).map((imageUrl, index) => (
                     <Link key={index} href="/" className="flex-shrink-0 w-1/4">
                         
                         <img 
@@ -72,8 +81,8 @@ export default function MerchPage() {
                             className="h-100px w-100px md:h-150px md:w-150px object-contain" // Adjust sizes as needed
                         />
 
-                        <p className="mt-2 text-sm text-black">Image Label {index + 1}</p> {/* Label under each image */}
-                        <p className="mt-2 text-sm text-black">Price {index + 1}</p> {/* Label under each image */}
+                        <p className="mt-2 text-md text-black">{merchLabels [index + 1]}</p> {/* Label under each image */}
+                        <p className="mt-2 mb-20 text-md text-black">{merchPrices [index + 1]}</p> {/* Label under each image */}
 
                     </Link>
                 ))}
