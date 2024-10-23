@@ -1,6 +1,27 @@
+require('dotenv').config();
+
 const express = require('express');
 const router = express.Router();
 const db = require('../../db');
+const jwt = require('jsonwebtoken');  
+
+const authenticateJWT = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];  
+
+    if (token == null) {
+        return res.status(401).json({ message: 'Unauthorized, no token provided' });
+    }
+
+    jwt.verify(token, 'your_jwt_secret', (err, user) => {
+        if (err) {
+            return res.status(403).json({ message: 'Forbidden, invalid token' });
+        }
+        req.user = user;  // attaches user information to request
+        next();
+    });
+    
+};
 
 module.exports.getSetList = async (req, res) => {
     const { startDate, endDate } = req.query;
@@ -23,12 +44,64 @@ module.exports.getSetList = async (req, res) => {
     });
 };
 
+// module.exports.profile = [
+//     authenticateJWT,  // runs the JWT middleware to authenticate the user
+//     async (req, res) => {
+//         const { email } = req.user;  // return email from decoded token
+
+//         db.query('SELECT Fname, Lname, GradYear, MemberType, Major, Phone, Email, CWID, PfpImage FROM User WHERE Email = ?', [email], (err, results) => {
+//             if (err) {
+//                 return res.status(500).json({ message: 'Database error' });
+//             }
+
+//             if (results.length === 0) {
+//                 return res.status(404).json({ message: 'User not found' });
+//             }
+
+//             let user = results[0];
+
+//             // need this for blob to appear right on website
+//             if (user.PfpImage) {
+//                 const base64Image = user.PfpImage.toString('base64');
+//                 user.PfpImage = `data:image/png;base64,${base64Image}`;
+//             }
+
+//             res.status(200).json(user);  // returns the user
+//         });
+//     }
+// ];
+
 module.exports.registerReservation = async (req, res) => {
-    // Authenticate user is logged in before allowing reservation
-    const { date } = req.body;
-    
-    // In here, we need to get CWID for user
     console.log("Attempt to reserve!");
+
+    // In here, we need to get CWID for user. Get this from token
+
+    const { reserveDate } = req.body;
+    // Authenticate user is logged in before allowing reservation
+    // console.log(req.body);
+    // Getting back 403 on this. Issue with my token?
+    authenticateJWT(req, res, () => {
+        // console.log("Validated successfully");
+        // const { token } = req.body;
+        // console.log("User info");
+        // console.log(req.user);
+        const cwid = req.user.id;
+        console.log(cwid);
+        console.log(reserveDate);
+        const date = new Date(reserveDate);
+        console.log(date.toString());
+        const dateString = date.getFullYear() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":00";
+        // return error if date already exists
+        const query = 'INSERT INTO SetList (Date, CWID) VALUES (?, ?)';
+        db.query(query, [dateString, cwid], (err, result) => {
+            if (err) {
+                return res.status(500).json({ error: 'Failed to make reservation' });
+            }
+            res.json({ message: 'Inserted successfully' });
+        });
+    });
+    
+    
     res.status(200);
 };
 

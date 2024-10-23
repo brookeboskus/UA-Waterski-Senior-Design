@@ -56,14 +56,46 @@ const Button = ({ onClick, className, children }) => {
     };
 */
 
+const makeReservation = async (date) => {
+    try {
+
+        const token = localStorage.getItem('token'); 
+        if (!token) {
+            throw new Error('No token found'); 
+        }
+
+        console.log("Token: " + token);
+
+        const payload = {
+            'reserveDate': date
+        };
+
+        const response = await axios.post('http://localhost:4000/auth/setlist', payload, {
+            headers: {
+                Authorization: `Bearer ${token}` // send the token in the request headers to authenticate
+            },
+        });
+
+        console.log('Data Recieved for setList:', response.data);
+
+    } catch (error) {
+        console.error('Failed to make reservation', error);
+        alert("An error occurred when trying to make a reservation. Please contact the site administrator.");
+    } finally {
+
+    }
+};
+
 const SetListButton = ({date, reservationState, reservationName}) => {
     const handleClick = () => {
         // In here, we need to get the CWID of the current user, or maybe we can handle that by passing the JWT token?
         // alert('Button clicked! Date: ' + date.toString());
         if (reservationState == "open" && date >= Date.now()) {
             alert("Attempting to make reservation...");
+            makeReservation(date.getTime());
             // If registration fails, show alert stating that registration failed
             // Whether registration fails or succeeds, refresh page to show new data
+            window.location.reload();
         } else if (reservationState == "reservedByYou" && date >= Date.now()) {
             alert("Attempting to cancel reservation...");
             // If cancellation fails, show alert stating that cancellation failed
@@ -165,7 +197,7 @@ export default function SetListPage() {
                 // Initialize empty table cells for later modification
                 for (var day = 0; day <= 6; day++) {
 
-                    var thisButtonDate = new Date(new Date(currentWeekStartDate).setDate(currentWeekStartDate.getDate() + (day - 1)));
+                    var thisButtonDate = new Date(new Date(currentWeekStartDate).setDate(currentWeekStartDate.getDate() + (day)));
                     thisButtonDate.setHours(hour);
                     thisButtonDate.setMinutes(minutes);
                     thisButtonDate.setSeconds(0);
@@ -280,6 +312,13 @@ export default function SetListPage() {
         )
     }
     
+    const todayDate = new Date();
+    const dateRangeStart = new Date();
+    dateRangeStart.setDate(todayDate.getDate() - todayDate.getDay() - 14);
+    const dateRangeEnd = new Date();
+    dateRangeEnd.setDate(todayDate.getDate() - todayDate.getDay() + 20);
+    const dateRangeStartString = dateRangeStart.getFullYear().toString() + "-" + (dateRangeStart.getMonth() + 1).toString() + "-" + dateRangeStart.getDate().toString() + " 00:00:00";
+    const dateRangeEndString = dateRangeEnd.getFullYear().toString() + "-" + (dateRangeEnd.getMonth() + 1).toString() + "-" + dateRangeEnd.getDate().toString() + " 23:59:59";
     // Get reservations on page load
     useEffect(() => {
         const fetchSetList = async () => {
@@ -294,8 +333,8 @@ export default function SetListPage() {
                         Authorization: `Bearer ${token}` // send the token in the request headers to authenticate
                     },
                     params: {
-                        startDate: '2024-3-14 00:00:00',
-                        endDate: '2024-10-20 23:59:59'
+                        startDate: dateRangeStartString,
+                        endDate: dateRangeEndString
                     }
                 });
 
@@ -325,7 +364,7 @@ export default function SetListPage() {
         timesSet.add(new Date(reservations[i].Date).getTime());
     }
 
-    console.log(timesSet);
+    // console.log(timesSet);
     
     return (
         <div className="relative bg-white rounded-[5px]">
