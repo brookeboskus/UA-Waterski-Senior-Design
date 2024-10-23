@@ -2,11 +2,27 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './setlist_styles.css'
+import Image from 'next/image';
+import BlankPfp from '../img/blankpfp.svg';
+import { useRouter } from 'next/navigation';
 
 interface SetListReservation {
     Date: string;
     Fname: string;
     Lname: string;
+    Email: string;
+    RegisteredBy: string;
+}
+
+interface TeamMember {
+    Fname: string;
+    Lname: string;
+    GradYear: string;
+    MemberType: string;
+    Major: string;
+    PfpImage: string;
+    Email?: string;
+    Phone?: string;
 }
 
 const Button = ({ onClick, className, children }) => {
@@ -16,45 +32,6 @@ const Button = ({ onClick, className, children }) => {
       </button>
     );
 };
-
-// Taken from officers resource page. Use this to get an idea of how to add and delete reservations
-/*
-    const addNewNote = async () => {
-        if (!newNote.title) {
-            alert('Please add a title for the note');
-            return;
-        }
-
-        try {
-            const noteData = {
-                title: newNote.title,
-                content: newNote.content || '',
-            };
-
-            await axios.post('http://localhost:4000/auth/meetingnotes', noteData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            await fetchNotes();
-
-            setNewNote({ title: '', content: '' });
-            setIsEditing(false);
-        } catch (error) {
-            console.error('Error adding note:', error);
-        }
-    };
-
-    const deleteNote = async (id: number) => {
-        try {
-            await axios.delete(`http://localhost:4000/auth/meetingnotes/${id}`);
-            fetchNotes();
-        } catch (error) {
-            console.error("Error deleting note:", error);
-        }
-    };
-*/
 
 const makeReservation = async (date) => {
     try {
@@ -86,6 +63,41 @@ const makeReservation = async (date) => {
     }
 };
 
+const deleteReservation = async (date) => {
+    try {
+
+        const token = localStorage.getItem('token'); 
+        if (!token) {
+            throw new Error('No token found'); 
+        }
+
+        console.log("Token: " + token);
+
+        const payload = {
+            headers: {
+                Authorization: `Bearer ${token}` // send the token in the request headers to authenticate
+            },
+            data: {
+                'reserveDate': date
+            }
+        };
+
+        const response = await axios.delete('http://localhost:4000/auth/setlist', payload);
+
+        console.log('Data Recieved for setList:', response.data);
+
+    } catch (error) {
+        console.error('Failed to delete reservation', error);
+        alert("An error occurred when trying to delete your reservation. Please contact the site administrator.");
+    } finally {
+
+    }
+};
+
+const ShowUserInfo = ({userInfo}) => {
+
+};
+
 const SetListButton = ({date, reservationState, reservationName}) => {
     const handleClick = () => {
         // In here, we need to get the CWID of the current user, or maybe we can handle that by passing the JWT token?
@@ -98,8 +110,10 @@ const SetListButton = ({date, reservationState, reservationName}) => {
             window.location.reload();
         } else if (reservationState == "reservedByYou" && date >= Date.now()) {
             alert("Attempting to cancel reservation...");
+            deleteReservation(date.getTime());
             // If cancellation fails, show alert stating that cancellation failed
             // Whether registration fails or succeeds, refresh page to show new data
+            window.location.reload();
         } else if (reservationState == "reservedBySomeoneElse") {
             alert("Attempting to show person's profile info...");
             // Show a model of some kind to display persons info. Look at how roster page shows info and use that
@@ -113,10 +127,10 @@ const SetListButton = ({date, reservationState, reservationName}) => {
                   <Button className="reservedBySomeoneElse" onClick={handleClick}>Past reservation, reserved by {reservationName}</Button>
                 </div>
             ); 
-        } else if (reservationState == "reservedBySomeoneElse") {
+        } else if (reservationState == "reservedByYou") {
             return (
                 <div>
-                  <Button className="reservedByYou" onClick={handleClick}>Past reservation, reserved by you</Button>
+                  <Button className="reservedBySomeoneElse" onClick={handleClick}>Past reservation, reserved by you</Button>
                 </div>
             ); 
         } else {
@@ -135,7 +149,7 @@ const SetListButton = ({date, reservationState, reservationName}) => {
     } else if (reservationState == "reservedByYou") { // reserved by current user
         return (
             <div>
-              <Button className="reservedByYou" onClick={handleClick}>Slot registered. Click to cancel</Button>
+              <Button className="reservedByYou" onClick={handleClick}>Slot registered by you. Click to cancel</Button>
             </div>
         ); 
     } else { // reserved by someone else
@@ -149,18 +163,62 @@ const SetListButton = ({date, reservationState, reservationName}) => {
 
 export default function SetListPage() {
     const [reservations, setReservations] = useState<SetListReservation[]>([]);
+    const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null); // initial state as null to represent loading
     const [loading, setLoading] = useState<boolean>(true);
+    const [isCheckingLogin, setIsCheckingLogin] = useState(true); // Track if checking login status
     const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const timesSet = new Set();
+    const router = useRouter();
 
+    // Check if the user is logged in by looking for the token in localStorage
+    useEffect(() => {
+        const checkToken = () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setIsLoggedIn(false);
+                router.push('/login-page'); // Redirect to login page if not logged in
+            } else {
+                setIsLoggedIn(true); // Set logged-in status
+            }
+            setIsCheckingLogin(false); // Done checking login status
+        };
 
-    function RegisterHandler(registerDate: any) {
-        // Handle registration when clicked
-        // This will get CWID of current user and make a database query to register for the requested time
-        // for now it just pops up an alert box for testing purposes
-        alert(registerDate);
-    }
+        checkToken(); // Initial check when the component mounts
+    }, [router]);
+    
+    // Getting the roster
+    useEffect(() => {
+        const fetchRoster = async () => {
+            try {
+                const token = localStorage.getItem('token'); // Get the token from localStorage
+                if (!token) {
+                    throw new Error('No token available');
+                }
 
+                const response = await axios.get<TeamMember[]>('http://localhost:4000/auth/roster', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`, // Send token in request headers
+                    },
+                });
+
+                setTeamMembers(response.data); // Set the team members data
+            } catch (error) {
+                console.error('Failed to fetch team roster:', error);
+                router.push('/login-page'); // Redirect to login if fetch fails
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (isLoggedIn) {
+            fetchRoster(); // Only fetch the roster if the user is logged in
+        }
+    }, [isLoggedIn, router]);
+
+    console.log(teamMembers);
+
+    // Sets up the TimeTable
     function TimeTableBody() {
         var rows = [];
 
@@ -173,8 +231,7 @@ export default function SetListPage() {
 
         var currentWeekStartDate = new Date(Number(currentWeekDropDown.value) * 1000);
 
-        //console.log("Current week: " + currentWeekStartDate);
-
+        // From 7am to 5pm
         for (var hour = 7; hour <= 17; hour++) {
             // From :00 to :45
             for (var minutes = 0; minutes < 60; minutes += 15) {
@@ -205,7 +262,20 @@ export default function SetListPage() {
 
                     // Here, we should change reservationState depending on results from database
                     if (timesSet.has(thisButtonDate.getTime())) {
-                        cells.push(<td key={day + "_" + hour + "_" + minutes}><SetListButton date={thisButtonDate} reservationState={"reservedBySomeoneElse"} reservationName={"blah"}></SetListButton></td>);
+                        // Find reservation
+                        // This is potentially slow depending on the amount of reservations in the 5 week time span. Maybe try to optimize later
+                        for (var i = 0; i < reservations.length; i++) {
+                            if (new Date(reservations[i].Date).getTime() == thisButtonDate.getTime()) {
+                                // console.log(reservations[i].RegisteredBy);
+                                if (reservations[i].RegisteredBy == "you") {
+                                    cells.push(<td key={day + "_" + hour + "_" + minutes}><SetListButton date={thisButtonDate} reservationState={"reservedByYou"} reservationName={reservations[i].Fname + " " + reservations[i].Lname}></SetListButton></td>);
+                                } else {
+                                    cells.push(<td key={day + "_" + hour + "_" + minutes}><SetListButton date={thisButtonDate} reservationState={"reservedBySomeoneElse"} reservationName={reservations[i].Fname + " " + reservations[i].Lname}></SetListButton></td>);
+                                }
+                                break;
+                            }
+                        }
+                        // cells.push(<td key={day + "_" + hour + "_" + minutes}><SetListButton date={thisButtonDate} reservationState={"reservedBySomeoneElse"} reservationName={"blah"}></SetListButton></td>);
                     } else {
                         cells.push(<td key={day + "_" + hour + "_" + minutes}><SetListButton date={thisButtonDate} reservationState={"open"} reservationName={"blah"}></SetListButton></td>);
                     }
@@ -370,6 +440,40 @@ export default function SetListPage() {
         <div className="relative bg-white rounded-[5px]">
 
             {TimeTableInit()}
+            <div>
+                <div className="flip-card-front bg-white shadow-md hover:shadow-lg rounded-lg overflow-hidden h-full">
+                    <div className="p-4">
+                        {/* Profile Picture */}
+                        <div className="relative w-24 h-24 mb-4 mx-auto">
+                            <Image
+                                src={BlankPfp}
+                                alt={`${"member.Fname"} ${"member.Lname"}'s profile image`}
+                                layout="fill"
+                                objectFit="cover"
+                                className="rounded-full border shadow"
+                            />
+                        </div>
+                        <h2 className="text-xl font-semibold text-gray-900 mb-1 text-center">
+                            {"member.Fname"} {"member.Lname"}
+                        </h2>
+                        <p className="text-gray-700">
+                            <strong>Member Type:</strong> {"member.MemberType"}
+                        </p>
+                        <p className="text-gray-700">
+                            <strong>Graduation Year:</strong> {"member.GradYear"}
+                        </p>
+                        <p className="text-gray-700">
+                            <strong>Major:</strong> {"member.Major" || 'N/A'}
+                        </p>
+                        <p className="text-gray-700">
+                            <strong>Email:</strong> {"member.Email" || 'N/A'}
+                        </p>
+                        <p className="text-gray-700">
+                            <strong>Phone:</strong> {"member.Phone" || 'N/A'}
+                        </p>
+                    </div>
+                </div>
+            </div>
 
             {/* Conditionally render the team member info only if teamMember is defined */}
             {firstReservation ? (

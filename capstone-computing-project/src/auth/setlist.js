@@ -29,19 +29,39 @@ module.exports.getSetList = async (req, res) => {
     // Check if the dates are correctly passed through
     console.log('Start Date:', startDate, 'End Date:', endDate);
 
-    // Dynamically pass the startDate and endDate from the request instead of hardcoded values
-    db.query('SELECT SetList.Date, User.Fname, User.Lname FROM User INNER JOIN SetList ON User.CWID = SetList.CWID WHERE SetList.Date >= ? AND SetList.Date < ?', 
-    //b.query('SELECT SetList.Date, SetList.CWID FROM SetList INNER JOIN ON User.CWID = SetList.CWID WHERE SetList.Date >= ? AND SetList.Date < ?',
-    [startDate, endDate], 
-    (err, results) => {
-        if (err) {
-            return res.status(500).json({ message: 'Database error' });
-        }
+    authenticateJWT(req, res, () => {
+        // console.log("Validated successfully");
+        // const { token } = req.body;
+        // console.log("User info");
+        // console.log(req.user);
+        const cwid = req.user.id;
+        console.log(cwid);
 
-        // Log the results to verify how many rows are returned
-        console.log('Results from DB:', results);
-        res.status(200).json(results);
+        // Dynamically pass the startDate and endDate from the request instead of hardcoded values
+        db.query('SELECT SetList.Date, User.Fname, User.Lname, User.Email, User.CWID FROM User INNER JOIN SetList ON User.CWID = SetList.CWID WHERE SetList.Date >= ? AND SetList.Date < ?', 
+            [startDate, endDate], 
+            (err, results) => {
+                if (err) {
+                    return res.status(500).json({ message: 'Database error' });
+                }
+        
+                // Log the results to verify how many rows are returned
+                console.log('Results from DB:', results);
+                // For each item in results, determine if it was registered by the given user
+                for (var i = 0; i < results.length; i++) {
+                    console.log(results[i].CWID);
+                    if (results[i].CWID == cwid) {
+                        results[i].RegisteredBy = "you";
+                    } else {
+                        results[i].RegisteredBy = "someoneElse";
+                    }
+                    delete results[i].CWID;
+                }
+                console.log('After delete:', results);
+                res.status(200).json(results);
+        });
     });
+    
 };
 
 // module.exports.profile = [
@@ -75,10 +95,10 @@ module.exports.registerReservation = async (req, res) => {
     console.log("Attempt to reserve!");
 
     // In here, we need to get CWID for user. Get this from token
-
+    console.log(req.body);
     const { reserveDate } = req.body;
     // Authenticate user is logged in before allowing reservation
-    // console.log(req.body);
+    
     // Getting back 403 on this. Issue with my token?
     authenticateJWT(req, res, () => {
         // console.log("Validated successfully");
@@ -107,7 +127,37 @@ module.exports.registerReservation = async (req, res) => {
 
 module.exports.deleteReservation = async (req, res) => {
     // Authenticate user is logged in before allowing reservation
-    const { date } = req.params;
+    console.log("INSIDE deleteReservation");
+    const { reserveDate } = req.body;
+
+    // Authenticate user is logged in before allowing reservation
+    // console.log(req.body);
+    authenticateJWT(req, res, () => {
+        // console.log("Validated successfully");
+        // const { token } = req.body;
+        // console.log("User info");
+        // console.log(req.user);
+
+        // NOTE: Should add check in API here to disallow registrations before current time.
+
+        const cwid = req.user.id;
+        console.log(cwid);
+        console.log(reserveDate);
+        const date = new Date(reserveDate);
+        console.log(date.toString());
+        const dateString = date.getFullYear() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":00";
+        // return error if date already exists
+        const query = 'DELETE FROM SetList WHERE (Date = ? AND CWID = ?)';
+        db.query(query, [dateString, cwid], (err, result) => {
+            if (err) {
+                return res.status(500).json({ error: 'Failed to delete reservation' });
+            }
+            res.json({ message: 'Deleted successfully' });
+        });
+    });
+    
+    
+    res.status(200);
 
     // In here, we need to get CWID for user
     console.log("Attempt to delete!");
