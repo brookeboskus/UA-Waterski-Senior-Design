@@ -15,11 +15,14 @@ import axios from 'axios';
 interface TeamMember {
     PfpImage: string;
 }
+
+
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false); // for mobile menu toggle
     const [isDropdownOpen, setIsDropdownOpen] = useState(false); // for about's dropdown toggle
     const [isLoggedIn, setIsLoggedIn] = useState(false); // track login status
     const [profilePic, setProfilePic] = useState<string>(defaultPfpImage); // default pfp image
+    const [isProfileFetched, setIsProfileFetched] = useState<boolean>(false); // track if profile image has been fetched
     const router = useRouter();
 
     const toggleMenu = () => {
@@ -49,9 +52,11 @@ export default function Navbar() {
             });
 
             setProfilePic(response.data.PfpImage || defaultPfpImage); // use profile image or default if not available
+            setIsProfileFetched(true); // mark profile as fetched
         } catch (error) {
             console.error('Failed to fetch profile picture:', error);
             setProfilePic(defaultPfpImage); // fallback to default image
+            setIsProfileFetched(true); // mark profile as fetched even in case of error
         }
     };
 
@@ -78,6 +83,7 @@ export default function Navbar() {
         } else {
             setIsLoggedIn(false);
             setProfilePic(defaultPfpImage); // reset profile picture when not logged in
+            setIsProfileFetched(false); // reset profile fetched state
         }
     };
 
@@ -100,6 +106,7 @@ export default function Navbar() {
         localStorage.removeItem('token');
         setIsLoggedIn(false);
         setProfilePic(defaultPfpImage); // reset profile image to default bc user logged out
+        setIsProfileFetched(false); // reset profile fetched state
         router.push('/'); // redirects to login page after logout
         console.log('Logged out and redirected to home page');
     };
@@ -116,6 +123,7 @@ export default function Navbar() {
             fetchProfile(); 
         } else {
             setProfilePic(defaultPfpImage);
+            setIsProfileFetched(false); // reset profile fetched state on logout
         }
     }, [isLoggedIn]);
 
@@ -241,7 +249,7 @@ export default function Navbar() {
                     )}
                 </div>
 
-                {isLoggedIn && (
+                {isLoggedIn && isProfileFetched && ( // only show after profile is fetched
                     <div
                         className={`fixed top-0 p-2 ${isSidebarOpen ? 'z-0' : 'z-[9999]'}`}
                         style={{ top: '-5px', right: '10px' }}
@@ -264,7 +272,7 @@ export default function Navbar() {
                 {/* sidebar */}
                 {isSidebarOpen && (
                     <div
-                        className="fixed right-5 h-full bg-white z-[9998]"  // Adjust z-index for sidebar
+                        className="fixed right-5 h-full bg-white z-[9998]"  
                         style={{ top: '15px', width: '27%' }}
                     >
                         <button onClick={toggleSidebar} className="p-2 text-black">Close</button>
