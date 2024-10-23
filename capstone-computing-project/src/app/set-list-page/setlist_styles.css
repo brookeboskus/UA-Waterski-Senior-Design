@@ -83,7 +83,7 @@ tr:nth-child(even) td:nth-child(1) {
 }
 
 .pastReservation {
-    background-color: #969696;
+    background-color: #bdbdbd;
     border: none;
     color: black;
     padding: 10px 15px;

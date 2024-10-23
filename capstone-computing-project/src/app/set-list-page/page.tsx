@@ -4,7 +4,7 @@ import axios from 'axios';
 import './setlist_styles.css'
 
 interface SetListReservation {
-    ReservationDate: string;
+    Date: string;
     Fname: string;
     Lname: string;
 }
@@ -15,20 +15,85 @@ const Button = ({ onClick, className, children }) => {
         {children}
       </button>
     );
-  };
+};
+
+// Taken from officers resource page. Use this to get an idea of how to add and delete reservations
+/*
+    const addNewNote = async () => {
+        if (!newNote.title) {
+            alert('Please add a title for the note');
+            return;
+        }
+
+        try {
+            const noteData = {
+                title: newNote.title,
+                content: newNote.content || '',
+            };
+
+            await axios.post('http://localhost:4000/auth/meetingnotes', noteData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            await fetchNotes();
+
+            setNewNote({ title: '', content: '' });
+            setIsEditing(false);
+        } catch (error) {
+            console.error('Error adding note:', error);
+        }
+    };
+
+    const deleteNote = async (id: number) => {
+        try {
+            await axios.delete(`http://localhost:4000/auth/meetingnotes/${id}`);
+            fetchNotes();
+        } catch (error) {
+            console.error("Error deleting note:", error);
+        }
+    };
+*/
 
 const SetListButton = ({date, reservationState, reservationName}) => {
     const handleClick = () => {
-        // In here, we need to get the CWID of the current user
-        alert('Button clicked! Date: ' + date.toString());
+        // In here, we need to get the CWID of the current user, or maybe we can handle that by passing the JWT token?
+        // alert('Button clicked! Date: ' + date.toString());
+        if (reservationState == "open" && date >= Date.now()) {
+            alert("Attempting to make reservation...");
+            // If registration fails, show alert stating that registration failed
+            // Whether registration fails or succeeds, refresh page to show new data
+        } else if (reservationState == "reservedByYou" && date >= Date.now()) {
+            alert("Attempting to cancel reservation...");
+            // If cancellation fails, show alert stating that cancellation failed
+            // Whether registration fails or succeeds, refresh page to show new data
+        } else if (reservationState == "reservedBySomeoneElse") {
+            alert("Attempting to show person's profile info...");
+            // Show a model of some kind to display persons info. Look at how roster page shows info and use that
+        }
     };
     
     if (date < Date.now()) { // If date is before current time, disallow registration
-        return (
-            <div>
-              <Button className="pastReservation" onClick={handleClick}>Past reservation, cannot register</Button>
-            </div>
-        ); 
+        if (reservationState == "reservedBySomeoneElse") {
+            return (
+                <div>
+                  <Button className="reservedBySomeoneElse" onClick={handleClick}>Past reservation, reserved by {reservationName}</Button>
+                </div>
+            ); 
+        } else if (reservationState == "reservedBySomeoneElse") {
+            return (
+                <div>
+                  <Button className="reservedByYou" onClick={handleClick}>Past reservation, reserved by you</Button>
+                </div>
+            ); 
+        } else {
+            return (
+                <div>
+                  <Button className="pastReservation" onClick={handleClick}>Past reservation, cannot register</Button>
+                </div>
+            ); 
+        }
     } else if (reservationState == "open") { // open slot
         return (
             <div>
@@ -48,12 +113,13 @@ const SetListButton = ({date, reservationState, reservationName}) => {
             </div>
         ); 
     }
-  };
+};
 
 export default function SetListPage() {
-    const [reservations, setReservations] = useState<SetListReservation[]>([]); 
+    const [reservations, setReservations] = useState<SetListReservation[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const timesSet = new Set();
 
 
     function RegisterHandler(registerDate: any) {
@@ -75,7 +141,7 @@ export default function SetListPage() {
 
         var currentWeekStartDate = new Date(Number(currentWeekDropDown.value) * 1000);
 
-        console.log("Current week: " + currentWeekStartDate);
+        //console.log("Current week: " + currentWeekStartDate);
 
         for (var hour = 7; hour <= 17; hour++) {
             // From :00 to :45
@@ -84,8 +150,6 @@ export default function SetListPage() {
                 if (hour == 17 && minutes != 0) {
                     continue;
                 }
-
-                console.log("row_" + hour + "_" + minutes)
 
                 var cells = [];
                 
@@ -105,10 +169,14 @@ export default function SetListPage() {
                     thisButtonDate.setHours(hour);
                     thisButtonDate.setMinutes(minutes);
                     thisButtonDate.setSeconds(0);
-                    console.log(thisButtonDate);
-                    
+                    thisButtonDate.setMilliseconds(0);
+
                     // Here, we should change reservationState depending on results from database
-                    cells.push(<td key={day + "_" + hour + "_" + minutes}><SetListButton date={thisButtonDate} reservationState={"open"} reservationName={"blah"}></SetListButton></td>);
+                    if (timesSet.has(thisButtonDate.getTime())) {
+                        cells.push(<td key={day + "_" + hour + "_" + minutes}><SetListButton date={thisButtonDate} reservationState={"reservedBySomeoneElse"} reservationName={"blah"}></SetListButton></td>);
+                    } else {
+                        cells.push(<td key={day + "_" + hour + "_" + minutes}><SetListButton date={thisButtonDate} reservationState={"open"} reservationName={"blah"}></SetListButton></td>);
+                    }
                 }
                 
                 rows.push(<tr key={"row_" + hour + "_" + minutes}>{cells}</tr>);
@@ -123,7 +191,52 @@ export default function SetListPage() {
 
     }
 
-    function weekDropDown() {
+    function TimeTable() {
+        return (
+            <table id="setListTable">
+                <thead>
+                    <tr>
+                        <th className="timeCell">Time</th>
+                        <th>Sunday</th>
+                        <th>Monday</th>
+                        <th>Tuesday</th>
+                        <th>Wednesday</th>
+                        <th>Thursday</th>
+                        <th>Friday</th>
+                        <th>Saturday</th>
+                    </tr>
+                </thead>
+                {TimeTableBody()}
+            </table>
+        )
+    }
+
+    const TimeTableWithDropDown = ({values, labels}) => {
+        if (values == null || labels == null) {
+            return;
+        }
+        //console.log(values);
+        var options = [];
+        for (var i = 0; i < values.length; i++) {
+            options.push([values[i], labels[i]]);
+        }
+        const [selectedOption, setSelectedOption] = useState(options[2][0]);
+        return (
+            <div id="timeTableDiv">
+                <select
+                    id="dateRangeDropDown"
+                    value={selectedOption}
+                    onChange={e => setSelectedOption(e.target.value)}>
+                    {options.map(o => (
+                    <option key={o[0]} value={o[0]}>{o[1]}</option>
+                    ))}
+                </select>
+                {TimeTable()}
+            </div>
+        );
+    };
+
+    function TimeTableInit() {
         var today = new Date();
         // weekRange is the number of weeks shown before and after the current week.
         // Setting this to 2 will result in a list that containts the two weeks before the current week, the current week, and the next two weeks after the current week
@@ -131,42 +244,43 @@ export default function SetListPage() {
         var weekRange = 2;
 
         var dateRanges = [];
-
-        var optionsList = [];
+        var values = [];
+        var labels = [];
 
         var thisWeekSunday = new Date();
         thisWeekSunday.setDate(today.getDate() - today.getDay());
-        console.log(thisWeekSunday);
+        //console.log(thisWeekSunday);
 
         for (var i = 0; i < (weekRange * 2) + 1; i++) {
             // Each item in dateRange is an array consisting of a start and end day for the week
             dateRanges.push([new Date(), new Date()]);
             dateRanges[i][0].setDate(today.getDate() - today.getDay() + (7 * (i - weekRange)));
             dateRanges[i][1].setDate(today.getDate() - today.getDay() + (7 * (i - weekRange)) + 6);
+            labels.push(dateRanges[i][0].toLocaleDateString("en-US") + " - " + dateRanges[i][1].toLocaleDateString("en-US"));
+            values.push(dateRanges[i][0].getTime() / 1000);
         }
+        //console.log(values);
+        //console.log(labels);
 
-        // Previous (weekRange) weeks
-        for (var i = 0; i < weekRange; i++) {
-            optionsList.push(<option key={"prevWeek" + i} value={dateRanges[i][0].getTime() / 1000}>{dateRanges[i][0].toLocaleDateString("en-US") + " - " + dateRanges[i][1].toLocaleDateString("en-US")}</option>);
-        }
+        // // Previous (weekRange) weeks
+        // for (var i = 0; i < weekRange; i++) {
+        //     optionsList.push(<option key={"prevWeek" + i} value={dateRanges[i][0].getTime() / 1000}>{dateRanges[i][0].toLocaleDateString("en-US") + " - " + dateRanges[i][1].toLocaleDateString("en-US")}</option>);
+        // }
 
-        // Current week
-        optionsList.push(<option key="currentWeek" value={thisWeekSunday.getTime() / 1000}>{dateRanges[Math.floor(weekRange / 2) + 1][0].toLocaleDateString("en-US") + " - " + dateRanges[Math.floor(weekRange / 2) + 1][1].toLocaleDateString("en-US")}</option>);
+        // // Current week
+        // optionsList.push(<option key="currentWeek" value={thisWeekSunday.getTime() / 1000}>{dateRanges[Math.floor(weekRange / 2) + 1][0].toLocaleDateString("en-US") + " - " + dateRanges[Math.floor(weekRange / 2) + 1][1].toLocaleDateString("en-US")}</option>);
 
-        // Next (weekRange) weeks
-        for (var i = 0; i < weekRange; i++) {
-            optionsList.push(<option key={"nextWeek" + i} value={dateRanges[i + weekRange + 1][0].getTime() / 1000}>{dateRanges[i + weekRange + 1][0].toLocaleDateString("en-US") + " - " + dateRanges[i + weekRange + 1][1].toLocaleDateString("en-US")}</option>);
-        }
+        // // Next (weekRange) weeks
+        // for (var i = 0; i < weekRange; i++) {
+        //     optionsList.push(<option key={"nextWeek" + i} value={dateRanges[i + weekRange + 1][0].getTime() / 1000}>{dateRanges[i + weekRange + 1][0].toLocaleDateString("en-US") + " - " + dateRanges[i + weekRange + 1][1].toLocaleDateString("en-US")}</option>);
+        // }
 
-        // Need to set an onChange handler apparently?
         return (
-            <select id="dateRangeDropDown" defaultValue={thisWeekSunday.getTime() / 1000}>
-                {optionsList}
-            </select>
+            <TimeTableWithDropDown values={values} labels={labels}></TimeTableWithDropDown>
         )
     }
     
-
+    // Get reservations on page load
     useEffect(() => {
         const fetchSetList = async () => {
             try {
@@ -198,34 +312,26 @@ export default function SetListPage() {
 
         fetchSetList();
     }, []);
-// lake sign up sheet
+
     if (loading) {
         return <div className="text-black">Loading...</div>; // Render a loading message while data is being fetched
     }
 
     const firstReservation = reservations.length > 0 ? reservations[0] : undefined;
     const secondReservation = reservations.length > 0 ? reservations[1] : undefined;
+
+    for (var i = 0; i < reservations.length; i++) {
+        console.log("Adding " + new Date(reservations[i].Date).getTime() + " to dates!");
+        timesSet.add(new Date(reservations[i].Date).getTime());
+    }
+
+    console.log(timesSet);
     
     return (
         <div className="relative bg-white rounded-[5px]">
-            {/* NOTE!!! On change of weekDropDown, we need to re-render TimeTableBody so that buttons contain correct values, or perhaps look into another way to handle this */}
-            {weekDropDown()}
-            
-            <table id="setListTable">
-                <thead>
-                    <tr>
-                        <th className="timeCell">Time</th>
-                        <th>Sunday</th>
-                        <th>Monday</th>
-                        <th>Tuesday</th>
-                        <th>Wednesday</th>
-                        <th>Thursday</th>
-                        <th>Friday</th>
-                        <th>Saturday</th>
-                    </tr>
-                </thead>
-                {TimeTableBody()}
-            </table>
+
+            {TimeTableInit()}
+
             {/* Conditionally render the team member info only if teamMember is defined */}
             {firstReservation ? (
                 <>
