@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const db = require('../../db'); 
+const db = require('../../db');
 
 module.exports.login = async (req, res) => {
     const { email, password } = req.body;
@@ -20,8 +20,7 @@ module.exports.login = async (req, res) => {
             return res.status(400).json({ message: 'Invalid password or email' }); //we know it's invalid password but to not let malicious hackers know
         }
 
-        // generates a JWT token and send it to the client //need to figure out how to use .env and bring it in here
-        const token = jwt.sign({ id: user.CWID, email: user.Email }, 'your_jwt_secret', { expiresIn: '1h' });
+        const token = jwt.sign({ id: user.CWID, email: user.Email }, 'your_jwt_secret', { expiresIn: '1h' }); //tested with 10s and it worked to expire token and redirect to login
 
         res.status(200).json({ message: 'Login successful', token });
     });

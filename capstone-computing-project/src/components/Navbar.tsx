@@ -6,6 +6,7 @@ import Image from 'next/image';
 import HeaderWLAM from './img/headerWLAM.svg';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { jwtDecode } from "jwt-decode"; // needed this for token expiration!!
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false); // for mobile menu toggle
@@ -25,8 +26,35 @@ export default function Navbar() {
         setIsDropdownOpen(!isDropdownOpen);
     };
 
+
+    const checkTokenExpiration = () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                const currentTime = Date.now() / 1000; 
+                if (decoded.exp < currentTime) {
+                    localStorage.removeItem('token'); 
+                    setIsLoggedIn(false);
+                    router.push('/login-page'); 
+                    console.log('Token expired. Redirected to login page.');
+                } else {
+                    setIsLoggedIn(true);
+                }
+            } catch (error) {
+                console.error('Error decoding token:', error);
+                localStorage.removeItem('token');
+                setIsLoggedIn(false);
+            }
+        } else {
+            setIsLoggedIn(false);
+        }
+    };
     // checks if the user is logged in by looking for the token in localStorage
     useEffect(() => {
+
+        checkTokenExpiration(); // Check token expiration when component mounts
+
         const checkToken = () => {
             const token = localStorage.getItem('token');
             setIsLoggedIn(!!token);
