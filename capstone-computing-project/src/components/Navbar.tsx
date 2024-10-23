@@ -1,5 +1,4 @@
-
-// v5
+// v6
 "use client";
 
 import Link from 'next/link';
@@ -14,8 +13,8 @@ import axios from 'axios';
 
 interface TeamMember {
     PfpImage: string;
+    MemberType: string; 
 }
-
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false); // for mobile menu toggle
@@ -23,6 +22,7 @@ export default function Navbar() {
     const [isLoggedIn, setIsLoggedIn] = useState(false); // track login status
     const [profilePic, setProfilePic] = useState<string>(defaultPfpImage); // default pfp image
     const [isProfileFetched, setIsProfileFetched] = useState<boolean>(false); // track if profile image has been fetched
+    const [memberType, setMemberType] = useState<string>(''); // track user's member type
     const router = useRouter();
 
     const toggleMenu = () => {
@@ -37,7 +37,7 @@ export default function Navbar() {
         setIsDropdownOpen(!isDropdownOpen);
     };
 
-    // fetch the profile data for the PfpImage
+    // fetch the profile data including PfpImage and MemberType
     const fetchProfile = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -52,9 +52,10 @@ export default function Navbar() {
             });
 
             setProfilePic(response.data.PfpImage || defaultPfpImage); // use profile image or default if not available
+            setMemberType(response.data.MemberType); // store member type (Officer or Athlete)
             setIsProfileFetched(true); // mark profile as fetched
         } catch (error) {
-            console.error('Failed to fetch profile picture:', error);
+            console.error('Failed to fetch profile data:', error);
             setProfilePic(defaultPfpImage); // fallback to default image
             setIsProfileFetched(true); // mark profile as fetched even in case of error
         }
@@ -107,6 +108,7 @@ export default function Navbar() {
         setIsLoggedIn(false);
         setProfilePic(defaultPfpImage); // reset profile image to default bc user logged out
         setIsProfileFetched(false); // reset profile fetched state
+        setMemberType(''); // reset member type
         router.push('/'); // redirects to login page after logout
         console.log('Logged out and redirected to home page');
     };
@@ -120,10 +122,11 @@ export default function Navbar() {
     // fetches profile every time `isLoggedIn` changes
     useEffect(() => {
         if (isLoggedIn) {
-            fetchProfile(); 
+            fetchProfile();
         } else {
             setProfilePic(defaultPfpImage);
             setIsProfileFetched(false); // reset profile fetched state on logout
+            setMemberType(''); // reset member type on logout
         }
     }, [isLoggedIn]);
 
@@ -229,7 +232,7 @@ export default function Navbar() {
                         </ul>
                     </div>
 
-                    {isLoggedIn && (
+                    {isLoggedIn && memberType === 'Officer' && ( // only show Officer Resources if user is an officer
                         <Link href="/officer-resources-page" className="text-white text-base hover:text-black hover:underline transition duration-300">
                             Officer Resources
                         </Link>
@@ -272,7 +275,7 @@ export default function Navbar() {
                 {/* sidebar */}
                 {isSidebarOpen && (
                     <div
-                        className="fixed right-5 h-full bg-white z-[9998]"  
+                        className="fixed right-5 h-full bg-white z-[9998]"
                         style={{ top: '15px', width: '27%' }}
                     >
                         <button onClick={toggleSidebar} className="p-2 text-black">Close</button>
@@ -283,8 +286,6 @@ export default function Navbar() {
 
                 {/* background overlay when sidebar is open */}
                 {isSidebarOpen && <div className="fixed inset-0 bg-black opacity-40 z-40" style={{ top: '15px', width: '71.5%' }} onClick={toggleSidebar} />}
-
-
             </div>
 
             {/* mobile menu */}
@@ -344,7 +345,7 @@ export default function Navbar() {
                     )}
                 </div>
 
-                {isLoggedIn && (
+                {isLoggedIn && memberType === 'Officer' && ( // only show Officer Resources for officers in mobile view
                     <Link href="/officer-resources-page" className="block text-white text-lg hover:text-black transition duration-300" onClick={closeMenu}>
                         Officer Resources
                     </Link>
