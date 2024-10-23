@@ -7,6 +7,10 @@ import HeaderWLAM from './img/headerWLAM.svg';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from "jwt-decode"; // needed this for token expiration!!
+import defaultPfpImage from './img/DefaultPFP.svg';
+// import ProtectedProfilePage from '../app/protected-pages/protected-profile-edit-page/page';
+import ProtectedProfilePage from '../app/protected-pages/protected-profile-page/page';
+
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false); // for mobile menu toggle
@@ -53,7 +57,7 @@ export default function Navbar() {
     // checks if the user is logged in by looking for the token in localStorage
     useEffect(() => {
 
-        checkTokenExpiration(); // Check token expiration when component mounts
+        checkTokenExpiration(); // checks token expiration when component mounts
 
         const checkToken = () => {
             const token = localStorage.getItem('token');
@@ -76,6 +80,12 @@ export default function Navbar() {
         console.log('Logged out and redirected to home page');
     };
 
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false); // state to manage sidebar visibility
+
+    const toggleSidebar = () => {
+        setIsSidebarOpen(!isSidebarOpen);
+    };
+
     return (
         <nav className="bg-[#9E1B32] shadow-md sticky top-0 z-[9999] w-full">
             <div className="container mx-auto flex justify-between items-center px-4 h-20 md:h-14 lg:h-15">
@@ -87,7 +97,7 @@ export default function Navbar() {
                             alt="Header WLAM image"
                             width={250}
                             height={250}
-                            className="object-contain cursor-pointer"
+                            className="object-contain cursor-pointer "
                         />
                     </div>
                 </Link>
@@ -197,6 +207,38 @@ export default function Navbar() {
                         </Link>
                     )}
                 </div>
+
+                {isLoggedIn && (
+                    <div className="fixed top-0 p-2 z-[9999]" style={{ top: '-5px', right: '10px' }}>
+                        {/* open the sidebar */}
+                        <button onClick={toggleSidebar} className="p-0 m-0" style={{ width: 'auto', height: 'auto' }}>
+                            <Link href="#">
+                                <Image
+                                    src={defaultPfpImage}
+                                    alt="Header WLAM image"
+                                    width={50}
+                                    height={50}
+                                    className="object-contain h-12 w-12"
+                                />
+                            </Link>
+                        </button>
+                    </div>
+                )}
+                {/* Sidebar */}
+                {isSidebarOpen && (
+
+                    <div className="fixed right-5 h-full bg-white" style={{ top: '15px', width: '27%' }}>
+
+                        <button onClick={toggleSidebar} className="p-2 text-black">Close</button>
+                        {/* render the profile page content */}
+                        <ProtectedProfilePage />
+                        
+                    </div>
+                )}
+                {/* background overlay when sidebar is open */}
+                {isSidebarOpen && <div className="fixed inset-0 bg-black opacity-40 z-40" style={{ top: '15px', width: '71.5%' }} onClick={toggleSidebar} />}
+
+
             </div>
 
             {/* mobile menu */}
