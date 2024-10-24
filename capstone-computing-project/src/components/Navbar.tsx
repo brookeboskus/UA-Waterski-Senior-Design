@@ -241,6 +241,9 @@ export default function Navbar() {
 
                 {/* login/logout button */}
                 <div className="hidden md:block">
+                    <Link href="/contact-us-page" className="bg-white-500 text-white text-base py-2 px-4 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300">
+                        Contact Us
+                    </Link>
                     {isLoggedIn ? (
                         <button onClick={handleLogout} className="bg-white-500 text-white text-base py-2 px-4 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300">
                             Log Out
