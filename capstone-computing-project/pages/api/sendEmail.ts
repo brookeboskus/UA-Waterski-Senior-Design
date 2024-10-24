@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
-        const { name, email, message } = req.body;
+        const { name, email, message, role } = req.body;
 
         if (!name || !email || !message) {
             return res.status(400).json({ error: 'Please fill out all fields.' });
@@ -22,12 +22,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             from: process.env.GMAIL_EMAIL,
             to: process.env.GMAIL_EMAIL,
             subject: `New message from ${name}`,
-            text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
+            text: `Name: ${name}\nEmail: ${email}\nRole: ${role}\nMessage: ${message}`,
             html: `
                 <h3>You have a new message from your website contact form</h3>
                 <ul>
                     <li><strong>Name:</strong> ${name}</li>
                     <li><strong>Email:</strong> ${email}</li>
+                    <li><strong>Role:</strong> ${role}</li>
                 </ul>
                 <p><strong>Message:</strong><br>${message}</p>
             `,
@@ -42,6 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             html: `
                 <h3>Hello ${name},</h3>
                 <p>Thank you for getting in touch! Here’s a copy of your message:</p>
+                <p><strong>Role:</strong> ${role}</p>
                 <p><strong>Message:</strong><br>${message}</p>
                 <p>I'll get back to you as soon as I can.</p>
                 <p>Best regards,<br>Jeongbin Son</p>
