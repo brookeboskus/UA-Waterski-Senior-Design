@@ -10,8 +10,8 @@ export default function ContactUs () {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const apiUrl = process.env.NODE_ENV === 'development'
-            ? 'https://localhost:3001/api/sendEmail'
+        const apiUrl = process.env.NODE_ENV === 'production'
+            ? 'http://localhost:4000/api/sendEmail'
             : '/api/sendEmail';
 
         try {
