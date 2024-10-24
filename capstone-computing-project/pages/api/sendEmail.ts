@@ -10,19 +10,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         const transporter = nodemailer.createTransport({
-            host: 'smtp.mail.me.com',
-            port: 587,
-            secure: false, 
+            service: 'gmail',
             auth: {
-                user: process.env.ICLOUD_EMAIL,
-                pass: process.env.ICLOUD_APP_PASSWORD,
+                user: process.env.GMAIL_EMAIL,
+                pass: process.env.GMAIL_APP_PASSWORD,
             },
         });
 
         // how the email sent to me is formatted in my inbox
         const mailOptionsToOwner = {
-            from: process.env.ICLOUD_EMAIL,
-            to: process.env.ICLOUD_EMAIL,
+            from: process.env.GMAIL_EMAIL,
+            to: process.env.GMAIL_EMAIL,
             subject: `New message from ${name}`,
             text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
             html: `
@@ -37,7 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         // how the email sent to the user is formatted
         const mailOptionsToUser = {
-            from: process.env.ICLOUD_EMAIL,
+            from: process.env.GMAIL_EMAIL,
             to: email, // user's email
             subject: 'Email Confirmation: Your message has been sent and received',
             text: `Hello ${name},\n\nThank you for getting in touch! Here’s a copy of your message:\n\n${message}\n\nI'll get back to you as soon as I can.\n\nBest regards,\nJeongbin Son`,
