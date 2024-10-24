@@ -13,7 +13,7 @@ import axios from 'axios';
 
 interface TeamMember {
     PfpImage: string;
-    MemberType: string; 
+    MemberType: string;
 }
 
 export default function Navbar() {
@@ -240,7 +240,7 @@ export default function Navbar() {
                 </div>
 
                 {/* login/logout button */}
-                <div className="hidden md:block">
+                <div className="hidden md:flex items-center space-x-4">
                     <Link href="/contact-us-page" className="bg-white-500 text-white text-base py-2 px-4 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300">
                         Contact Us
                     </Link>
@@ -253,27 +253,33 @@ export default function Navbar() {
                             Login
                         </Link>
                     )}
+                    {isLoggedIn && isProfileFetched && ( // only show after profile is fetched
+                        <div
+                            className={`p-2 hidden md:flex items-center space-x-4 ${isSidebarOpen ? 'z-0' : 'z-[9999]'}`}
+                            style={{ top: '-5px', right: '10px' }}
+                        >
+                            {/* open the sidebar */}
+                            <button onClick={toggleSidebar} className="p-0 m-0" style={{ width: 'auto', height: 'auto' }}>
+                                <Link href="#">
+                                    <div className="relative">
+                                        <Image
+                                            src={profilePic}
+                                            alt="Profile picture"
+                                            width={50}
+                                            height={50}
+                                            className="object-cover h-12 w-12 rounded-full border-2 border-white shadow-lg hover:shadow-xl transition-shadow duration-300"
+                                        />
+                                    </div>
+
+                                </Link>
+                            </button>
+                        </div>
+                    )}
+
+
                 </div>
 
-                {isLoggedIn && isProfileFetched && ( // only show after profile is fetched
-                    <div
-                        className={`fixed top-0 p-2 ${isSidebarOpen ? 'z-0' : 'z-[9999]'}`}
-                        style={{ top: '-5px', right: '10px' }}
-                    >
-                        {/* open the sidebar */}
-                        <button onClick={toggleSidebar} className="p-0 m-0" style={{ width: 'auto', height: 'auto' }}>
-                            <Link href="#">
-                                <Image
-                                    src={profilePic}
-                                    alt="Profile picture"
-                                    width={50}
-                                    height={50}
-                                    className="object-cover h-12 w-12 rounded-full border-2 border-white shadow-lg hover:shadow-xl transition-shadow duration-300"
-                                />
-                            </Link>
-                        </button>
-                    </div>
-                )}
+
 
                 {/* sidebar */}
                 {isSidebarOpen && (
