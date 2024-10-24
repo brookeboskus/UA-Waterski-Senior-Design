@@ -1,5 +1,5 @@
 "use client";
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
 export default function ContactUs () {
     const [name, setName] = useState('');
@@ -7,6 +7,11 @@ export default function ContactUs () {
     const [message, setMessage] = useState('');
     const [formStatus, setFormStatus] = useState('');
     const [role, setRole] = useState('');
+
+    // Set page title
+    useEffect(() => {
+        document.title = 'UA Waterski - Contact Us';
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

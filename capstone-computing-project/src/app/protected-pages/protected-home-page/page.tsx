@@ -18,6 +18,11 @@ export default function Home() {
     const [image8B, setImage8B] = useState<string | null>(null);
     const [textFrom8C, setTextFrom8C] = useState<string | null>(null);
 
+    // Set page title
+    useEffect(() => {
+        document.title = 'UA Waterski - Home';
+    }, []);
+
     useEffect(() => {
         // fetching data from Google Sheets
         const getData = async () => {

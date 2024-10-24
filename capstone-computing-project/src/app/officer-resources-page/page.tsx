@@ -2,7 +2,7 @@
 
 
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
@@ -23,6 +23,8 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: any) {
             console.error("Error fetching meeting notes:", error);
         }
     };
+
+    
 
     useEffect(() => {
         fetchNotes();
@@ -146,6 +148,11 @@ export default function OfficerResourcesPage() {
     const [isOfficer, setIsOfficer] = useState<boolean>(false); 
     const [isCheckingLogin, setIsCheckingLogin] = useState(true);
     const router = useRouter();
+
+    // Set page title
+    useEffect(() => {
+        document.title = 'UA Waterski - Officer Resources';
+    }, []);
 
     // chck user if they are logged in + they are officer or not
     useEffect(() => {

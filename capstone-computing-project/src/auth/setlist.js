@@ -102,6 +102,7 @@ module.exports.registerReservation = async (req, res) => {
         }
 
         // Format date string to what database is expecting
+        // Could this cause issues if server is deployed in different timezone?
         const dateString = date.getFullYear() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":00";
         
         const query = 'INSERT INTO SetList (Date, CWID) VALUES (?, ?)';
