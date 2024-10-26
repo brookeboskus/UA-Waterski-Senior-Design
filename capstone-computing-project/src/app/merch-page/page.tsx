@@ -12,6 +12,11 @@ export default function MerchPage() {
     const [merchLabels, setMerchLabels] = useState<string[]>([]);
     const [merchPrices, setMerchPrices] = useState<string[]>([]);
 
+    // Set page title
+    useEffect(() => {
+        document.title = 'UA Waterski - Merch';
+    }, []);
+
     useEffect(() => {
         // fetching data from Google Sheets
         const getData = async () => {

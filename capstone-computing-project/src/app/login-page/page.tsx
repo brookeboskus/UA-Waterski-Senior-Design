@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Select from 'react-select';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -120,6 +120,11 @@ export default function LoginPage() {
     const [PfpImage, setProfilePicture] = useState(null);
     const [isLogin, setIsLogin] = useState(true);
     const router = useRouter();
+
+    // Set page title
+    useEffect(() => {
+        document.title = 'UA Waterski - Login/Sign Up';
+    }, []);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];

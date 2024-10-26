@@ -1,11 +1,17 @@
 "use client";
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
 export default function ContactUs () {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [formStatus, setFormStatus] = useState('');
+    const [role, setRole] = useState('');
+
+    // Set page title
+    useEffect(() => {
+        document.title = 'UA Waterski - Contact Us';
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -20,7 +26,7 @@ export default function ContactUs () {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name, email, message }),
+                body: JSON.stringify({ name, email, message, role }),
             });
 
             if (res.status === 200) {
@@ -53,6 +59,11 @@ export default function ContactUs () {
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
+        setFormStatus('');
+    };
+
+    const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setRole(e.target.value);
         setFormStatus('');
     };
 
@@ -92,13 +103,20 @@ export default function ContactUs () {
                             <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
                                 You are...
                             </label>
-                            <select id="role" name="role" className="bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9E1B32] focus:border-[#9E1B32] block w-full p-2.5">
+                            <select 
+                                id="role" 
+                                name="role" 
+                                value={role} 
+                                onChange={handleRoleChange} 
+                                className="bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9E1B32] focus:border-[#9E1B32] block w-full p-2.5"
+                                required
+                            >
                                 <option value="">Select your role</option>
                                 <option value="recruit">Recruit</option>
                                 <option value="new_member">Interested in Joining</option>
                                 <option value="alumni">Alumni</option>
                                 <option value="parent">Parent</option>
-                                <option value="parent">Sponsorship Inquiry</option>
+                                <option value="sponsorship">Sponsorship Inquiry</option>
                                 <option value="other">Other</option>
                             </select>
                         </div>
@@ -146,15 +164,6 @@ export default function ContactUs () {
 
                 </div>
 
-                {/* Contact Information */}
-                <div className="mt-12 text-center">
-                    <p className="text-lg text-white">
-                        You can also reach me via email at{' '}
-                        <a href="mailto:json10@crimson.ua.edu" target="_blank" className="text-[#49A097] underline">
-                            json10@crimson.ua.edu
-                        </a>
-                    </p>
-                </div>
             </section>
         </div>
     )

@@ -2,13 +2,18 @@
 
 
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from 'next/image';
 import waterskiClubInfoPhoto1 from '../../components/img/waterski-club-info-1 1.svg';
 
 export default function ClubInfo() {
     const [activeSection, setActiveSection] = useState<string>('roles');
     const [isBylawsExpanded, setIsBylawsExpanded] = useState<boolean>(false);
+
+    // Set page title
+    useEffect(() => {
+        document.title = 'UA Waterski - Club Info';
+    }, []);
 
     const toggleBylaws = () => {
         setIsBylawsExpanded(!isBylawsExpanded);
