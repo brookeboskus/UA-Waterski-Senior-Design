@@ -1,3 +1,6 @@
+// currently not in use. head to login-page and modiy router.push('/') to router.push('/protected-pages/protected-home-page') to see this page
+
+
 // we still need to ensure we added redirection logic (logged in or not)
 // if we want to add elements to this page that is sensitive. 
 // currently this page is accessbile when you're not logged in by typing the page addresss

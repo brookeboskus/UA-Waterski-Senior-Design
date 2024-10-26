@@ -160,7 +160,7 @@ export default function LoginPage() {
             try {
                 const response = await axios.post(endpoint, payload);
                 localStorage.setItem('token', response.data.token);
-                router.push('/protected-pages/protected-home-page');
+                router.push('/'); // can push to /protected-pages/protected-home-page if we have sensitive info to present in this home page after logging in
             } catch (error) {
                 console.error('Error:', error.response?.data?.message || error.message);
                 document.getElementById('errorBox')?.setAttribute("style", "display: block;");

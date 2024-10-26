@@ -22,6 +22,7 @@ export default function Home() {
     }, []);
 
     useEffect(() => {
+        console.log("Fetching data...");
         // fetching data from Google Sheets
         const getData = async () => {
             try {
@@ -58,6 +59,7 @@ export default function Home() {
         };
 
         getData();
+
     }, []);
 
     const startSlide = (newIndex: number, dir: "left" | "right") => {
