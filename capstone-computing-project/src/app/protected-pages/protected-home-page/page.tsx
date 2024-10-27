@@ -190,13 +190,14 @@ export default function Home() {
                     </div>
 
                     <div className="container mx-auto text-center flex flex-col justify-center items-center min-h-[50vh] md:min-h-[70vh] px-4">
-                        <Image
-                            src={SkiBamaLogo}
-                            alt="Ski Bama Logo"
-                            width={400}
-                            height={400}
-                            className="h-200 w-200 md:h-100 md:w-100 lg:h-200 lg:w-200 object-contain"
-                        />
+                        <div style={{ height: 'auto', width: '400px' }}>
+                            <Image
+                                src={SkiBamaLogo}
+                                alt="Ski Bama Logo"
+                                className="h-200 w-200 md:h-100 md:w-100 lg:h-200 lg:w-200 object-contain"
+                                priority={true}
+                            />
+                        </div>
 
                         <div className="flex flex-col md:flex-row items-center justify-center mt-8 mx-15 border border-gray-300 p-4 rounded-lg min-h-[300px]">
 

@@ -278,12 +278,13 @@ export default function ClubInfo() {
                 </div>
 
                 {/* Image Section */}
-                <div className="flex justify-center mb-12">
+                <div className="mb-12 relative mx-auto" style={{ width: '80%', maxWidth: '800px', height: 'auto', aspectRatio: '16/10' }}>
                     <Image
                         src={waterskiClubInfoPhoto1}
                         alt="Water Ski Club Info Photo 1"
-                        width={800}
-                        height={500}
+                        fill
+                        className="object-contain"
+                        priority={true}
                     />
                 </div>
 

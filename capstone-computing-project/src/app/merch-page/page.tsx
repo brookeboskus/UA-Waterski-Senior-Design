@@ -35,7 +35,7 @@ export default function MerchPage() {
                     const merchPrices = data.map((row) => row[2]);
                     setMerchPrices(merchPrices.slice(3));
 
-                    console.log(sheetData);
+                    // console.log(sheetData);
 
                     const image2AUrl = data[1][0];
                     if (image2AUrl?.startsWith("http")) {
