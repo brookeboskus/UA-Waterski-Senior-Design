@@ -113,7 +113,7 @@ export default function ContactUs () {
                             >
                                 <option value="">Select your role</option>
                                 <option value="recruit">Recruit</option>
-                                <option value="new_member">Interested in Joining</option>
+                                <option value="interested">Interested in Joining</option>
                                 <option value="alumni">Alumni</option>
                                 <option value="parent">Parent</option>
                                 <option value="sponsorship">Sponsorship Inquiry</option>
