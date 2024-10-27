@@ -110,13 +110,13 @@ const majors = [
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false); 
     const [fname, setFname] = useState('');
     const [lname, setLname] = useState('');
     const [cwid, setCwid] = useState('');
     const [phone, setPhone] = useState('');
     const [gradYear, setGradYear] = useState('Freshman');
     const [selectedMajor, setSelectedMajor] = useState(null);
-    // const [major, setMajor] = useState('');
     const [PfpImage, setProfilePicture] = useState(null);
     const [isLogin, setIsLogin] = useState(true);
     const router = useRouter();
@@ -147,19 +147,14 @@ export default function LoginPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         const endpoint = isLogin ? 'http://localhost:4000/auth/login' : 'http://localhost:4000/auth/signup';
 
         if (isLogin) {
-            const payload = {
-                email,
-                password,
-            };
-
+            const payload = { email, password };
             try {
                 const response = await axios.post(endpoint, payload);
                 localStorage.setItem('token', response.data.token);
-                router.push('/'); // can push to /protected-pages/protected-home-page if we have sensitive info to present in this home page after logging in
+                router.push('/');
             } catch (error) {
                 console.error('Error:', error.response?.data?.message || error.message);
                 document.getElementById('errorBox')?.setAttribute("style", "display: block;");
@@ -182,11 +177,8 @@ export default function LoginPage() {
 
             try {
                 const response = await axios.post(endpoint, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
+                    headers: { 'Content-Type': 'multipart/form-data' },
                 });
-
                 setIsLogin(true);
             } catch (error) {
                 console.error('Error:', error.response?.data?.message || error.message);
@@ -196,7 +188,7 @@ export default function LoginPage() {
 
     return (
         <div className='login-page flex items-center justify-center min-h-screen bg-[#ffffff]'>
-            <div className="flex flex-row w-full h-full"> {/* Full height for both sides */}
+            <div className="flex flex-row w-full h-full">
                 <div className="w-2/3 flex flex-col justify-center items-center w-1/2 pr-0">
                     <div className="mb-8" style={{height: 'auto', width: '300px'}}>
                         <Image src={SkiBamaLogo} alt="Ski Bama Logo"/>
@@ -223,7 +215,6 @@ export default function LoginPage() {
                             </button>
                         </div>
 
-                        {/* sign-up form layout */}
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <input
                                 type="email"
@@ -235,14 +226,33 @@ export default function LoginPage() {
                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
                                 required
                             />
-                            <input
-                                type="password"
-                                placeholder="Password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
-                                required
-                            />
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? 'text' : 'password'} 
+                                    placeholder="Password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute inset-y-0 right-3 flex items-center"
+                                >
+                                    {showPassword ? (
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M17.94 17.94A10.95 10.95 0 0112 20c-5.523 0-10-4.477-10-10 0-1.326.255-2.593.72-3.757" />
+                                            <path d="M3.6 3.6l16.8 16.8" />
+                                        </svg>
+                                    ) : (
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <circle cx="12" cy="12" r="3" />
+                                            <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12z" />
+                                        </svg>
+                                    )}
+                                </button>
+                            </div>
 
                             {!isLogin && (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -321,8 +331,6 @@ export default function LoginPage() {
                             </button>
                         </form>
 
-
-
                         {isLogin && (
                             <p className='text-center mt-4 text-xs'>
                                 <a href='/forgot-password-page' className='text-[black] hover:text-[#9E1B32] font-bold'>
@@ -342,8 +350,6 @@ export default function LoginPage() {
                         style={{ width: '100%', height: 'auto' }}
                     />
                 </div>
-
-
 
             </div>
         </div>

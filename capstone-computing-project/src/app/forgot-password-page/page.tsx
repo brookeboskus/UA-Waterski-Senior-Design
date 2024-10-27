@@ -1,4 +1,5 @@
-// this is not done, just the front end page is done
+// this is not done
+// for future access to work on, this is page 1 for forgot password
 
 "use client";
 import { useState } from 'react';
@@ -10,15 +11,37 @@ export default function ForgotPasswordPage() {
 
     const handleForgotPassword = async (e: React.FormEvent) => {
         e.preventDefault();
+        try {
+            const response = await fetch('api/forgotPassword', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            });
+            const data = await response.json();
+            if (data.success) {
+                setMessage(data.message);
+                setError('');
+            } else {
+                setMessage('');
+                setError(data.error);
+            }
+        } catch (error) {
+            console.log(error);
+            setMessage('');
+            setError('Something went wrong. Please try again.');
+        }
     };
+
 
     return (
         <div className="min-h-screen flex flex-col text-gray-800">
             <section className="container mx-auto px-4 py-20">
                 <div className="text-center mb-12">
-                    <h1 className="text-5xl font-extrabold text-[#9E1B32] mb-6">Forgot Password</h1>
+                    <h1 className="text-5xl font-extrabold text-[#9E1B32] mb-6">Forgot Password?</h1>
                     <p className="text-lg text-black max-w-3xl mx-auto">
-                        Enter your registered email address to receive a password reset link.
+                        Enter your registered email address to receive a link to reset your password.
                     </p>
                 </div>
 
