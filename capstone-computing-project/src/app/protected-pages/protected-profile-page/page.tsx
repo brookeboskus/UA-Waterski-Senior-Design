@@ -11,7 +11,10 @@ import EmailImage from '../../img/Text (5).svg';
 import CWIDImage from '../../img/Text (6).svg';
 import MajorImage from '../../img/Text (7).svg';
 import StatusImage from '../../img/Text (8).svg';
+import EditPage from '../protected-profile-edit-page/page';
 import axios from 'axios';
+import Link from 'next/link';
+import EditIcon from '../../img/Icon (2).svg';
 
 interface TeamMember {
     Fname: string;
@@ -28,6 +31,12 @@ interface TeamMember {
 export default function ProfilePage() {
     const [teamMember, setTeamMember] = useState<TeamMember | null>(null); 
     const [loading, setLoading] = useState<boolean>(true);
+    const [isEditPageOpen, setIsEditPageOpen] = useState(false); // state to manage edit page visibility
+
+    const toggleEditPage = () => {
+        setIsEditPageOpen(!isEditPageOpen);
+    };
+
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -84,8 +93,40 @@ export default function ProfilePage() {
         </div>
     </div>
 
+    <div>
+        {/* Edit Page */}
+        <div
+            className={`fixed top-0 p-2 ${isEditPageOpen ? 'z-0' : 'z-[9999]'}`}
+            style={{ top: '-5px', right: '10px' }}
+        >
+            {/* open the sidebar */}
+            <button onClick={toggleEditPage} className=" p-20  -m-5 transform translate-x-10">
+                <Link href="#">
+                    <Image
+                    src={EditIcon}
+                    alt="Profile picture"
+                    width={20}
+                    height={20}
+                    className=" shadow-lg hover:shadow-xl transition-shadow duration-300"
+                    />
+                </Link>
+            </button>
+        </div>
+           
 
+                {/* sidebar */}
+                {isEditPageOpen && (
+                    <div
+                        className="fixed right-5 h-full bg-white z-[9998]"
+                        style={{ top: '15px', width: '27%' }}
+                    >
+                        <button onClick={toggleEditPage} className="p-2 text-black">Close</button>
+                        {/* render the profile page content */}
+                        <EditPage />
+                    </div>
 
+                )}
+            </div>
 
 
             {/* Conditionally render the team member info only if teamMember is defined */}
