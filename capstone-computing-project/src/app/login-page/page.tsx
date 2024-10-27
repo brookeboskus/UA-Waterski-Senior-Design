@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Select from 'react-select';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -110,16 +110,20 @@ const majors = [
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false); 
     const [fname, setFname] = useState('');
     const [lname, setLname] = useState('');
     const [cwid, setCwid] = useState('');
     const [phone, setPhone] = useState('');
     const [gradYear, setGradYear] = useState('Freshman');
     const [selectedMajor, setSelectedMajor] = useState(null);
-    // const [major, setMajor] = useState('');
     const [PfpImage, setProfilePicture] = useState(null);
     const [isLogin, setIsLogin] = useState(true);
     const router = useRouter();
+
+    useEffect(() => {
+        document.title = 'UA Waterski - Login/Sign Up';
+    }, []);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -143,19 +147,14 @@ export default function LoginPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         const endpoint = isLogin ? 'http://localhost:4000/auth/login' : 'http://localhost:4000/auth/signup';
 
         if (isLogin) {
-            const payload = {
-                email,
-                password,
-            };
-
+            const payload = { email, password };
             try {
                 const response = await axios.post(endpoint, payload);
                 localStorage.setItem('token', response.data.token);
-                router.push('/protected-pages/protected-home-page');
+                router.push('/');
             } catch (error) {
                 console.error('Error:', error.response?.data?.message || error.message);
                 document.getElementById('errorBox')?.setAttribute("style", "display: block;");
@@ -178,11 +177,8 @@ export default function LoginPage() {
 
             try {
                 const response = await axios.post(endpoint, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
+                    headers: { 'Content-Type': 'multipart/form-data' },
                 });
-
                 setIsLogin(true);
             } catch (error) {
                 console.error('Error:', error.response?.data?.message || error.message);
@@ -192,10 +188,10 @@ export default function LoginPage() {
 
     return (
         <div className='login-page flex items-center justify-center min-h-screen bg-[#ffffff]'>
-            <div className="flex flex-row w-full h-full"> {/* Full height for both sides */}
-                <div className="flex flex-col justify-center items-center w-1/2 pr-0">
-                    <div className="mb-8">
-                        <Image src={SkiBamaLogo} alt="Ski Bama Logo" width={300} height={300} />
+            <div className="flex flex-row w-full h-full">
+                <div className="w-2/3 flex flex-col justify-center items-center w-1/2 pr-0">
+                    <div className="mb-8" style={{height: 'auto', width: '300px'}}>
+                        <Image src={SkiBamaLogo} alt="Ski Bama Logo"/>
                     </div>
 
                     <div className='bg-white p-8 rounded-lg shadow-lg w-full max-w-md text-black mt-[-40px]'>
@@ -219,112 +215,125 @@ export default function LoginPage() {
                             </button>
                         </div>
 
-                        <form onSubmit={handleSubmit} className='space-y-4'>
+                        <form onSubmit={handleSubmit} className="space-y-4">
                             <input
-                                type='email'
-                                placeholder='Email Address'
+                                type="email"
+                                placeholder="Email Address"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 pattern=".+@+(.+\.)?ua\.edu"
                                 title="Email must be a valid University of Alabama address (i.e. ending in ua.edu)"
-                                className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]'
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
                                 required
                             />
-                            <input
-                                type='password'
-                                placeholder='Password'
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]'
-                                required
-                            />
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? 'text' : 'password'} 
+                                    placeholder="Password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute inset-y-0 right-3 flex items-center"
+                                >
+                                    {showPassword ? (
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M17.94 17.94A10.95 10.95 0 0112 20c-5.523 0-10-4.477-10-10 0-1.326.255-2.593.72-3.757" />
+                                            <path d="M3.6 3.6l16.8 16.8" />
+                                        </svg>
+                                    ) : (
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <circle cx="12" cy="12" r="3" />
+                                            <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12z" />
+                                        </svg>
+                                    )}
+                                </button>
+                            </div>
 
                             {!isLogin && (
-                                <>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <input
-                                        type='text'
-                                        placeholder='First Name'
+                                        type="text"
+                                        placeholder="First Name"
                                         value={fname}
                                         onChange={(e) => setFname(e.target.value)}
-                                        className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]'
+                                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
                                         required
                                     />
                                     <input
-                                        type='text'
-                                        placeholder='Last Name'
+                                        type="text"
+                                        placeholder="Last Name"
                                         value={lname}
                                         onChange={(e) => setLname(e.target.value)}
-                                        className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]'
+                                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
                                         required
                                     />
                                     <input
-                                        type='text'
-                                        placeholder='CWID'
+                                        type="text"
+                                        placeholder="CWID"
                                         value={cwid}
                                         onChange={(e) => setCwid(e.target.value)}
-                                        className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]'
+                                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
                                         required
                                     />
                                     <input
-                                        type='text'
-                                        placeholder='Phone Number'
+                                        type="text"
+                                        placeholder="Phone Number"
                                         value={phone}
                                         onChange={(e) => setPhone(e.target.value)}
-                                        className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]'
+                                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
                                         required
                                     />
-                                    <select
-                                        value={gradYear}
-                                        onChange={(e) => setGradYear(e.target.value)}
-                                        className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]'
-                                        required
-                                    >
-                                        <option value='Freshman'>Freshman</option>
-                                        <option value='Sophomore'>Sophomore</option>
-                                        <option value='Junior'>Junior</option>
-                                        <option value='Senior'>Senior</option>
-                                    </select>
-                                    {/* <input
-                                        type='text'
-                                        placeholder='Major'
-                                        value={major}
-                                        onChange={(e) => setMajor(e.target.value)}
-                                        className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]'
-                                        required
-                                    /> */}
-                                    <Select
-                                        placeholder="Select your Major"
-                                        value={selectedMajor}
-                                        onChange={setSelectedMajor}
-                                        options={majors}
-                                        className="w-full"
-                                        required
-                                    />
-                                    <div className='flex items-center mb-4'>
-                                        <label className='w-full cursor-pointer border-2 border-[#49A097] rounded-lg p-2 flex justify-between items-center'>
-                                            <span className='text-gray-700'>Upload Profile Picture</span>
+                                    <div className="col-span-2">
+                                        <select
+                                            value={gradYear}
+                                            onChange={(e) => setGradYear(e.target.value)}
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
+                                            required
+                                        >
+                                            <option value="Freshman">Freshman</option>
+                                            <option value="Sophomore">Sophomore</option>
+                                            <option value="Junior">Junior</option>
+                                            <option value="Senior">Senior</option>
+                                        </select>
+                                    </div>
+                                    <div className="col-span-2">
+                                        <Select
+                                            placeholder="Select your Major"
+                                            value={selectedMajor}
+                                            onChange={setSelectedMajor}
+                                            options={majors}
+                                            className="w-full"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="col-span-2">
+                                        <label className="w-full cursor-pointer border-2 border-[#49A097] rounded-lg p-2 flex justify-between items-center">
+                                            <span className="text-gray-700">Upload Profile Picture</span>
                                             <input
-                                                type='file'
-                                                accept='.png, .jpg, .jpeg, .webp'
-                                                //onChange={(e) => setProfilePicture(e.target.files[0])}
+                                                type="file"
+                                                accept=".png, .jpg, .jpeg, .webp"
                                                 onChange={handleFileChange}
-                                                className='hidden'
+                                                className="hidden"
                                             />
                                         </label>
-                                        {PfpImage && <span className='ml-2 text-gray-600'>{PfpImage.name}</span>}
+                                        {PfpImage && <span className="ml-2 text-gray-600">{PfpImage.name}</span>}
                                     </div>
-                                    <p className='text-xs text-gray-500'>Accepted file types: PNG, JPG, JPEG, WEBP. <br></br>Max size: 4 MB. Max dimensions: 1536 x 1536 pixels.</p>
-                                </>
+                                </div>
                             )}
 
-                            <button type='submit' className='w-full bg-[white] text-[black] py-2 rounded-full font-bold hover:text-[#9E1B32]'>
+                            <button type="submit" className="w-full bg-[white] text-[black] py-2 rounded-full font-bold hover:text-[#9E1B32]">
                                 {isLogin ? 'Sign In' : 'Sign Up'}
                             </button>
                         </form>
 
                         {isLogin && (
                             <p className='text-center mt-4 text-xs'>
-                                <a href='/forgot-password' className='text-[black] hover:text-[#9E1B32] font-bold'>
+                                <a href='/forgot-password-page' className='text-[black] hover:text-[#9E1B32] font-bold'>
                                     Forgot Password?
                                 </a>
                             </p>
@@ -333,18 +342,14 @@ export default function LoginPage() {
 
                 </div>
 
-               {/* Right side containing the image */}
-        <div className=" rounded-tl-[55px] rounded-bl-[55px]  "> {/* Right side */}
-            <Image 
-                src={WaterskiImage} 
-                alt="Water ski image" 
-                width={800}
-                height={8000}
-                //className="object-cover  rounded-tl-[55px] rounded-bl-[55px]" // Ensure image covers full div
-            />
-        </div>
-
-
+                <div className="rounded-tl-[55px] rounded-bl-[55px] relative" style={{ maxWidth: '100%', height: 'auto' }}>
+                    <Image
+                        src={WaterskiImage}
+                        alt="Water ski image"
+                        priority={true}
+                        style={{ width: '100%', height: 'auto' }}
+                    />
+                </div>
 
             </div>
         </div>

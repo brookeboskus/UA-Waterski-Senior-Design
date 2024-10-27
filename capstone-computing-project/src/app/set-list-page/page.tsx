@@ -7,6 +7,10 @@ import BlankPfp from '../img/blankpfp.svg';
 import { useRouter } from 'next/navigation';
 import ReactDOMServer from 'react-dom/server';
 
+// NOTE: One potential issue is that this page was only tested in CST. 
+// While this is where we expect most users to use the page (as it is for the UA Waterski team, which is located in CST),
+// the page may not work as expected in other time zones. - Lilly Eide
+
 interface SetListReservation {
     Date: string;
     Fname: string;
@@ -252,6 +256,11 @@ export default function SetListPage() {
     const timesSet = new Set();
     const router = useRouter();
 
+    // Set page title
+    useEffect(() => {
+        document.title = 'UA Waterski - Set List';
+    }, []);
+
     // Check if the user is logged in by looking for the token in localStorage
     useEffect(() => {
         const checkToken = () => {
@@ -443,6 +452,7 @@ export default function SetListPage() {
             labels.push(dateRanges[i][0].toLocaleDateString("en-US") + " - " + dateRanges[i][1].toLocaleDateString("en-US"));
             values.push(dateRanges[i][0].getTime() / 1000);
         }
+
         
         // This component holds the actual table, as well as the date dropdown in the top left
         return (
@@ -502,7 +512,7 @@ export default function SetListPage() {
     for (var i = 0; i < reservations.length; i++) {
         timesSet.add(new Date(reservations[i].Date).getTime());
     }
-    
+
     return (
         <div className="relative bg-white rounded-[5px] pageContent">
             <div>

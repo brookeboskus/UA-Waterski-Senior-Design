@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Image from 'next/image';
-import Link from 'next/link';
 import SkiBamaLogo from './img/skibamalogo.svg';
 import { fetchSheetData } from "./googlesheetservices";
 import placeholderhomepageimage from "../app/img/placeholderhomepage.svg";
@@ -17,7 +16,13 @@ export default function Home() {
     const [image8B, setImage8B] = useState<string | null>(null);
     const [textFrom8C, setTextFrom8C] = useState<string | null>(null);
 
+    // Set page title
     useEffect(() => {
+        document.title = 'UA Waterski - Home';
+    }, []);
+
+    useEffect(() => {
+        console.log("Fetching data...");
         // fetching data from Google Sheets
         const getData = async () => {
             try {
@@ -29,14 +34,14 @@ export default function Home() {
                     setSheetData(imageUrls);
 
                     const image8BUrl = data[7]?.[1];
-                    if (image8BUrl?.startsWith("http")){
+                    if (image8BUrl?.startsWith("http")) {
                         setImage8B(image8BUrl);
                     } else {
                         setImage8B(null);
                     }
-                    
+
                     const textFrom8C = data[7]?.[2];
-                    if (textFrom8C){
+                    if (textFrom8C) {
                         setTextFrom8C(textFrom8C);
                     } else {
                         setTextFrom8C("No content available.");
@@ -54,6 +59,7 @@ export default function Home() {
         };
 
         getData();
+
     }, []);
 
     const startSlide = (newIndex: number, dir: "left" | "right") => {
@@ -178,44 +184,40 @@ export default function Home() {
                     </div>
 
                     <div className="container mx-auto text-center flex flex-col justify-center items-center min-h-[50vh] md:min-h-[70vh] px-4">
-                        {/* Logo Image */}
-                        <Link href="/">
-                            <Image 
-                                src={SkiBamaLogo} 
-                                alt="Ski Bama Logo" 
-                                width={400} 
-                                height={400} 
-                                className="h-200 w-200 md:h-100 md:w-100 lg:h-200 lg:w-200 object-contain" // image scales within navbar height and width with different screen sizes
+
+                        <div style={{ height: 'auto', width: '400px' }}>
+                            <Image
+                                src={SkiBamaLogo}
+                                alt="Ski Bama Logo"
+                                className="h-200 w-200 md:h-100 md:w-100 lg:h-200 lg:w-200 object-contain"
+                                priority={true}
                             />
-                        </Link>
-
-                        <div className="flex flex-col md:flex-row items-center md:items-start mt-8 mx-15">
-
-                            {/* Picture from cell 8B */}
-                        <Link href="/">
-                            {image8B && (
-                                <img 
-                                    src={image8B}
-                                    alt="Image from 8B"
-                                    
-                                    className="h-200px w-200px md:h-250px md:w-250px lg:h-300px lg:w-300px max-w-full object-contain mr-20"
-                                />
-                            )}
-                        </Link>
-                             {/* About Us snippet */}
-                             <div className = "flex flex-col md:flex-row items-center justify-center md:items-start min-h-screen mt-8">
-                                <p className="text-lg md:text-1xl mb-12 text-black max-w-3xl mx-auto mt-20 mb-200">
-                                    {textFrom8C ? textFrom8C : "Loading content..."}
-                                </p>
-
-                             </div>
                         </div>
 
-                    
+                        <div className="flex flex-col md:flex-row items-center justify-center mt-8 mx-15 border border-gray-300 p-4 rounded-lg min-h-[300px]">
+
+                            {/* Picture from cell 8B */}
+                            {image8B && (
+                                <img
+                                    src={image8B}
+                                    alt="Image from 8B"
+                                    className="h-200px w-200px md:h-250px md:w-250px lg:h-300px lg:w-300px max-w-full object-contain mr-6"
+                                />
+                            )}
+
+                            {/* Text from 8C */}
+                            <div className="flex flex-col justify-center h-full">
+                                <p className="text-lg md:text-xl text-black max-w-3xl">
+                                    {textFrom8C ? textFrom8C : "Loading content..."}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </section>
+                {/* temp usage of br for spacing on the bottom */}
+                <br />
+                <br />
 
-                
             </main>
         </div>
     );
