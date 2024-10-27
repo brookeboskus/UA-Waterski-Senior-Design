@@ -13,7 +13,9 @@ import CWIDImage from '../../img/Text (6).svg';
 import MajorImage from '../../img/Text (7).svg';
 import StatusImage from '../../img/Text (8).svg';
 import DefaultPFP from '../../img/DefaultPFP.svg';
-import { useRouter } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
+
+
 
 interface TeamMember {
     Fname: string;
@@ -36,13 +38,22 @@ export default function EditProfile() {
     const [phone, setPhone] = useState('');
     const [gradYear, setGradYear] = useState('Freshman');
     const [selectedMajor, setSelectedMajor] = useState('');
+    const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const token = searchParams.get('token');
     //  const router = useRouter();
     // const [major, setMajor] = useState('');
+
 
     const [teamMember, setTeamMember] = useState<TeamMember | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
+        if (!token) {
+            setError("Invalid or missing token.");
+        }
         const fetchProfile = async () => {
             try {
                 const token = localStorage.getItem('token');
@@ -74,15 +85,15 @@ export default function EditProfile() {
         };
 
         fetchProfile();
-    }, []);
+    }, [token]);
 
-    const updateProfile = async () => {
-
+    const updateProfile = async (e: React.FormEvent) => {
+        e.preventDefault();
         try {
             const token = localStorage.getItem('token');
             if (!token) throw new Error('No token found');
 
-            const response = await axios.put('http://localhost:4000/auth/update-profile', {
+            const response = await axios.post('http://localhost:4000/auth/update-profile', {
                 Fname: fname,
                 Lname: lname,
                 GradYear: gradYear,

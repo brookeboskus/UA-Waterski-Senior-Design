@@ -71,7 +71,7 @@ export default function ProfilePage() {
 
     // Ensure teamMembers array has at least one member
     if (!teamMember) {
-        return <div>No team member ballhead data available.</div>; 
+        return <div>No team member righthere data available.</div>; 
     }else{
 
     return (
