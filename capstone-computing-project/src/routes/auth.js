@@ -3,6 +3,7 @@ const multer = require('multer');
 const router = express.Router();
 const { login } = require('../auth/login');
 const { signup } = require('../auth/signup');
+const { updateprofile } = require('../auth/update-profile');
 const { getRoster } = require('../auth/roster');
 const { getSetList, registerReservation, deleteReservation } = require('../auth/setlist');
 const { profile } = require('../auth/profile');
@@ -15,24 +16,27 @@ const upload = multer({ storage });
 const checkAuth = (req, res, next) => {
     console.log('Checking authentication for Express routes');
 
-    const authHeader = req.headers['authorization']; 
+    const authHeader = req.headers['authorization'];
     if (!authHeader) {
         return res.redirect('/login-page');
     }
 
-    const token = authHeader.split(' ')[1]; 
+    const token = authHeader.split(' ')[1];
     if (!token) {
         return res.redirect('/login-page');
     }
 
-    
+
     next();
 };
 
+
 router.post('/login', login);
 router.post('/signup', upload.single('pfpimage'), signup);
-router.get('/roster', checkAuth, getRoster); 
+router.get('/roster', checkAuth, getRoster);
 router.get('/profile', profile);
+router.get('/update-profile', updateprofile);
+router.put('/update-profile', upload.single('pfpimage'), updateprofile);
 router.get('/setlist', getSetList);
 router.post('/setlist', registerReservation);
 router.delete('/setlist', deleteReservation);

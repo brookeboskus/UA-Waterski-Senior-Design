@@ -13,6 +13,7 @@ import CWIDImage from '../../img/Text (6).svg';
 import MajorImage from '../../img/Text (7).svg';
 import StatusImage from '../../img/Text (8).svg';
 import DefaultPFP from '../../img/DefaultPFP.svg';
+import { useRouter } from 'next/router';
 
 interface TeamMember {
     Fname: string;
@@ -35,6 +36,7 @@ export default function EditProfile() {
     const [phone, setPhone] = useState('');
     const [gradYear, setGradYear] = useState('Freshman');
     const [selectedMajor, setSelectedMajor] = useState('');
+    const router = useRouter();
     // const [major, setMajor] = useState('');
 
     const [teamMember, setTeamMember] = useState<TeamMember | null>(null);
@@ -57,6 +59,13 @@ export default function EditProfile() {
                 console.log('Profile data:', response.data);
 
                 setTeamMember(response.data); // store profile data in state
+                setEmail(response.data.Email);
+                setFname(response.data.Fname);
+                setLname(response.data.Lname);
+                setCwid(response.data.CWID);
+                setPhone(response.data.Phone);
+                setGradYear(response.data.GradYear);
+                setSelectedMajor(response.data.Major);
             } catch (error) {
                 console.error('Failed to fetch team roster:', error);
             } finally {
@@ -66,6 +75,30 @@ export default function EditProfile() {
 
         fetchProfile();
     }, []);
+
+    const updateProfile = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) throw new Error('No token found');
+
+            const response = await axios.put('http://localhost:4000/auth/update-profile', {
+                Fname: fname,
+                Lname: lname,
+                GradYear: gradYear,
+                Major: selectedMajor,
+                Phone: phone,
+                Email: email,
+                CWID: cwid
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            console.log('Profile updated successfully:', response.data);
+            router.reload(); // Optionally reload or redirect after saving
+        } catch (error) {
+            console.error('Failed to update profile:', error);
+        }
+    };
 
     if (!teamMember) {
         return <div>No team member data available.</div>; // no data available then say this
@@ -256,6 +289,9 @@ export default function EditProfile() {
                     <div className="w-[220px] h-[20px] left-[99px] top-[730px] absolute text-[#b9b9b9] text-[13px] font-bold">
                         {teamMember.CWID}
                     </div>
+                    <button onClick={updateProfile} className="bg-blue-500 text-white p-2 rounded mt-4">
+                            Save Changes
+                    </button>
                 </>
             ) : (
                 <div>No team member data available.</div>
