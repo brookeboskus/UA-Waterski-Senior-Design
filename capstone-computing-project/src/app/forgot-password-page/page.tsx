@@ -1,21 +1,27 @@
-// src/app/forgot-password-page.tsx
+// page 1 for forgot password
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function ForgotPasswordPage() {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+    const router = useRouter();
+
+    useEffect(() => {
+        if (message === 'Password reset link sent to your email address.') {
+            setTimeout(() => {
+                router.push('/login-page');
+            }, 3000);
+        }
+    }, [message, router]);
 
     const handleForgotPassword = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const apiUrl = process.env.NODE_ENV === 'production'
-            ? 'http://localhost:4000/api/forgotPassword'
-            : '/api/forgotPassword';
-
         try {
-            const res = await fetch(apiUrl, {
+            const res = await fetch('/api/forgotPassword', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
