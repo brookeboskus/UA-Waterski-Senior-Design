@@ -1,87 +1,72 @@
-// this is not done
-// for future access to work on, this is page 1 for forgot password
-
+// page 1 for forgot password
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function ForgotPasswordPage() {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+    const router = useRouter();
+
+    useEffect(() => {
+        if (message === 'Password reset link sent to your email address.') {
+            setTimeout(() => {
+                router.push('/login-page');
+            }, 3000);
+        }
+    }, [message, router]);
 
     const handleForgotPassword = async (e: React.FormEvent) => {
         e.preventDefault();
+
         try {
-            const response = await fetch('api/forgotPassword', {
+            const res = await fetch('/api/forgotPassword', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ email }),
             });
-            const data = await response.json();
-            if (data.success) {
-                setMessage(data.message);
+
+            if (res.ok) {
+                const data = await res.json();
+                setMessage(data.message || 'Password reset link sent to your email address.');
                 setError('');
             } else {
+                const errorData = await res.json();
+                setError(errorData.message || 'An error occurred while processing your request.');
                 setMessage('');
-                setError(data.error);
             }
         } catch (error) {
-            console.log(error);
+            setError('Network error. Please try again.');
             setMessage('');
-            setError('Something went wrong. Please try again.');
         }
     };
 
-
     return (
-        <div className="min-h-screen flex flex-col text-gray-800">
-            <section className="container mx-auto px-4 py-20">
-                <div className="text-center mb-12">
-                    <h1 className="text-5xl font-extrabold text-[#9E1B32] mb-6">Forgot Password?</h1>
-                    <p className="text-lg text-black max-w-3xl mx-auto">
-                        Enter your registered email address to receive a link to reset your password.
-                    </p>
-                </div>
-
-                <div className="max-w-lg mx-auto bg-white shadow-lg rounded-lg p-8">
-                    <form onSubmit={handleForgotPassword}>
-                        <div className="mb-6">
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                                Your Email
-                            </label>
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-[#49A097] focus:border-[#49A097]"
-                                required
-                            />
-                        </div>
-                        <div className="text-center">
-                            <button
-                                type="submit"
-                                className="bg-[#9E1B32] text-white px-8 py-4 rounded-full hover:bg-[#000000] transition duration-300"
-                            >
-                                Send Reset Link
-                            </button>
-                        </div>
+        <div className="forgot-password-page flex items-center justify-center min-h-screen bg-[#ffffff]">
+            <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md text-black">
+                <h2 className="text-2xl font-bold mb-4">Forgot Password</h2>
+                {message ? (
+                    <p className="text-green-600">{message}</p>
+                ) : (
+                    <form onSubmit={handleForgotPassword} className="space-y-4">
+                        <input
+                            type="email"
+                            placeholder="Enter your email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
+                            required
+                        />
+                        <button type="submit" className="w-full bg-[#9E1B32] text-white py-2 rounded-full font-bold">
+                            Send Reset Link
+                        </button>
                     </form>
-
-                    <p className={`text-center mt-4 ${message ? 'text-green-500' : 'text-red-500'}`}>
-                        {message || error}
-                    </p>
-
-                    <div className="text-center mt-6">
-                        <a href="/login-page" className="text-[#9E1B32] hover:underline">
-                            Back to Login
-                        </a>
-                    </div>
-                </div>
-            </section>
+                )}
+                {error && <p className="text-red-600 mt-4 text-center">{error}</p>}
+            </div>
         </div>
     );
 }

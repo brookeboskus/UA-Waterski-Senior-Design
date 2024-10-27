@@ -1,4 +1,4 @@
-// // page 4 for forgot password, this one handles updating the password in db
+// page 4 for forgot password, this one handles updating the password in db
 
 
 import type { NextApiRequest, NextApiResponse } from 'next';
