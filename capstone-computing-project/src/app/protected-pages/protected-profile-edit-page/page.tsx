@@ -13,7 +13,7 @@ import CWIDImage from '../../img/Text (6).svg';
 import MajorImage from '../../img/Text (7).svg';
 import StatusImage from '../../img/Text (8).svg';
 import DefaultPFP from '../../img/DefaultPFP.svg';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 interface TeamMember {
     Fname: string;
@@ -36,7 +36,7 @@ export default function EditProfile() {
     const [phone, setPhone] = useState('');
     const [gradYear, setGradYear] = useState('Freshman');
     const [selectedMajor, setSelectedMajor] = useState('');
-    const router = useRouter();
+    //  const router = useRouter();
     // const [major, setMajor] = useState('');
 
     const [teamMember, setTeamMember] = useState<TeamMember | null>(null);
@@ -77,6 +77,7 @@ export default function EditProfile() {
     }, []);
 
     const updateProfile = async () => {
+
         try {
             const token = localStorage.getItem('token');
             if (!token) throw new Error('No token found');
@@ -94,7 +95,7 @@ export default function EditProfile() {
             });
 
             console.log('Profile updated successfully:', response.data);
-            router.reload(); // Optionally reload or redirect after saving
+
         } catch (error) {
             console.error('Failed to update profile:', error);
         }
@@ -132,7 +133,14 @@ export default function EditProfile() {
                     {/* "Your Information" Label */}
                     <div className="absolute left-[25%] top-[42%] w-[191px] h-[26px] text-center text-black text-xl font-bold transform -translate-x-[50%]">
                         Your Information
+
                     </div>
+                    <div>
+                        <button onClick={updateProfile} className="absolute bg-blue-500 left-[25%] top-[50%] text-black p-2 rounded mt-4 ">
+                            Save Changes
+                        </button>
+                    </div>
+
 
                     {/* First Name */}
                     <div className="w-[101px] h-[15px] left-[99px] top-[360px] absolute text-black text-[13px] font-bold">First Name</div>
@@ -289,9 +297,7 @@ export default function EditProfile() {
                     <div className="w-[220px] h-[20px] left-[99px] top-[730px] absolute text-[#b9b9b9] text-[13px] font-bold">
                         {teamMember.CWID}
                     </div>
-                    <button onClick={updateProfile} className="bg-blue-500 text-white p-2 rounded mt-4">
-                            Save Changes
-                    </button>
+
                 </>
             ) : (
                 <div>No team member data available.</div>

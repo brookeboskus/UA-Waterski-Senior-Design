@@ -5,11 +5,11 @@ module.exports.updateProfile = async (req, res) => {
     const { email, fname, lname, cwid, phone, gradYear, major } = req.body;
     const pfpimage = req.file ? req.file.buffer : null;
     // Handle getting and updating profile data
-    if (req.method === 'GET') {
-        // Logic to fetch and return current profile data
-    } else if (req.method === 'PUT') {
-        // Logic to update profile information in the database
-    }
+    // if (req.method === 'GET') {
+    //     // Logic to fetch and return current profile data
+    // } else if (req.method === 'POST') {
+    //     // Logic to update profile information in the database
+    // }
     try {
         // Find the user by email or CWID (assumes these are unique)
         db.query('SELECT * FROM User WHERE Email = ?', [email], async (err, results) => {
@@ -43,7 +43,7 @@ module.exports.updateProfile = async (req, res) => {
                 [
                     updates.Fname, updates.Lname, updates.CWID, updates.Phone,
                     updates.GradYear, updates.Major, updates.PfpImage,
-            
+
                     email
                 ],
                 (err, result) => {
@@ -60,4 +60,3 @@ module.exports.updateProfile = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
-

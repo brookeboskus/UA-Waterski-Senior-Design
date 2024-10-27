@@ -71,11 +71,11 @@ export default function ProfilePage() {
 
     // Ensure teamMembers array has at least one member
     if (!teamMember) {
-        return <div>No team member data available.</div>; // no data available then say this
-    }
+        return <div>No team member ballhead data available.</div>; 
+    }else{
 
     return (
-        <div className="relative w-[417px] h-[787px] bg-white rounded-[5px] z-40" style={{ top: '0px', right: '5px', borderLeft: '3px solid black' }}>
+    <div className="relative w-[417px] h-[787px] bg-white rounded-[5px] z-40" style={{ top: '0px', right: '5px', borderLeft: '3px solid black' }}>
     {/* Container for the red header and profile image */}
     <div className="relative w-full h-full">
         {/* Red Header Section */}
@@ -92,6 +92,7 @@ export default function ProfilePage() {
                 />
         </div>
     </div>
+
 
     <div>
         {/* Edit Page */}
@@ -261,5 +262,6 @@ export default function ProfilePage() {
             <div>No team member data available.</div>
         )}
     </div>
+    
 );
-        }
+        }}
