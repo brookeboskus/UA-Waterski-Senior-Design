@@ -31,14 +31,15 @@ module.exports.updateProfile = async (req, res) => {
                 Phone: phone || results[0].Phone,
                 GradYear: gradYear || results[0].GradYear,
                 Major: major || results[0].Major,
-                PfpImage: pfpimage || results[0].PfpImage,
+                PfpImage: pfpimage ? pfpimage : results[0].PfpImage, // Only update if a new image is provided
+
             };
 
 
 
             // Update the user in the database
             db.query(
-                `UPDATE User SET Fname = ?, Lname = ?, CWID = ?, Phone = ?, GradYear = ?, Major = ?, PfpImage = ?,
+                `UPDATE User SET Fname = ?, Lname = ?, CWID = ?, Phone = ?, GradYear = ?, Major = ?, PfpImage = ?
                  WHERE Email = ?`,
                 [
                     updates.Fname, updates.Lname, updates.CWID, updates.Phone,

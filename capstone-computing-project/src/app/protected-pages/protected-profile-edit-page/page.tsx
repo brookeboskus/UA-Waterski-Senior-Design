@@ -93,7 +93,7 @@ export default function EditProfile() {
             const token = localStorage.getItem('token');
             if (!token) throw new Error('No token found');
 
-            const response = await axios.post('http://localhost:4000/auth/update-profile', {
+            const payload = {
                 Fname: fname,
                 Lname: lname,
                 GradYear: gradYear,
@@ -101,16 +101,36 @@ export default function EditProfile() {
                 Phone: phone,
                 Email: email,
                 CWID: cwid
-            }, {
-                headers: { Authorization: `Bearer ${token}` }
+            };
+
+            const response = await fetch('http://localhost:4000/auth/update-profile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(payload),
             });
-
-            console.log('Profile updated successfully:', response.data);
-
+            const data = await response.json();
+            if (response.ok) {
+                console.log('Profile updated successfully:', data);
+                setMessage('Profile updated successfully!');
+                setError('');
+                // You can also redirect or do something else here
+            } else {
+                setMessage('');
+                setError(data.error || 'Failed to update profile.');
+            }
         } catch (error) {
             console.error('Failed to update profile:', error);
+            setMessage('');
+            setError('Something went wrong. Please try again.');
         }
     };
+
+
+
+
 
     if (!teamMember) {
         return <div>No team member data available.</div>; // no data available then say this
