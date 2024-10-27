@@ -1,12 +1,18 @@
+// currently not in use. head to login-page and modiy router.push('/') to router.push('/protected-pages/protected-home-page') to see this page
+
+
+// we still need to ensure we added redirection logic (logged in or not)
+// if we want to add elements to this page that is sensitive. 
+// currently this page is accessbile when you're not logged in by typing the page addresss
+// but for now it's not a worry bc it's the same info as regular home page
+
 "use client";
 
 import { useEffect, useState } from "react";
 import Image from 'next/image';
-import Link from 'next/link';
 import SkiBamaLogo from '../../img/skibamalogo.svg';
 import { fetchSheetData } from "../../googlesheetservices";
-import placeholderhomepageimage from "../../img/placeholderhomepage.svg";
-
+import placeholderhomepageimage from "../../../app/img/placeholderhomepage.svg";
 
 export default function Home() {
     const [sheetData, setSheetData] = useState<string[] | null>(null);
@@ -17,6 +23,11 @@ export default function Home() {
     const [loading, setLoading] = useState(true);
     const [image8B, setImage8B] = useState<string | null>(null);
     const [textFrom8C, setTextFrom8C] = useState<string | null>(null);
+
+    // Set page title
+    useEffect(() => {
+        document.title = 'UA Waterski - Home';
+    }, []);
 
     useEffect(() => {
         // fetching data from Google Sheets
@@ -82,12 +93,6 @@ export default function Home() {
 
     const showPrevImage = currentIndex > 0;
     const showNextImage = sheetData && currentIndex < sheetData.length - 1;
-
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to manage sidebar visibility
-
-    const toggleSidebar = () => {
-        setIsSidebarOpen(!isSidebarOpen);
-    };
 
     return (
         <div className="min-h-screen flex flex-col">
@@ -185,43 +190,38 @@ export default function Home() {
                     </div>
 
                     <div className="container mx-auto text-center flex flex-col justify-center items-center min-h-[50vh] md:min-h-[70vh] px-4">
-                        {/* Logo Image */}
-                        <Link href="/">
+                        <div style={{ height: 'auto', width: '400px' }}>
                             <Image
                                 src={SkiBamaLogo}
                                 alt="Ski Bama Logo"
-                                width={400}
-                                height={400}
-                                className="h-200 w-200 md:h-100 md:w-100 lg:h-200 lg:w-200 object-contain" // image scales within navbar height and width with different screen sizes
+                                className="h-200 w-200 md:h-100 md:w-100 lg:h-200 lg:w-200 object-contain"
+                                priority={true}
                             />
-                        </Link>
-
-                        <div className="flex flex-col md:flex-row items-center md:items-start mt-8 mx-15">
-
-                            {/* Picture from cell 8B */}
-                            <Link href="/">
-                                {image8B && (
-                                    <img
-                                        src={image8B}
-                                        alt="Image from 8B"
-
-                                        className="h-200px w-200px md:h-250px md:w-250px lg:h-300px lg:w-300px max-w-full object-contain mr-20"
-                                    />
-                                )}
-                            </Link>
-                            {/* About Us snippet */}
-                            <div className="flex flex-col md:flex-row items-center justify-center md:items-start min-h-screen mt-8">
-                                <p className="text-lg md:text-1xl mb-12 text-black max-w-3xl mx-auto mt-20 mb-200">
-                                    {textFrom8C ? textFrom8C : "Loading content..."}
-                                </p>
-
-                            </div>
                         </div>
 
+                        <div className="flex flex-col md:flex-row items-center justify-center mt-8 mx-15 border border-gray-300 p-4 rounded-lg min-h-[300px]">
 
+                            {/* Picture from cell 8B */}
+                            {image8B && (
+                                <img
+                                    src={image8B}
+                                    alt="Image from 8B"
+                                    className="h-200px w-200px md:h-250px md:w-250px lg:h-300px lg:w-300px max-w-full object-contain mr-6"
+                                />
+                            )}
+
+                            {/* Text from 8C */}
+                            <div className="flex flex-col justify-center h-full">
+                                <p className="text-lg md:text-xl text-black max-w-3xl">
+                                    {textFrom8C ? textFrom8C : "Loading content..."}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </section>
-
+                {/* temp usage of br for spacing on the bottom */}
+                <br />
+                <br />
 
             </main>
         </div>

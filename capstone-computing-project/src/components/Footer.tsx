@@ -8,13 +8,12 @@ export default function Footer() {
             <div className="container mx-auto flex flex-col md:flex-row items-center justify-between text-center md:text-left">
 
                 {/* 'Alabama Sports Club' logo needed for copyright */}
-                <div className="mb-2 md:mb-0">
+                <div className="mb-2 md:mb-0" style={{ height: 'auto', width: '60px' }}>
                     <Image
                         src={uabrandingstandard}
                         alt="UA Branding Standard"
-                        width={60}
-                        height={60}
                         className="mx-auto md:mx-0"
+                        priority={true}
                     />
                 </div>
 

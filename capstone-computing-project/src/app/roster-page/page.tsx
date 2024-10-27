@@ -47,6 +47,11 @@ export default function RosterPage() {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null); // initial state as null to represent loading
     const router = useRouter();
 
+    // Set page title
+    useEffect(() => {
+        document.title = 'UA Waterski - Roster';
+    }, []);
+
     // Show a loading spinner or screen while checking the login status
     const [isCheckingLogin, setIsCheckingLogin] = useState(true); // Track if checking login status
 

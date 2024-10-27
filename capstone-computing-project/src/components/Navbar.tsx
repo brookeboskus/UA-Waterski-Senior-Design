@@ -13,7 +13,7 @@ import axios from 'axios';
 
 interface TeamMember {
     PfpImage: string;
-    MemberType: string; 
+    MemberType: string;
 }
 
 export default function Navbar() {
@@ -135,13 +135,12 @@ export default function Navbar() {
             <div className="container mx-auto flex justify-between items-center px-4 h-20 md:h-14 lg:h-15">
                 {/* where legends are made logo */}
                 <Link href="/">
-                    <div className="relative">
+                    <div className="relative" style={{ height: 'auto', width: '250px' }}>
                         <Image
                             src={HeaderWLAM}
                             alt="Header WLAM image"
-                            width={250}
-                            height={250}
-                            className="object-contain cursor-pointer "
+                            className="cursor-pointer"
+                            priority={true}
                         />
                     </div>
                 </Link>
@@ -189,7 +188,7 @@ export default function Navbar() {
                     {/* about dropdown */}
                     <div className="cursor-pointer items-center gap-1 group relative">
                         <div className="flex flex-row text-white text-base hover:text-black hover:underline transition duration-300">
-                            <Link href="/about-me-page" className="flex items-center py-2 px-4">
+                            <Link href="#" className="flex items-center py-2 px-4">
                                 About
                                 <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
@@ -240,37 +239,44 @@ export default function Navbar() {
                 </div>
 
                 {/* login/logout button */}
-                <div className="hidden md:block">
+                <div className="hidden md:flex items-center space-x-2 -mr-20">
+                    <Link href="/contact-us-page" className="bg-white-500 text-white text-base py-2 px-2 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300">
+                        Contact Us
+                    </Link>
+
                     {isLoggedIn ? (
-                        <button onClick={handleLogout} className="bg-white-500 text-white text-base py-2 px-4 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300">
+                        <button onClick={handleLogout} className="bg-white-500 text-white text-base py-2 px-2 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300">
                             Log Out
                         </button>
                     ) : (
-                        <Link href="/login-page" className="bg-white-500 text-white text-base py-2 px-4 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300">
+                        <Link href="/login-page" className="bg-white-500 text-white text-base py-2 px-2 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300">
                             Login
                         </Link>
                     )}
+
+                    {/* Reserve space for profile picture, even if it's not visible */}
+                    <div className="relative w-12 h-12">
+                        {isLoggedIn && isProfileFetched ? (
+                            <button onClick={toggleSidebar} className="p-0 m-0">
+                                <Link href="#">
+                                    <Image
+                                        src={profilePic}
+                                        alt="Profile picture"
+                                        width={50}
+                                        height={50}
+                                        className="object-cover h-12 w-12 rounded-full border-2 border-white shadow-lg hover:shadow-xl transition-shadow duration-300"
+                                    />
+                                </Link>
+                            </button>
+                        ) : (
+                            // Placeholder to maintain the layout
+                            <div className="w-15 h-15"></div>
+                        )}
+                    </div>
                 </div>
 
-                {isLoggedIn && isProfileFetched && ( // only show after profile is fetched
-                    <div
-                        className={`fixed top-0 p-2 ${isSidebarOpen ? 'z-0' : 'z-[9999]'}`}
-                        style={{ top: '-5px', right: '10px' }}
-                    >
-                        {/* open the sidebar */}
-                        <button onClick={toggleSidebar} className="p-0 m-0" style={{ width: 'auto', height: 'auto' }}>
-                            <Link href="#">
-                                <Image
-                                    src={profilePic}
-                                    alt="Profile picture"
-                                    width={50}
-                                    height={50}
-                                    className="object-cover h-12 w-12 rounded-full border-2 border-white shadow-lg hover:shadow-xl transition-shadow duration-300"
-                                />
-                            </Link>
-                        </button>
-                    </div>
-                )}
+
+
 
                 {/* sidebar */}
                 {isSidebarOpen && (
