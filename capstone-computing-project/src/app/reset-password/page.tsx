@@ -1,8 +1,7 @@
-// // page 3 for forgot password
-
+// page 3 for forgot password
 "use client";
 import { useState, useEffect } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 export default function ResetPasswordPage() {
     const [newPassword, setNewPassword] = useState('');
@@ -12,7 +11,6 @@ export default function ResetPasswordPage() {
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const searchParams = useSearchParams();
-    const router = useRouter();
     const token = searchParams.get('token');
 
     useEffect(() => {
@@ -40,19 +38,16 @@ export default function ResetPasswordPage() {
 
             const data = await response.json();
             if (data.success) {
-                setMessage("Password reset successfully! Redirecting to login...");
-                setError('');
+                setMessage("Password reset successfully! Closing this tab...");
 
                 setTimeout(() => {
-                    router.push('/login-page');
-                }, 3000);
+                    window.close();
+                }, 2000);
             } else {
-                setMessage('');
                 setError(data.error);
             }
         } catch (error) {
             console.error("Error:", error);
-            setMessage('');
             setError('Something went wrong. Please try again.');
         }
     };
@@ -130,6 +125,7 @@ export default function ResetPasswordPage() {
                                 )}
                             </button>
                         </div>
+
                         <button
                             type="submit"
                             className="w-full bg-[#9E1B32] text-white py-3 rounded-full font-semibold hover:bg-gray-800 transition duration-300"

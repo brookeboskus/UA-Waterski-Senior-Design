@@ -499,8 +499,9 @@ export default function SetListPage() {
                 setLoading(false);
             }
         };
-
-        fetchSetList();
+        if (isLoggedIn) {
+            fetchSetList();
+        }
     }, []);
 
     if (loading) {

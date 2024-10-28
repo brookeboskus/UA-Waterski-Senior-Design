@@ -3,16 +3,44 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import nodemailer from 'nodemailer';
 const jwt = require('jsonwebtoken');
+const db = require('../../db'); 
+const SECRET_KEY = process.env.JWT_SECRET;
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
-const SECRET_KEY = process.env.JWT_SECRET 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'; 
+const isValidUAEmail = (email: string): boolean => {
+    //pattern=".+@+(.+\.)?ua\.edu"
+    const uaEmailPattern = /.+@+(.+\.)?ua\.edu/;
+    return uaEmailPattern.test(email);
+};
+
+const isEmailRegistered = async (email: string): Promise<boolean> => {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM User WHERE Email = ?';
+        db.query(query, [email], (err, results) => {
+            if (err) {
+                console.error('Database error:', err);
+                reject(err);
+            } else {
+                resolve(results.length > 0);
+            }
+        });
+    });
+};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-
     if (req.method === 'POST') {
         const { email } = req.body;
 
         try {
+            if (!isValidUAEmail(email)) {
+                return res.status(400).json({ success: false, message: "Please use a valid University of Alabama (ua.edu) email address." });
+            }
+
+            const emailExists = await isEmailRegistered(email);
+            if (!emailExists) {
+                return res.status(400).json({ success: false, message: "This email address is not registered for an account with the UA Waterski Team." });
+            }
+
             const token = jwt.sign({ email }, SECRET_KEY, { expiresIn: '1h' });
             const resetLink = `${APP_URL}/reset-password?token=${token}`;
 
