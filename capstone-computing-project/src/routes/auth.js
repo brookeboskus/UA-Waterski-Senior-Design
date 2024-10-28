@@ -3,7 +3,7 @@ const multer = require('multer');
 const router = express.Router();
 const { login } = require('../auth/login');
 const { signup } = require('../auth/signup');
-const { updateProfile: updateprofile } = require('../auth/update-profile');
+
 const { getRoster } = require('../auth/roster');
 const { getSetList, registerReservation, deleteReservation } = require('../auth/setlist');
 const { profile } = require('../auth/profile');
@@ -38,8 +38,7 @@ router.get('/profile', profile);
 router.get('/setlist', getSetList);
 router.post('/setlist', registerReservation);
 router.delete('/setlist', deleteReservation);
-router.get('/update-profile', updateprofile);
-router.post('/update-profile', updateprofile);
+
 router.get('/meetingnotes', getMeetingNotes);
 router.post('/meetingnotes', upload.single('file'), addMeetingNote);
 router.delete('/meetingnotes/:id', deleteMeetingNote);

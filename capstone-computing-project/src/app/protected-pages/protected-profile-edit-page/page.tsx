@@ -36,14 +36,14 @@ export default function EditProfile() {
     const [lname, setLname] = useState('');
     const [cwid, setCwid] = useState('');
     const [phone, setPhone] = useState('');
-    const [gradYear, setGradYear] = useState('Freshman');
+    const [gradYear, setGradYear] = useState('');
     const [selectedMajor, setSelectedMajor] = useState('');
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const searchParams = useSearchParams();
     const router = useRouter();
     const token = searchParams.get('token');
-    //  const router = useRouter();
+    // const router = useRouter();
     // const [major, setMajor] = useState('');
 
 
@@ -51,14 +51,11 @@ export default function EditProfile() {
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        if (!token) {
-            setError("Invalid or missing token.");
-        }
         const fetchProfile = async () => {
             try {
-                const token = localStorage.getItem('token');
+                const token = localStorage.getItem('token'); 
                 if (!token) {
-                    throw new Error('No token found');
+                    throw new Error('No token found'); 
                 }
 
                 const response = await axios.get<TeamMember>('http://localhost:4000/auth/profile', {
@@ -67,16 +64,9 @@ export default function EditProfile() {
                     }
                 });
 
-                console.log('Profile data:', response.data);
+                console.log('Profile data:', response.data); 
 
                 setTeamMember(response.data); // store profile data in state
-                setEmail(response.data.Email);
-                setFname(response.data.Fname);
-                setLname(response.data.Lname);
-                setCwid(response.data.CWID);
-                setPhone(response.data.Phone);
-                setGradYear(response.data.GradYear);
-                setSelectedMajor(response.data.Major);
             } catch (error) {
                 console.error('Failed to fetch team roster:', error);
             } finally {
@@ -85,13 +75,25 @@ export default function EditProfile() {
         };
 
         fetchProfile();
-    }, [token]);
+    }, []);
+
+   
+        
+    
+   
+    
 
     const updateProfile = async (e: React.FormEvent) => {
         e.preventDefault();
+      
+    
         try {
-            const token = localStorage.getItem('token');
-            if (!token) throw new Error('No token found');
+
+            const token = searchParams.get('token');
+                if (!token) {
+                    throw new Error('No token found'); 
+                }
+
 
             const payload = {
                 Fname: fname,
@@ -103,19 +105,25 @@ export default function EditProfile() {
                 CWID: cwid
             };
 
-            const response = await fetch('http://localhost:4000/auth/update-profile', {
+            //const token = localStorage.getItem('token'); // Retrieve the token again
+
+
+            const response = await fetch('/api/updateProfile', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                
+                
+
                 },
-                body: JSON.stringify(payload),
+                body: JSON.stringify({token, payload }),
             });
             const data = await response.json();
-            if (response.ok) {
+            if (data.success) {
                 console.log('Profile updated successfully:', data);
                 setMessage('Profile updated successfully!');
                 setError('');
+
                 // You can also redirect or do something else here
             } else {
                 setMessage('');
