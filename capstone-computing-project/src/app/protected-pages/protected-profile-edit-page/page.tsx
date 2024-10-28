@@ -180,7 +180,7 @@ export default function EditProfile() {
 
                     </div>
                     <div>
-                        <button onClick={updateProfile} className="absolute bg-blue-500 left-[25%] top-[50%] text-black p-2 rounded mt-4 ">
+                        <button onClick={updateProfile} className="absolute bg-[#9e1b32] left-[60%] top-[40%] text-black p-2 rounded mt-4 ">
                             Save Changes
                         </button>
                     </div>
