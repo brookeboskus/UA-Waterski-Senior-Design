@@ -53,9 +53,9 @@ export default function EditProfile() {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const token = localStorage.getItem('token'); 
+                const token = localStorage.getItem('token');
                 if (!token) {
-                    throw new Error('No token found'); 
+                    throw new Error('No token found');
                 }
 
                 const response = await axios.get<TeamMember>('http://localhost:4000/auth/profile', {
@@ -64,7 +64,7 @@ export default function EditProfile() {
                     }
                 });
 
-                console.log('Profile data:', response.data); 
+                console.log('Profile data:', response.data);
 
                 setTeamMember(response.data); // store profile data in state
             } catch (error) {
@@ -77,22 +77,22 @@ export default function EditProfile() {
         fetchProfile();
     }, []);
 
-   
-        
-    
-   
-    
+
+
+
+
+
 
     const updateProfile = async (e: React.FormEvent) => {
         e.preventDefault();
-      
-    
+
+
         try {
 
             const token = searchParams.get('token');
-                if (!token) {
-                    throw new Error('No token found'); 
-                }
+            if (!token) {
+                throw new Error('No token found');
+            }
 
 
             const payload = {
@@ -112,11 +112,11 @@ export default function EditProfile() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                
-                
+
+
 
                 },
-                body: JSON.stringify({token, payload }),
+                body: JSON.stringify({ token, payload }),
             });
             const data = await response.json();
             if (data.success) {
@@ -175,7 +175,7 @@ export default function EditProfile() {
 
                     </div>
                     <div>
-                        <button onClick={updateProfile} className="absolute bg-blue-500 left-[25%] top-[50%] text-black p-2 rounded mt-4 ">
+                        <button onClick={updateProfile} className="absolute bg-[#9e1b32] left-[35%] top-[90%] text-black p-2 rounded mt-4 ">
                             Save Changes
                         </button>
                     </div>
