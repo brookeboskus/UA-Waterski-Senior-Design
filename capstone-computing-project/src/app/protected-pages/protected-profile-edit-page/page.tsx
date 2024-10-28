@@ -52,23 +52,30 @@ export default function EditProfile() {
 
     useEffect(() => {
         const fetchProfile = async () => {
-            try {
-                const token = localStorage.getItem('token'); 
-                if (!token) {
-                    throw new Error('No token found'); 
-                }
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('No token found in localStorage');
+                setError('Authentication token missing. Please log in again.');
+                return;
+            }
 
+            try {
                 const response = await axios.get<TeamMember>('http://localhost:4000/auth/profile', {
                     headers: {
-                        Authorization: `Bearer ${token}` // send the token in the request headers to authenticate
+                        Authorization: `Bearer ${token}`
                     }
                 });
 
-                console.log('Profile data:', response.data); 
+                console.log('Profile data:', response.data);
+                // setTeamMember(response.data);
 
-                setTeamMember(response.data); // store profile data in state
+                const data = response.data;
+                setTeamMember(data);
+                console.log('Team Member:', teamMember);
+
             } catch (error) {
-                console.error('Failed to fetch team roster:', error);
+                console.error('Failed to fetch profile:', error);
+                setError('Failed to fetch profile.');
             } finally {
                 setLoading(false);
             }
@@ -77,23 +84,18 @@ export default function EditProfile() {
         fetchProfile();
     }, []);
 
-   
-        
-    
-   
-    
 
     const updateProfile = async (e: React.FormEvent) => {
         e.preventDefault();
-      
-    
+
         try {
-
-            const token = searchParams.get('token');
-                if (!token) {
-                    throw new Error('No token found'); 
-                }
-
+            const token = localStorage.getItem('token'); // retrieve token from localStorage
+            if (!token) {
+                console.error('No token found in localStorage');
+                setError('Authentication token missing. Please log in again.');
+                return; 
+            }
+            console.log('Token retrieved for updateProfile:', token);
 
             const payload = {
                 Fname: fname,
@@ -105,26 +107,26 @@ export default function EditProfile() {
                 CWID: cwid
             };
 
-            //const token = localStorage.getItem('token'); // Retrieve the token again
-
+            console.log('Payload:', payload);
 
             const response = await fetch('/api/updateProfile', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                
-                
-
+                    Authorization: `Bearer ${token}`
                 },
-                body: JSON.stringify({token, payload }),
+                body: JSON.stringify({ token, payload })
             });
+
+
+            // log the response and handle based on status
             const data = await response.json();
-            if (data.success) {
-                console.log('Profile updated successfully:', data);
+            console.log('Response Status:', response.status);
+            console.log('Response Data:', data);
+
+            if (response.ok) {
                 setMessage('Profile updated successfully!');
                 setError('');
-
-                // You can also redirect or do something else here
             } else {
                 setMessage('');
                 setError(data.error || 'Failed to update profile.');
@@ -135,6 +137,9 @@ export default function EditProfile() {
             setError('Something went wrong. Please try again.');
         }
     };
+
+
+
 
 
 
