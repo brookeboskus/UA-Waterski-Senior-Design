@@ -302,9 +302,48 @@ export default function SetListPage() {
         };
 
         if (isLoggedIn) {
+            //console.log("Fetching roster...");
             fetchRoster(); // Only fetch the roster if the user is logged in
         }
     }, [isLoggedIn, router]);
+
+    // Get reservations on page load
+    useEffect(() => {
+        const fetchSetList = async () => {
+            try {
+                const token = localStorage.getItem('token'); 
+                if (!token) {
+                    throw new Error('No token found'); 
+                }
+
+                const response = await axios.get<SetListReservation[]>('http://localhost:4000/auth/setlist', {
+                    headers: {
+                        Authorization: `Bearer ${token}` // send the token in the request headers to authenticate
+                    },
+                    params: {
+                        startDate: dateRangeStartString,
+                        endDate: dateRangeEndString
+                    }
+                });
+
+                console.log('Data Received for setList:', response.data); 
+
+                setReservations(response.data); // store profile data in state
+            } catch (error) {
+                console.error('Failed to fetch Reservation', error);
+                alert("An error occurred when trying to fetch the Set List.\nPlease refresh the page and try again. If this repeatedly fails, contact the site administrator.");
+            } finally {
+                setLoading(false);
+            }
+        };
+        
+        if (isLoggedIn) {
+            //console.log("Fetching set list...");
+            fetchSetList();
+        }
+        
+
+    }, [isLoggedIn]);
 
     // Sets up the TimeTable
     function TimeTableBody() {
@@ -470,39 +509,7 @@ export default function SetListPage() {
     const dateRangeStartString = dateRangeStart.getFullYear().toString() + "-" + (dateRangeStart.getMonth() + 1).toString() + "-" + dateRangeStart.getDate().toString() + " 00:00:00";
     const dateRangeEndString = dateRangeEnd.getFullYear().toString() + "-" + (dateRangeEnd.getMonth() + 1).toString() + "-" + dateRangeEnd.getDate().toString() + " 23:59:59";
 
-    // Get reservations on page load
-    useEffect(() => {
-        const fetchSetList = async () => {
-            try {
-                const token = localStorage.getItem('token'); 
-                if (!token) {
-                    throw new Error('No token found'); 
-                }
 
-                const response = await axios.get<SetListReservation[]>('http://localhost:4000/auth/setlist', {
-                    headers: {
-                        Authorization: `Bearer ${token}` // send the token in the request headers to authenticate
-                    },
-                    params: {
-                        startDate: dateRangeStartString,
-                        endDate: dateRangeEndString
-                    }
-                });
-
-                console.log('Data Received for setList:', response.data); 
-
-                setReservations(response.data); // store profile data in state
-            } catch (error) {
-                console.error('Failed to fetch Reservation', error);
-                alert("An error occurred when trying to fetch the Set List.\nPlease refresh the page and try again. If this repeatedly fails, contact the site administrator.");
-            } finally {
-                setLoading(false);
-            }
-        };
-        if (isLoggedIn) {
-            fetchSetList();
-        }
-    }, []);
 
     if (loading) {
         return <div className="text-black">Loading...</div>; // Render a loading message while data is being fetched
