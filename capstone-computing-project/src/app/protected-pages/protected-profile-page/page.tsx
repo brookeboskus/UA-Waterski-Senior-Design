@@ -53,7 +53,7 @@ export default function ProfilePage() {
                 }
             });
 
-            console.log('Profile data:', response.data);
+            // console.log('Profile data:', response.data);
 
             setTeamMember(response.data); // store profile data in state
         } catch (error) {
