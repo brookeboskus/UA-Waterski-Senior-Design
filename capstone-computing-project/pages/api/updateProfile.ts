@@ -28,9 +28,14 @@ const updateUserProfile = async (email: string, payload: any) => {
             query += `Major = ?, `;
             values.push(payload.Major);
         }
+
         if (payload.Phone) {
+            let phone = payload.Phone;
+            if (phone.length === 10) {
+                phone = `(${phone.slice(0, 3)})-${phone.slice(3, 6)}-${phone.slice(6)}`;
+            }
             query += `Phone = ?, `;
-            values.push(payload.Phone);
+            values.push(phone);
         }
         if (payload.Email) {
             query += `Email = ?, `;
@@ -45,8 +50,6 @@ const updateUserProfile = async (email: string, payload: any) => {
         query += ` WHERE Email = ?`;
         values.push(email);
 
-        console.log('Dynamic Query:', query);
-        console.log('Values:', values);
 
         db.query(query, values, (err, results) => {
             if (err) {
@@ -68,16 +71,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const authHeader = req.headers.authorization;
         const token = authHeader && authHeader.split(' ')[1]; 
 
-        console.log('Token 2:', token);
 
         if (!token) {
             res.status(401).json({ error: 'Authentication token missing. Please log in again.' });
             return;
         }
 
-        console.log('Request Body:', req.body);
         const { payload } = req.body; 
-        console.log('Payload:', payload);
 
         try {
 

@@ -71,13 +71,13 @@ export default function Navbar() {
                     localStorage.removeItem('token');
                     setIsLoggedIn(false);
                     router.push('/login-page');
-                    console.log('Token expired. Redirected to login page.');
+                    // console.log('Token expired. Redirected to login page.');
                 } else {
                     setIsLoggedIn(true);
                     fetchProfile(); // fetch the profile image if token is valid
                 }
             } catch (error) {
-                console.error('Error decoding token:', error);
+                // console.error('Error decoding token:', error);
                 localStorage.removeItem('token');
                 setIsLoggedIn(false);
             }
@@ -110,7 +110,7 @@ export default function Navbar() {
         setIsProfileFetched(false); // reset profile fetched state
         setMemberType(''); // reset member type
         router.push('/'); // redirects to login page after logout
-        console.log('Logged out and redirected to home page');
+        // console.log('Logged out and redirected to home page');
     };
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false); // state to manage sidebar visibility
@@ -129,6 +129,15 @@ export default function Navbar() {
             setMemberType(''); // reset member type on logout
         }
     }, [isLoggedIn]);
+
+    useEffect(() => {
+        if (isSidebarOpen) {
+            document.body.style.overflow = 'hidden'; // disables background scroll when sidebar is open
+        } else {
+            document.body.style.overflow = 'auto'; 
+        }
+    }, [isSidebarOpen]);
+    
 
     return (
         <nav className="bg-[#9E1B32] shadow-md sticky top-0 z-[9999] w-full">

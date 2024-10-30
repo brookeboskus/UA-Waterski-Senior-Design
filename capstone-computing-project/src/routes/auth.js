@@ -14,7 +14,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 const checkAuth = (req, res, next) => {
-    console.log('Checking authentication for Express routes');
+    // console.log('Checking authentication for Express routes');
 
     const authHeader = req.headers['authorization'];
     if (!authHeader) {

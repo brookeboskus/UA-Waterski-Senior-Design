@@ -54,7 +54,7 @@ export default function EditProfile() {
         const fetchProfile = async () => {
             const token = localStorage.getItem('token');
             if (!token) {
-                console.error('No token found in localStorage');
+                // console.error('No token found in localStorage');
                 setError('Authentication token missing. Please log in again.');
                 return;
             }
@@ -66,12 +66,12 @@ export default function EditProfile() {
                     }
                 });
 
-                console.log('Profile data:', response.data);
+                // console.log('Profile data:', response.data);
                 // setTeamMember(response.data);
 
                 const data = response.data;
                 setTeamMember(data);
-                console.log('Team Member:', teamMember);
+                // console.log('Team Member:', teamMember);
 
             } catch (error) {
                 console.error('Failed to fetch profile:', error);
@@ -91,11 +91,11 @@ export default function EditProfile() {
         try {
             const token = localStorage.getItem('token'); // retrieve token from localStorage
             if (!token) {
-                console.error('No token found in localStorage');
+                // console.error('No token found in localStorage');
                 setError('Authentication token missing. Please log in again.');
                 return; 
             }
-            console.log('Token retrieved for updateProfile:', token);
+            // console.log('Token retrieved for updateProfile:', token);
 
             const payload = {
                 Fname: fname,
@@ -107,7 +107,7 @@ export default function EditProfile() {
                 CWID: cwid
             };
 
-            console.log('Payload:', payload);
+            // console.log('Payload:', payload);
 
             const response = await fetch('/api/updateProfile', {
                 method: 'POST',
@@ -121,8 +121,8 @@ export default function EditProfile() {
 
             // log the response and handle based on status
             const data = await response.json();
-            console.log('Response Status:', response.status);
-            console.log('Response Data:', data);
+            // console.log('Response Status:', response.status);
+            // console.log('Response Data:', data);
 
             if (response.ok) {
                 setMessage('Profile updated successfully!');

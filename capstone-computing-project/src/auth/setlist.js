@@ -28,7 +28,7 @@ module.exports.getSetList = async (req, res) => {
 
     // Check if the dates are correctly passed through
     console.log("Fetching set list reservations...");
-    console.log('Start Date:', startDate, 'End Date:', endDate);
+    // console.log('Start Date:', startDate, 'End Date:', endDate);
 
     authenticateJWT(req, res, () => {
         // Get current user's CWID

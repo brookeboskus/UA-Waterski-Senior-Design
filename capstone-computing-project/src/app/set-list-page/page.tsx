@@ -70,7 +70,7 @@ const makeReservation = async (date) => {
             },
         });
 
-        console.log('Data Received for setList:', response.data);
+        // console.log('Data Received for setList:', response.data);
 
     } catch (error) {
         // If registration fails, show alert stating that registration failed
@@ -102,7 +102,7 @@ const deleteReservation = async (date) => {
 
         const response = await axios.delete('http://localhost:4000/auth/setlist', payload);
 
-        console.log('Data Received for setList:', response.data);
+        // console.log('Data Received for setList:', response.data);
 
     } catch (error) {
         // If delete fails, show alert stating that delete failed
@@ -326,7 +326,7 @@ export default function SetListPage() {
                     }
                 });
 
-                console.log('Data Received for setList:', response.data); 
+                // console.log('Data Received for setList:', response.data); 
 
                 setReservations(response.data); // store profile data in state
             } catch (error) {

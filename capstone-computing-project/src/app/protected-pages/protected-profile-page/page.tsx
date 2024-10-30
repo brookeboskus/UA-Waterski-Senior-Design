@@ -74,22 +74,20 @@ export default function ProfilePage() {
 
 
     if (loading) {
-        return <div>Loading...</div>; // Render a loading message while data is being fetched
+        return <div>Loading...</div>; 
     }
 
-    // Ensure teamMembers array has at least one member
     if (!teamMember) {
         return <div>No team member righthere data available.</div>;
     } else {
 
         return (
-            <div className="relative w-[417px] h-[787px] bg-white rounded-[5px] z-40" style={{ top: '0px', right: '5px', borderLeft: '3px solid black' }}>
-                {/* Container for the red header and profile image */}
+            <div className="relative w-[417px] max-h-full h-[787px] bg-white rounded-[5px] z-40 overflow-y-auto" style={{ top: '0px', right: '5px', borderLeft: '3px solid black' }}>
                 <div className="relative w-full h-full">
-                    {/* Red Header Section */}
+                    {/* red header section */}
                     <div className="absolute left-0 top-0 w-full h-[320px] bg-[#9e1b32] z-10"></div>
 
-                    {/* User Profile Image */}
+                    {/* user profile image */}
                     <div className="absolute left-[50%] top-[5%] w-[230px] h-[230px] rounded-full z-20 transform -translate-x-[50%] overflow-hidden">
                         <Image
                             src={teamMember.PfpImage ? teamMember.PfpImage : DefaultPFP}
@@ -103,7 +101,7 @@ export default function ProfilePage() {
 
 
                 <div>
-                    {/* Edit Page */}
+                    {/* edit page */}
                     <div
                         className={`fixed top-0 p-2 ${isEditPageOpen ? 'z-0' : 'z-[9999]'}`}
                         style={{ top: '-5px', right: '10px' }}
@@ -139,15 +137,14 @@ export default function ProfilePage() {
                 </div>
 
 
-                {/* Conditionally render the team member info only if teamMember is defined */}
+                {/* conditionally render the team member info only if teamMember is defined */}
                 {teamMember ? (
                     <>
-                        {/* "Your Information" Label */}
+                        {/* "your information" label section */}
                         <div className="absolute left-[25%] top-[42%] w-[191px] h-[26px] text-center text-black text-xl font-bold transform -translate-x-[50%]">
                             Your Information
                         </div>
 
-                        {/* First Name */}
                         <div className="w-[101px] h-[15px] left-[99px] top-[360px] absolute text-black text-[13px] font-bold">First Name</div>
                         <div className="absolute left-[50px] top-[365px] w-[15px] h-[30px] z-20 transform -translate-x-[50%]">
                             <Image
@@ -162,7 +159,6 @@ export default function ProfilePage() {
                             {teamMember.Fname}
                         </div>
 
-                        {/* Last Name */}
                         <div className="w-[101px] h-[15px] left-[99px] top-[410px] absolute text-black text-[13px] font-bold">Last Name</div>
                         <div className="absolute left-[50px] top-[415px] w-[15px] h-[30px] z-20 transform -translate-x-[50%]">
                             <Image
@@ -177,7 +173,6 @@ export default function ProfilePage() {
                             {teamMember.Lname}
                         </div>
 
-                        {/* Graduation Year */}
                         <div className="w-[125px] h-[15px] left-[99px] top-[460px] absolute text-black text-[13px] font-bold">Graduation Year</div>
                         <div className="absolute left-[50px] top-[465px] w-[15px] h-[30px] z-20 transform -translate-x-[50%]">
                             <Image
@@ -192,7 +187,6 @@ export default function ProfilePage() {
                             {teamMember.GradYear}
                         </div>
 
-                        {/* Major */}
                         <div className="w-[101px] h-[15px] left-[99px] top-[510px] absolute text-black text-[13px] font-bold">Major</div>
                         <div className="absolute left-[50px] top-[515px] w-[15px] h-[30px] z-20 transform -translate-x-[50%]">
                             <Image
@@ -207,7 +201,6 @@ export default function ProfilePage() {
                             {teamMember.Major}
                         </div>
 
-                        {/* Phone Number */}
                         <div className="w-[125px] h-[15px] left-[99px] top-[560px] absolute text-black text-[13px] font-bold">Phone Number</div>
                         <div className="absolute left-[50px] top-[565px] w-[15px] h-[30px] z-20 transform -translate-x-[50%]">
                             <Image
@@ -222,7 +215,6 @@ export default function ProfilePage() {
                             {teamMember.Phone}
                         </div>
 
-                        {/* Email */}
                         <div className="w-[101px] h-[15px] left-[99px] top-[610px] absolute text-black text-[13px] font-bold">E-mail</div>
                         <div className="absolute left-[50px] top-[615px] w-[15px] h-[30px] z-20 transform -translate-x-[50%]">
                             <Image
@@ -237,7 +229,6 @@ export default function ProfilePage() {
                             {teamMember.Email}
                         </div>
 
-                        {/* CWID */}
                         <div className="w-[101px] h-[15px] left-[99px] top-[660px] absolute text-black text-[13px] font-bold">CWID</div>
                         <div className="absolute left-[50px] top-[665px] w-[15px] h-[30px] z-20 transform -translate-x-[50%]">
                             <Image
@@ -252,7 +243,6 @@ export default function ProfilePage() {
                             {teamMember.CWID}
                         </div>
 
-                        {/* Status */}
                         <div className="w-[101px] h-[15px] left-[99px] top-[710px] absolute text-black text-[13px] font-bold">Status</div>
                         <div className="absolute left-[50px] top-[715px] w-[15px] h-[30px] z-20 transform -translate-x-[50%]">
                             <Image
