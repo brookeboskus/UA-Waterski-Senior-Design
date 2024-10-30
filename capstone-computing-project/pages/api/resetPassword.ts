@@ -2,9 +2,10 @@
 
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const db = require('../../db'); 
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import db from '../../db';
+
 
 const SECRET_KEY = process.env.JWT_SECRET;
 
