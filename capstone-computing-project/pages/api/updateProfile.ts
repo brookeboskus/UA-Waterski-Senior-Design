@@ -1,17 +1,10 @@
+require('dotenv').config();
+
 // page for updating the profile
 import type { NextApiRequest, NextApiResponse } from 'next';
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require('../../db'); 
-
-// const SECRET_KEY = process.env.JWT_SECRET; 
-//we'll need to eventually delete every1 in DB, update login.js to use this SECRET_KEY format. 
-// login's token has to be generated from the same jwt token for anywhere else we 
-// grab and verify token to actually let a get / post request go through
-
-const SECRET_KEY = 'your_jwt_secret';
-
-
 
 
 const updateUserProfile = async (email: string, payload: any) => {
@@ -82,14 +75,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return;
         }
 
+        console.log('Request Body:', req.body);
         const { payload } = req.body; 
+        console.log('Payload:', payload);
 
         try {
-            console.log("entered try block")
-            const decoded = jwt.verify(token, SECRET_KEY);
-            console.log('Decoded:', decoded);
+
+            try {
+                jwt.verify(token, process.env.JWT_SECRET); // This line should succeed if the signature matches
+            } catch (error) {
+            }
+            
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
             const email = decoded.email;
-            console.log('Email:', email);
 
             await updateUserProfile(email, payload);
 

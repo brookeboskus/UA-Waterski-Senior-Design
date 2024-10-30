@@ -115,7 +115,7 @@ export default function EditProfile() {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`
                 },
-                body: JSON.stringify({ token, payload })
+                body: JSON.stringify({ payload })
             });
 
 

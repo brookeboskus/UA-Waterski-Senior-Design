@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require('../../db');
@@ -20,7 +22,13 @@ module.exports.login = async (req, res) => {
             return res.status(400).json({ message: 'Invalid password or email' }); //we know it's invalid password but to not let malicious hackers know
         }
 
-        const token = jwt.sign({ id: user.CWID, email: user.Email }, 'your_jwt_secret', { expiresIn: '1h' }); //tested with 10s and it worked to expire token and redirect to login
+        const token = jwt.sign(
+            {id: user.CWID, email: user.Email},
+            process.env.JWT_SECRET,
+            {expiresIn: '1h'}
+        );
+
+
 
         res.status(200).json({ message: 'Login successful', token });
     });
@@ -33,7 +41,7 @@ const authenticateJWT = (req, res, next) => {
         return res.status(401).json({ message: 'Unauthorized access' });
     }
 
-    jwt.verify(token, 'your_jwt_secret', (err, user) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         if (err) {
             return res.status(403).json({ message: 'Forbidden' });
         }
