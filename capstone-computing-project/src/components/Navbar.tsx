@@ -8,9 +8,11 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from "jwt-decode"; // needed this for token expiration!!
 import ProtectedProfilePage from '../app/protected-pages/protected-profile-page/page';
+import EditPage from '../app/protected-pages/protected-profile-edit-page/page';
 import defaultPfpImage from './img/DefaultPFP.svg';
+import EditIcon from './img/Icon (2).svg';
 import axios from 'axios';
-
+import closeIcon from './img/Vector.svg';
 interface TeamMember {
     PfpImage: string;
     MemberType: string;
@@ -24,11 +26,20 @@ export default function Navbar() {
     const [isProfileFetched, setIsProfileFetched] = useState<boolean>(false); // track if profile image has been fetched
     const [memberType, setMemberType] = useState<string>(''); // track user's member type
     const router = useRouter();
+    const [isEditPageOpen, setIsEditPageOpen] = useState(false);
+    const toggleEditPage = () => {
+        setIsEditPageOpen(!isEditPageOpen);
+     
+    };
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
 
+    const handleClick = () => {
+        fetchProfile();
+        toggleEditPage();
+    }
     const closeMenu = () => {
         setIsOpen(false);
     };
@@ -134,10 +145,10 @@ export default function Navbar() {
         if (isSidebarOpen) {
             document.body.style.overflow = 'hidden'; // disables background scroll when sidebar is open
         } else {
-            document.body.style.overflow = 'auto'; 
+            document.body.style.overflow = 'auto';
         }
     }, [isSidebarOpen]);
-    
+
 
     return (
         <nav className="bg-[#9E1B32] shadow-md sticky top-0 z-[9999] w-full">
@@ -253,15 +264,7 @@ export default function Navbar() {
                         Contact Us
                     </Link>
 
-                    {isLoggedIn ? (
-                        <button onClick={handleLogout} className="bg-white-500 text-white text-base py-2 px-2 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300">
-                            Log Out
-                        </button>
-                    ) : (
-                        <Link href="/login-page" className="bg-white-500 text-white text-base py-2 px-2 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300">
-                            Login
-                        </Link>
-                    )}
+                   
 
                     {/* Reserve space for profile picture, even if it's not visible */}
                     <div className="relative w-12 h-12">
@@ -289,30 +292,107 @@ export default function Navbar() {
 
                 {/* sidebar */}
                 {isSidebarOpen && (
+
                     <div
-                        className="fixed right-5 h-full bg-white z-[9998]"
-                        style={{ top: '15px', width: '27%' }}
+                    //sidea
+                        className="fixed right-5 h-full bg-[#9E1B32] z-[9998] overflow-y-auto"
+                        style={{ top: '56px', width: '27%', borderTop: '3px solid #681313' }}
                     >
-                        <button onClick={toggleSidebar} className="p-2 text-black">Close</button>
+                        <button onClick={toggleSidebar} className="p-2 text-black">
+                            <Link href="#">
+                                <Image
+                                    src={closeIcon}
+                                    alt="Close"
+                                    width={15}
+                                    height={15}
+                                    className=" shadow-lg hover:shadow-xl transition-shadow duration-300"
+                                />
+                            </Link>
+                        </button>
                         {/* render the profile page content */}
                         <ProtectedProfilePage />
                     </div>
                 )}
 
-                {/* background overlay when sidebar is open */}
-                {isSidebarOpen && <div className="fixed inset-0 bg-black opacity-40 z-40" style={{ top: '15px', width: '71.5%' }} onClick={toggleSidebar} />}
-            </div>
+                <div>
+                    {/* Sidebar */}
+                    {isSidebarOpen && (
+                        <div
+                            className="fixed right-5 h-full bg-[#9E1B32] z-[9998] overflow-y-auto"
+                            style={{ top: '56px', width: '27%', borderTop: '3px solid #681313' }}
+                        >
+                            <div className="flex justify-between items-center p-2">
+                                {/* Close button */}
+                                <button onClick={toggleSidebar} className="p-2 text-black">
+                                    <Link href="#">
+                                        <Image
+                                            src={closeIcon}
+                                            alt="Close"
+                                            width={15}
+                                            height={15}
+                                            className="shadow-lg hover:shadow-xl transition-shadow duration-300"
+                                        />
+                                    </Link>
+                                </button>
 
-            {/* mobile menu */}
-            <div className={`md:hidden ${isOpen ? 'block' : 'hidden'} mt-4 space-y-4`}>
-                <Link href="/" className="block text-white text-lg hover:text-black transition duration-300" onClick={closeMenu}>
-                    Home
-                </Link>
-                {isLoggedIn && (
-                    <Link href="/set-list-page" className="block text-white text-lg hover:text-black transition duration-300" onClick={closeMenu}>
-                        Set List
-                    </Link>
-                )}
+                                {/* Edit button */}
+                                <button onClick={toggleEditPage} className="p-2 text-black">
+                                    <Link href="#">
+                                        <Image
+                                            src={EditIcon}
+                                            alt="Edit Profile"
+                                            width={20}
+                                            height={20}
+                                            className="shadow-lg hover:shadow-xl transition-shadow duration-300"
+                                        />
+                                    </Link>
+                                </button>
+                            </div>
+
+                            {/* Render profile page content */}
+                            <ProtectedProfilePage />
+
+                            {/* Edit Page content (conditionally rendered) */}
+                            {isEditPageOpen && (
+                       
+                       <div
+                       className="fixed right-5 h-full bg-[#9E1B32] z-[9998] overflow-y-auto"
+                       style={{ top: '56px', width: '27%', borderTop: '3px solid #681313' }}
+                   >
+                    
+                                     {/* Close button */}
+                                <button onClick={toggleEditPage} className="p-2 text-black">
+                                    <Link href="#">
+                                        <Image
+                                            src={closeIcon}
+                                            alt="Close"
+                                            width={15}
+                                            height={15}
+                                            className="shadow-lg hover:shadow-xl transition-shadow duration-300"
+                                        />
+                                    </Link>
+                                </button>
+                                    <EditPage />
+                                </div>
+                             
+                                
+                            )}
+                        </div>
+                    )}
+
+                    {/* Background overlay when sidebar is open */}
+                    {isSidebarOpen && (
+                        <div
+                            className="fixed inset-0 bg-black opacity-40 z-40"
+                            style={{ top: '56px', width: '72%' }}
+                            onClick={() => {
+                                toggleSidebar();
+                                toggleEditPage();
+                            }}
+                        />
+                    )}
+                </div>
+
 
                 {/* about dropdown for mobile */}
                 <div>

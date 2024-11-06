@@ -82,7 +82,7 @@ export default function ProfilePage() {
     } else {
 
         return (
-            <div className="relative w-[417px] max-h-full h-[787px] bg-white rounded-[5px] z-40 overflow-y-auto" style={{ top: '0px', right: '5px', borderLeft: '3px solid black' }}>
+            <div className="relative w-[417px] max-h-full h-[787px] bg-white rounded-[5px] z-40 overflow-y-auto" style={{ top: '0px', right: '5px', borderLeft: '.5px solid black' }}>
                 <div className="relative w-full h-full">
                     {/* red header section */}
                     <div className="absolute left-0 top-0 w-full h-[320px] bg-[#9e1b32] z-10"></div>
@@ -100,41 +100,7 @@ export default function ProfilePage() {
                 </div>
 
 
-                <div>
-                    {/* edit page */}
-                    <div
-                        className={`fixed top-0 p-2 ${isEditPageOpen ? 'z-0' : 'z-[9999]'}`}
-                        style={{ top: '-5px', right: '10px' }}
-                    >
-                        {/* open the sidebar */}
-                        <button onClick={toggleEditPage} className=" p-20  -m-5 transform translate-x-10">
-                            <Link href="#">
-                                <Image
-                                    src={EditIcon}
-                                    alt="Profile picture"
-                                    width={20}
-                                    height={20}
-                                    className=" shadow-lg hover:shadow-xl transition-shadow duration-300"
-                                />
-                            </Link>
-                        </button>
-                    </div>
-
-
-                    {/* sidebar */}
-                    {isEditPageOpen && (
-                        <div
-                            className="fixed right-5 h-full bg-white z-[9998]"
-                            style={{ top: '15px', width: '27%' }}
-                        >
-                            <button onClick={handleClick} className="p-2 text-black">Close</button>
-
-                            {/* render the profile page content */}
-                            <EditPage />
-                        </div>
-
-                    )}
-                </div>
+    
 
 
                 {/* conditionally render the team member info only if teamMember is defined */}

@@ -12,6 +12,7 @@ import EmailImage from '../../img/Text (5).svg';
 import CWIDImage from '../../img/Text (6).svg';
 import MajorImage from '../../img/Text (7).svg';
 import StatusImage from '../../img/Text (8).svg';
+import SaveChanges from '../../img/savechange.svg';
 import DefaultPFP from '../../img/DefaultPFP.svg';
 import { useSearchParams, useRouter } from 'next/navigation';
 
@@ -151,11 +152,10 @@ export default function EditProfile() {
 
 
     return (
-        <div className="relative w-[417px] h-[787px] bg-white rounded-[5px] z-40" style={{ top: '0px', right: '5px', borderLeft: '3px solid black' }}>
-            {/* Container for the red header and profile image */}
-            <div className="relative w-full h-full">
-                {/* Red Header Section */}
-                <div className="absolute left-0 top-0 w-full h-[320px] bg-[#9e1b32] z-10"></div>
+        <div className="relative w-[417px] max-h-full h-[787px] bg-white rounded-[5px] z-40 overflow-y-auto" style={{ top: '0px', right: '5px', borderLeft: '.5px solid black' }}>
+                <div className="relative w-full h-full">
+                    {/* red header section */}
+                    <div className="absolute left-0 top-0 w-full h-[320px] bg-[#9e1b32] z-10"></div>
 
                 {/* User Profile Image */}
                 <div className="absolute left-[50%] top-[5%] w-[230px] h-[230px] rounded-full z-20 transform -translate-x-[50%] overflow-hidden">
@@ -180,9 +180,17 @@ export default function EditProfile() {
 
                     </div>
                     <div>
-                        <button onClick={updateProfile} className="absolute bg-[#9e1b32] left-[60%] top-[40%] text-black p-2 rounded mt-4 ">
-                            Save Changes
+                        <button onClick={updateProfile} className="absolute bg-[#9e1b32] left-[70%] top-[60%] text-black p-2 rounded mt-4 z-50">
+                        <Image
+                                            src={SaveChanges}
+                                            alt="Edit Profile"
+                                            width={40}
+                                            height={40}
+                                            className="shadow-lg hover:shadow-xl transition-shadow duration-300"
+                                        />
                         </button>
+
+                       
                     </div>
 
 
