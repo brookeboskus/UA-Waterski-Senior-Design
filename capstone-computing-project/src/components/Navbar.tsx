@@ -295,8 +295,8 @@ export default function Navbar() {
 
                     <div
                     //sidea
-                        className="fixed right-5 h-full bg-[#9E1B32] z-[9998] overflow-y-auto"
-                        style={{ top: '56px', width: '27%', borderTop: '3px solid #681313' }}
+                        className="fixed right-1 h-full bg-[#9E1B32] z-[9998] overflow-y-auto"
+                        style={{ top: '56px', width: '30%', borderTop: '3px solid #681313' }}
                     >
                         <button onClick={toggleSidebar} className="p-2 text-black">
                             <Link href="#">
@@ -318,8 +318,8 @@ export default function Navbar() {
                     {/* Sidebar */}
                     {isSidebarOpen && (
                         <div
-                            className="fixed right-5 h-full bg-[#9E1B32] z-[9998] overflow-y-auto"
-                            style={{ top: '56px', width: '27%', borderTop: '3px solid #681313' }}
+                            className="fixed right-1 h-full bg-[#9E1B32] z-[9998] overflow-y-auto"
+                            style={{ top: '56px', width: '30%', borderTop: '3px solid #681313' }}
                         >
                             <div className="flex justify-between items-center p-2">
                                 {/* Close button */}
@@ -356,8 +356,8 @@ export default function Navbar() {
                             {isEditPageOpen && (
                        
                        <div
-                       className="fixed right-5 h-full bg-[#9E1B32] z-[9998] overflow-y-auto"
-                       style={{ top: '56px', width: '27%', borderTop: '3px solid #681313' }}
+                       className="fixed right-1 h-full bg-[#9E1B32] z-[9998] overflow-y-auto"
+                       style={{ top: '56px', width: '30%', borderTop: '3px solid #681313' }}
                    >
                     
                                      {/* Close button */}
