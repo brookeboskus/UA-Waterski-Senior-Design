@@ -6,7 +6,6 @@ import { fetchSheetData } from "../googlesheetservices";
 
 export default function MerchPage() {
     const [image2A, setImage2A] = useState<string | null>(null);
-    const [loading, setLoading] = useState(true);
     const [sheetData, setSheetData] = useState<string[] | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [merchLabels, setMerchLabels] = useState<string[]>([]);
@@ -47,11 +46,9 @@ export default function MerchPage() {
                 } else {
                     setSheetData([]);
                 }
-                setLoading(false);
             } catch (err) {
                 console.error("Error fetching sheet data:", err);
                 setError("Failed to fetch data");
-                setLoading(false);
             }
         };
 
@@ -80,7 +77,7 @@ export default function MerchPage() {
                         <img
                             src={imageUrl}
                             alt={`Image ${index + 2}`}
-                            className="h-full w-auto object-contain" 
+                            className="h-full w-auto object-contain"
                         />
                         <div className="flex flex-col">
                             <p className="mt-2 text-md text-black">{merchLabels[index + 1]}</p> {/* Label under each image */}
