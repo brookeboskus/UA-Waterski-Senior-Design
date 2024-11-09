@@ -154,7 +154,7 @@ function popupContent(info) {
 
 // Render the content to HTML and set the popup box's content to the correct user info
 function setUserInfo(info) {
-    var popupElement = document.getElementById("popupContent") as HTMLDivElement;
+    const popupElement = document.getElementById("popupContent") as HTMLDivElement;
     
     if (popupElement != null) {
         popupElement.innerHTML = ReactDOMServer.renderToString(popupContent(info));
@@ -227,7 +227,7 @@ const SetListButton = ({date, reservationState, reservationName, userInfo, setIs
 
 // Returns the first team member from the team members list whose email matches the input email, otherwise returns null
 function getTeamMemberInfo(teamMembers, email) {
-    for (var i = 0; i < teamMembers.length; i++) {
+    for (let i = 0; i < teamMembers.length; i++) {
         if (teamMembers[i].Email == email) {
             return teamMembers[i];
         }
@@ -237,7 +237,7 @@ function getTeamMemberInfo(teamMembers, email) {
 
 // Returns info for the given reservation if it exists, else returns null
 function getReservationInfo(reservations, date) {
-    for (var i = 0; i < reservations.length; i++) {
+    for (let i = 0; i < reservations.length; i++) {
         if (new Date(reservations[i].Date).getTime() == date.getTime()) {
             return reservations[i];
         }
@@ -252,9 +252,20 @@ export default function SetListPage() {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null); // initial state as null to represent loading
     const [loading, setLoading] = useState<boolean>(true);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
-    const [isCheckingLogin, setIsCheckingLogin] = useState(true); // Track if checking login status
+    //const [isCheckingLogin, setIsCheckingLogin] = useState(true); // Track if checking login status
     const timesSet = new Set();
     const router = useRouter();
+
+    // Initialize date range for database lookup
+    const todayDate = new Date();
+    const dateRangeStart = new Date();
+    dateRangeStart.setDate(todayDate.getDate() - todayDate.getDay() - 14);
+    const dateRangeEnd = new Date();
+    dateRangeEnd.setDate(todayDate.getDate() - todayDate.getDay() + 20);
+    // End results are the Sunday that is two weeks from before the current week, and the next Saturday two weeks in advance, thus getting a 5 week period with the current week in the middle
+    const dateRangeStartString = dateRangeStart.getFullYear().toString() + "-" + (dateRangeStart.getMonth() + 1).toString() + "-" + dateRangeStart.getDate().toString() + " 00:00:00";
+    const dateRangeEndString = dateRangeEnd.getFullYear().toString() + "-" + (dateRangeEnd.getMonth() + 1).toString() + "-" + dateRangeEnd.getDate().toString() + " 23:59:59";
+
 
     // Set page title
     useEffect(() => {
@@ -271,7 +282,7 @@ export default function SetListPage() {
             } else {
                 setIsLoggedIn(true); // Set logged-in status
             }
-            setIsCheckingLogin(false); // Done checking login status
+            //setIsCheckingLogin(false); // Done checking login status
         };
 
         checkToken(); // Initial check when the component mounts
@@ -343,13 +354,13 @@ export default function SetListPage() {
         }
         
 
-    }, [isLoggedIn]);
+    }, [isLoggedIn, dateRangeStartString, dateRangeEndString]);
 
     // Sets up the TimeTable
     function TimeTableBody() {
-        var rows = [];
+        let rows = [];
 
-        var currentWeekDropDown = document.getElementById("dateRangeDropDown") as HTMLInputElement;
+        let currentWeekDropDown = document.getElementById("dateRangeDropDown") as HTMLInputElement;
 
         // Drop down must be created before table can be returned, so return nothing until drop down exists on document
         if (currentWeekDropDown == null) {
@@ -357,32 +368,32 @@ export default function SetListPage() {
         }
 
         // Multiply by 1000 to get as milliseconds for date
-        var currentWeekStartDate = new Date(Number(currentWeekDropDown.value) * 1000);
+        let currentWeekStartDate = new Date(Number(currentWeekDropDown.value) * 1000);
 
         // From 7am to 5pm
-        for (var hour = 7; hour <= 17; hour++) {
+        for (let hour = 7; hour <= 17; hour++) {
             // From :00 to :45
-            for (var minutes = 0; minutes < 60; minutes += 15) {
+            for (let minutes = 0; minutes < 60; minutes += 15) {
                 // Special case to allow for 5pm
                 if (hour == 17 && minutes != 0) {
                     continue;
                 }
                 
                 // Cells of table
-                var cells = [];
+                let cells = [];
                 
                 // Handle 12 hour logic
-                var hourString = (hour <= 12) ? hour.toString() : (hour - 12).toString();
+                let hourString = (hour <= 12) ? hour.toString() : (hour - 12).toString();
                 // Add leading zero if hours is 0 (could also do this with precision?)
-                var minuteString = (minutes == 0) ? minutes.toString() + "0" : minutes.toString();
-                var amPMString = (hour < 12) ? "am" : "pm";
+                let minuteString = (minutes == 0) ? minutes.toString() + "0" : minutes.toString();
+                let amPMString = (hour < 12) ? "am" : "pm";
     
-                var timeString = hourString + ":" + minuteString + amPMString;
+                let timeString = hourString + ":" + minuteString + amPMString;
                 // Set id for right-align styling
                 cells.push(<td key={"timeCell_" + hour + "_" + minutes}className="timeCell">{timeString}</td>);
 
-                for (var day = 0; day <= 6; day++) {
-                    var thisButtonDate = new Date(new Date(currentWeekStartDate).setDate(currentWeekStartDate.getDate() + (day)));
+                for (let day = 0; day <= 6; day++) {
+                    let thisButtonDate = new Date(new Date(currentWeekStartDate).setDate(currentWeekStartDate.getDate() + (day)));
                     thisButtonDate.setHours(hour);
                     thisButtonDate.setMinutes(minutes);
                     thisButtonDate.setSeconds(0);
@@ -447,8 +458,8 @@ export default function SetListPage() {
             return;
         }
 
-        var options = [];
-        for (var i = 0; i < values.length; i++) {
+        let options = [];
+        for (let i = 0; i < values.length; i++) {
             options.push([values[i], labels[i]]);
         }
         // Default to selecting middle option, which should be current week
@@ -470,20 +481,20 @@ export default function SetListPage() {
 
     // Initializes time table
     function TimeTableInit() {
-        var today = new Date();
+        let today = new Date();
         // weekRange is the number of weeks shown before and after the current week.
         // Setting this to 2 will result in a list that containts the two weeks before the current week, the current week, and the next two weeks after the current week
         // Seems like setting it above 2 causes odd behavior. Not sure what the cause of this is. For now, leave set to 2.
-        var weekRange = 2;
+        let weekRange = 2;
 
-        var dateRanges = [];
-        var values = [];
-        var labels = [];
+        let dateRanges = [];
+        let values = [];
+        let labels = [];
 
-        var thisWeekSunday = new Date();
+        let thisWeekSunday = new Date();
         thisWeekSunday.setDate(today.getDate() - today.getDay());
 
-        for (var i = 0; i < (weekRange * 2) + 1; i++) {
+        for (let i = 0; i < (weekRange * 2) + 1; i++) {
             // Each item in dateRange is an array consisting of a start and end day for the week
             dateRanges.push([new Date(), new Date()]);
             dateRanges[i][0].setDate(today.getDate() - today.getDay() + (7 * (i - weekRange)));
@@ -498,17 +509,6 @@ export default function SetListPage() {
             <TimeTableWithDropDown values={values} labels={labels}></TimeTableWithDropDown>
         )
     }
-    
-    // Initialize date range for database lookup
-    const todayDate = new Date();
-    const dateRangeStart = new Date();
-    dateRangeStart.setDate(todayDate.getDate() - todayDate.getDay() - 14);
-    const dateRangeEnd = new Date();
-    dateRangeEnd.setDate(todayDate.getDate() - todayDate.getDay() + 20);
-    // End results are the Sunday that is two weeks from before the current week, and the next Saturday two weeks in advance, thus getting a 5 week period with the current week in the middle
-    const dateRangeStartString = dateRangeStart.getFullYear().toString() + "-" + (dateRangeStart.getMonth() + 1).toString() + "-" + dateRangeStart.getDate().toString() + " 00:00:00";
-    const dateRangeEndString = dateRangeEnd.getFullYear().toString() + "-" + (dateRangeEnd.getMonth() + 1).toString() + "-" + dateRangeEnd.getDate().toString() + " 23:59:59";
-
 
 
     if (loading) {
@@ -516,7 +516,7 @@ export default function SetListPage() {
     }
 
     // Add our reservation times to timesSet to make checking faster later on
-    for (var i = 0; i < reservations.length; i++) {
+    for (let i = 0; i < reservations.length; i++) {
         timesSet.add(new Date(reservations[i].Date).getTime());
     }
 
