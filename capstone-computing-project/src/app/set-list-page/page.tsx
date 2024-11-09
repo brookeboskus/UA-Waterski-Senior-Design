@@ -452,24 +452,40 @@ export default function SetListPage() {
     };
 
     // Initializes time table, placing dropdown above it
-    const TimeTableWithDropDown = ({values, labels}) => {
+    const TimeTableWithDropDown = ({
+            values,
+            labels
+        }: {
+            values: number[];
+            labels: string[];
+        }) => {
         // Ensure that values and labels are filled
         if (values == null || labels == null) {
-            return;
+            return null;
         }
+
+        const today = new Date();
+
+        const thisWeekSunday = new Date();
+        thisWeekSunday.setDate(today.getDate() - today.getDay());
+
+        const currentWeekTimestamp = Math.floor(thisWeekSunday.getTime() / 1000);
+
+        const defaultSelectedIndex = values.findIndex(value => value === currentWeekTimestamp);
+        const [selectedOption, setSelectedOption] = useState(defaultSelectedIndex >= 0 ? values[defaultSelectedIndex] : values[Math.floor(values.length / 2)]);
 
         const options = [];
         for (let i = 0; i < values.length; i++) {
             options.push([values[i], labels[i]]);
         }
+        
         // Default to selecting middle option, which should be current week
-        const [selectedOption, setSelectedOption] = useState(options[2][0]);
         return (
             <div id="timeTableDiv">
                 <select
                     id="dateRangeDropDown"
                     value={selectedOption}
-                    onChange={e => setSelectedOption(e.target.value)}>
+                    onChange={e => setSelectedOption(Number(e.target.value))}>
                     {options.map(o => (
                     <option key={o[0]} value={o[0]}>{o[1]}</option>
                     ))}
