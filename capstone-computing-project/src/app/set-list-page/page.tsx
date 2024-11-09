@@ -64,7 +64,7 @@ const makeReservation = async (date) => {
             'reserveDate': date
         };
 
-        const response = await axios.post('http://localhost:4000/auth/setlist', payload, {
+        await axios.post('http://localhost:4000/auth/setlist', payload, {
             headers: {
                 Authorization: `Bearer ${token}` // send the token in the request headers to authenticate
             },
@@ -100,7 +100,7 @@ const deleteReservation = async (date) => {
             }
         };
 
-        const response = await axios.delete('http://localhost:4000/auth/setlist', payload);
+        await axios.delete('http://localhost:4000/auth/setlist', payload);
 
         // console.log('Data Received for setList:', response.data);
 
