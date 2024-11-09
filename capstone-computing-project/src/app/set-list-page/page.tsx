@@ -358,9 +358,9 @@ export default function SetListPage() {
 
     // Sets up the TimeTable
     function TimeTableBody() {
-        let rows = [];
+        const rows = [];
 
-        let currentWeekDropDown = document.getElementById("dateRangeDropDown") as HTMLInputElement;
+        const currentWeekDropDown = document.getElementById("dateRangeDropDown") as HTMLInputElement;
 
         // Drop down must be created before table can be returned, so return nothing until drop down exists on document
         if (currentWeekDropDown == null) {
@@ -368,7 +368,7 @@ export default function SetListPage() {
         }
 
         // Multiply by 1000 to get as milliseconds for date
-        let currentWeekStartDate = new Date(Number(currentWeekDropDown.value) * 1000);
+        const currentWeekStartDate = new Date(Number(currentWeekDropDown.value) * 1000);
 
         // From 7am to 5pm
         for (let hour = 7; hour <= 17; hour++) {
@@ -380,20 +380,20 @@ export default function SetListPage() {
                 }
                 
                 // Cells of table
-                let cells = [];
+                const cells = [];
                 
                 // Handle 12 hour logic
-                let hourString = (hour <= 12) ? hour.toString() : (hour - 12).toString();
+                const hourString = (hour <= 12) ? hour.toString() : (hour - 12).toString();
                 // Add leading zero if hours is 0 (could also do this with precision?)
-                let minuteString = (minutes == 0) ? minutes.toString() + "0" : minutes.toString();
-                let amPMString = (hour < 12) ? "am" : "pm";
+                const minuteString = (minutes == 0) ? minutes.toString() + "0" : minutes.toString();
+                const amPMString = (hour < 12) ? "am" : "pm";
     
-                let timeString = hourString + ":" + minuteString + amPMString;
+                const timeString = hourString + ":" + minuteString + amPMString;
                 // Set id for right-align styling
                 cells.push(<td key={"timeCell_" + hour + "_" + minutes}className="timeCell">{timeString}</td>);
 
                 for (let day = 0; day <= 6; day++) {
-                    let thisButtonDate = new Date(new Date(currentWeekStartDate).setDate(currentWeekStartDate.getDate() + (day)));
+                    const thisButtonDate = new Date(new Date(currentWeekStartDate).setDate(currentWeekStartDate.getDate() + (day)));
                     thisButtonDate.setHours(hour);
                     thisButtonDate.setMinutes(minutes);
                     thisButtonDate.setSeconds(0);
@@ -403,10 +403,10 @@ export default function SetListPage() {
                     if (timesSet.has(thisButtonDate.getTime())) {
                         // Find reservation
                         // This is potentially slow depending on the amount of reservations in the 5 week time span. Maybe try to optimize later
-                        let reservation = getReservationInfo(reservations, thisButtonDate);
+                        const reservation = getReservationInfo(reservations, thisButtonDate);
                         if (reservation != null) {
                             // Again, this is potentially slow. See if it can be optimized later
-                            let userInfo = getTeamMemberInfo(teamMembers, reservation.Email);
+                            const userInfo = getTeamMemberInfo(teamMembers, reservation.Email);
                             if (reservation.RegisteredBy == "you") {
                                 cells.push(<td key={day + "_" + hour + "_" + minutes}><SetListButton date={thisButtonDate} reservationState={"reservedByYou"} reservationName={reservation.Fname + " " + reservation.Lname} userInfo={userInfo} setIsPopupOpen={setIsPopupOpen}></SetListButton></td>);
                             } else {
@@ -458,7 +458,7 @@ export default function SetListPage() {
             return;
         }
 
-        let options = [];
+        const options = [];
         for (let i = 0; i < values.length; i++) {
             options.push([values[i], labels[i]]);
         }
@@ -481,17 +481,17 @@ export default function SetListPage() {
 
     // Initializes time table
     function TimeTableInit() {
-        let today = new Date();
+        const today = new Date();
         // weekRange is the number of weeks shown before and after the current week.
         // Setting this to 2 will result in a list that containts the two weeks before the current week, the current week, and the next two weeks after the current week
         // Seems like setting it above 2 causes odd behavior. Not sure what the cause of this is. For now, leave set to 2.
-        let weekRange = 2;
+        const weekRange = 2;
 
-        let dateRanges = [];
-        let values = [];
-        let labels = [];
+        const dateRanges = [];
+        const values = [];
+        const labels = [];
 
-        let thisWeekSunday = new Date();
+        const thisWeekSunday = new Date();
         thisWeekSunday.setDate(today.getDate() - today.getDay());
 
         for (let i = 0; i < (weekRange * 2) + 1; i++) {
