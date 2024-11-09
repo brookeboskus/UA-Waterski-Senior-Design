@@ -19,3 +19,4 @@ need two terminals. one will type 'npm run dev' and the other terminal will be f
 node index.js will connect to the amazon aws database
 
 BOIIIIIIIIIII
+My name is Brooke
