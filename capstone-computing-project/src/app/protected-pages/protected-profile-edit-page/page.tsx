@@ -67,7 +67,7 @@ export default function EditProfile() {
             const token = localStorage.getItem('token');
             if (!token) {
                 console.error('Authentication token missing. Please log in again.');
-                return;
+                return; 
             }
 
             const payload = {
