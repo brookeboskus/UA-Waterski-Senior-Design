@@ -1,5 +1,6 @@
 "use client";
 import {useEffect, useState} from 'react';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
 export default function ContactUs () {
     const [name, setName] = useState('');
@@ -17,7 +18,7 @@ export default function ContactUs () {
         e.preventDefault();
 
         const apiUrl = process.env.NODE_ENV === 'production'
-            ? 'http://localhost:4000/api/sendEmail'
+            ? `${APP_URL}/api/sendEmail`
             : '/api/sendEmail';
 
         try {
