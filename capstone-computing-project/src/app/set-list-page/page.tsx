@@ -459,10 +459,6 @@ export default function SetListPage() {
             values: number[];
             labels: string[];
         }) => {
-        // Ensure that values and labels are filled
-        if (values == null || labels == null) {
-            return null;
-        }
 
         const today = new Date();
 
@@ -474,11 +470,16 @@ export default function SetListPage() {
         const defaultSelectedIndex = values.findIndex(value => value === currentWeekTimestamp);
         const [selectedOption, setSelectedOption] = useState(defaultSelectedIndex >= 0 ? values[defaultSelectedIndex] : values[Math.floor(values.length / 2)]);
 
+        // Ensure that values and labels are filled
+        if (values == null || labels == null) {
+            return null;
+        }
+
         const options = [];
         for (let i = 0; i < values.length; i++) {
             options.push([values[i], labels[i]]);
         }
-        
+
         // Default to selecting middle option, which should be current week
         return (
             <div id="timeTableDiv">
