@@ -1,19 +1,32 @@
-// // //a. Depth Chart (i. Skier rankings for our team) b. fundraising addresses c. alumni contacts d. meeting notes
-
+// a. Depth Chart (i. Skier rankings for our team) b. fundraising addresses c. alumni contacts d. meeting notes
 
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: any) {
+type Note = {
+    id: number;
+    title: string;
+    content: string;
+    date: Date;
+};
+
+interface MeetingNotesProps {
+    isEditing: boolean;
+    setIsEditing: (isEditing: boolean) => void;
+    notes: Note[];
+    setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
+}
+
+function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: MeetingNotesProps) {
     const [newNote, setNewNote] = useState({ title: "", content: "" });
     const [openNoteId, setOpenNoteId] = useState<number | null>(null);
 
-    const fetchNotes = async () => {
+    const fetchNotes = useCallback(async () => {
         try {
             const response = await axios.get("http://localhost:4000/auth/meetingnotes");
-            const formattedNotes = response.data.map((note: any) => ({
+            const formattedNotes = response.data.map((note: Note) => ({
                 ...note,
                 date: new Date(note.date)
             }));
@@ -22,13 +35,11 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: any) {
         } catch (error) {
             console.error("Error fetching meeting notes:", error);
         }
-    };
-
-    
+    }, [setNotes]);
 
     useEffect(() => {
         fetchNotes();
-    }, [setNotes]);
+    }, [fetchNotes]);
 
     const addNewNote = async () => {
         if (!newNote.title) {
@@ -49,7 +60,6 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: any) {
             });
 
             await fetchNotes();
-
             setNewNote({ title: '', content: '' });
             setIsEditing(false);
         } catch (error) {
@@ -100,7 +110,7 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: any) {
                 )}
 
                 <div className="grid gap-6">
-                    {notes.map((note: any) => (
+                    {notes.map((note) => (
                         <div
                             key={note.id}
                             className="p-6 bg-white rounded-lg shadow-lg border border-gray-200 hover:border-[#9E1B32] transition duration-300 cursor-pointer"
@@ -110,7 +120,7 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: any) {
                                 <div>
                                     <h2 className="text-2xl font-semibold text-gray-900">{note.title}</h2>
                                     <p className="text-gray-600 text-sm">
-                                        {new Date(note.date).toLocaleDateString('en-US', {
+                                        {note.date.toLocaleDateString('en-US', {
                                             year: 'numeric',
                                             month: 'long',
                                             day: 'numeric',
@@ -143,23 +153,21 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: any) {
 export default function OfficerResourcesPage() {
     const [openSection, setOpenSection] = useState<string | null>(null);
     const [isEditing, setIsEditing] = useState(false);
-    const [notes, setNotes] = useState<any[]>([]);
+    const [notes, setNotes] = useState<Note[]>([]);
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const [isOfficer, setIsOfficer] = useState<boolean>(false); 
     const [isCheckingLogin, setIsCheckingLogin] = useState(true);
     const router = useRouter();
 
-    // Set page title
     useEffect(() => {
         document.title = 'UA Waterski - Officer Resources';
     }, []);
 
-    // chck user if they are logged in + they are officer or not
     useEffect(() => {
         const checkLoginStatus = async () => {
             const token = localStorage.getItem('token');
             if (!token) {
-                router.push('/login-page'); // not logged in
+                router.push('/login-page'); 
                 return;
             }
 
@@ -174,7 +182,7 @@ export default function OfficerResourcesPage() {
                 setIsLoggedIn(true);
                 setIsOfficer(MemberType === 'Officer'); 
                 if (MemberType !== 'Officer') {
-                    router.push('/'); // not officer, then go back to homepage
+                    router.push('/'); 
                 }
             } catch (error) {
                 console.error('Error fetching user profile:', error);
@@ -187,11 +195,11 @@ export default function OfficerResourcesPage() {
         checkLoginStatus(); 
     }, [router]);
 
-    if (isCheckingLogin) { // if checking login status, then return null
+    if (isCheckingLogin) {
         return null;
     }
 
-    if (!isLoggedIn || !isOfficer) { // if not logged in or not an officer, then return null
+    if (!isLoggedIn || !isOfficer) {
         return null; 
     }
 

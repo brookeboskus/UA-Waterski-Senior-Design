@@ -5,7 +5,7 @@ import axios from 'axios';
 import Image from 'next/image';
 import BlankPfp from '../img/blankpfp.svg';
 import React from 'react';
-import Select from 'react-select';
+import Select, { SingleValue, MultiValue } from 'react-select';
 import { useRouter } from 'next/navigation';
 
 const yearOptions = [
@@ -36,88 +36,87 @@ interface TeamMember {
     Phone?: string;
 }
 
+interface Option {
+    value: string;
+    label: string;
+}
+
 export default function RosterPage() {
     const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [searchQuery, setSearchQuery] = useState<string>('');
-    const [selectedYears, setSelectedYears] = useState<any[]>([]);
-    const [selectedRoles, setSelectedRoles] = useState<any[]>([]);
-    const [selectedSortOption, setSelectedSortOption] = useState<any>(null);
+    const [selectedYears, setSelectedYears] = useState<MultiValue<Option>>([]);
+    const [selectedRoles, setSelectedRoles] = useState<MultiValue<Option>>([]);
+    const [selectedSortOption, setSelectedSortOption] = useState<SingleValue<Option>>(null);
     const [flipped, setFlipped] = useState<number | null>(null);
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null); // initial state as null to represent loading
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
     const router = useRouter();
 
-    // Set page title
     useEffect(() => {
         document.title = 'UA Waterski - Roster';
     }, []);
 
-    // Show a loading spinner or screen while checking the login status
-    const [isCheckingLogin, setIsCheckingLogin] = useState(true); // Track if checking login status
+    const [isCheckingLogin, setIsCheckingLogin] = useState(true);
 
-    // Check if the user is logged in by looking for the token in localStorage
     useEffect(() => {
         const checkToken = () => {
             const token = localStorage.getItem('token');
             if (!token) {
                 setIsLoggedIn(false);
-                router.push('/login-page'); // Redirect to login page if not logged in
+                router.push('/login-page');
             } else {
-                setIsLoggedIn(true); // Set logged-in status
+                setIsLoggedIn(true);
             }
-            setIsCheckingLogin(false); // Done checking login status
+            setIsCheckingLogin(false);
         };
 
-        checkToken(); // Initial check when the component mounts
+        checkToken();
     }, [router]);
 
     useEffect(() => {
         const fetchRoster = async () => {
             try {
-                const token = localStorage.getItem('token'); // Get the token from localStorage
+                const token = localStorage.getItem('token');
                 if (!token) {
                     throw new Error('No token available');
                 }
 
                 const response = await axios.get<TeamMember[]>('http://localhost:4000/auth/roster', {
                     headers: {
-                        'Authorization': `Bearer ${token}`, // Send token in request headers
+                        'Authorization': `Bearer ${token}`,
                     },
                 });
 
-                setTeamMembers(response.data); // Set the team members data
+                setTeamMembers(response.data);
             } catch (error) {
                 console.error('Failed to fetch team roster:', error);
-                router.push('/login-page'); // Redirect to login if fetch fails
+                router.push('/login-page');
             } finally {
                 setLoading(false);
             }
         };
 
         if (isLoggedIn) {
-            fetchRoster(); // Only fetch the roster if the user is logged in
+            fetchRoster();
         }
     }, [isLoggedIn, router]);
 
-    const handleYearChange = (selectedOptions: any) => {
-        setSelectedYears(selectedOptions || []);
+    const handleYearChange = (selectedOptions: MultiValue<Option>) => {
+        setSelectedYears(selectedOptions);
     };
 
-    const handleRoleChange = (selectedOptions: any) => {
-        setSelectedRoles(selectedOptions || []);
+    const handleRoleChange = (selectedOptions: MultiValue<Option>) => {
+        setSelectedRoles(selectedOptions);
     };
 
-    // Only render when login status has been determined
     if (isCheckingLogin || isLoggedIn === null) {
-        return null; // Don't render anything while checking login status
-    }
-
-    if (!isLoggedIn) {
-        // If not logged in, redirect immediately (without rendering)
         return null;
     }
 
-    // filters and sorts members based on dropdown selections
+    if (!isLoggedIn) {
+        return null;
+    }
+
     const filteredMembers = teamMembers
         .filter((member) => {
             const fullName = `${member.Fname} ${member.Lname}`.toLowerCase();
@@ -148,12 +147,12 @@ export default function RosterPage() {
         });
 
     const handleFlip = (index: number) => {
-        setFlipped(index); // flip the card on click
+        setFlipped(index);
     };
 
     const handleMouseLeave = (index: number) => {
         if (flipped === index) {
-            setFlipped(null); // reset the flip state when the cursor leaves the card
+            setFlipped(null);
         }
     };
 
@@ -215,13 +214,11 @@ export default function RosterPage() {
                                 key={index}
                                 className={`relative perspective w-full h-72 border border-gray-200 transform hover:scale-105`}
                                 onClick={() => handleFlip(index)}
-                                onMouseLeave={() => handleMouseLeave(index)} // flips card back if the cursor leaves the card
+                                onMouseLeave={() => handleMouseLeave(index)}
                             >
                                 <div className={`flip-card ${flipped === index ? 'flipped' : ''}`}>
-                                    {/* Front side of the card */}
                                     <div className="flip-card-front bg-white shadow-md hover:shadow-lg rounded-lg overflow-hidden h-full">
                                         <div className="p-4">
-                                            {/* Profile Picture */}
                                             <div className="relative w-24 h-24 mb-4 mx-auto">
                                                 <Image
                                                     src={member.PfpImage || BlankPfp}
@@ -246,9 +243,7 @@ export default function RosterPage() {
                                         </div>
                                     </div>
 
-                                    {/* Back side of the card */}
                                     <div className="flip-card-back bg-white shadow-md hover:shadow-lg rounded-lg overflow-hidden p-4 text-black h-full">
-                                        {/* Profile Picture */}
                                         <div className="relative w-24 h-24 mb-4 mx-auto">
                                             <Image
                                                 src={member.PfpImage || BlankPfp}
