@@ -130,8 +130,8 @@ export default function ProfilePage() {
                     {/* sidebar */}
                     {isEditPageOpen && (
                         <div
-                            className="fixed right-5 h-full bg-white z-[9998]"
-                            style={{ top: '15px', width: '27%' }}
+                            className="fixed right-0 h-full bg-[#9E1B32] z-[9998] overflow-y-auto "
+                            style={{ top: '56px', width: '27%', borderTop: '3px solid darkred' }}
                         >
                             <button onClick={handleClick} className="p-2 text-black">Close</button>
 
@@ -147,7 +147,7 @@ export default function ProfilePage() {
                 {teamMember ? (
                     <>
                         {/* "your information" label section */}
-                        <div className="absolute left-[25%] top-[42%] w-[191px] h-[26px] text-center text-black text-xl font-bold transform -translate-x-[50%]">
+                        <div className="absolute left-[50%] top-[42%] w-[191px] h-[26px] text-center text-black text-xl font-bold transform -translate-x-[50%]">
                             Your Information
                         </div>
 
@@ -262,7 +262,10 @@ export default function ProfilePage() {
                         <div className="w-[220px] h-[20px] left-[99px] top-[730px] absolute text-[#b9b9b9] text-[13px] font-bold">
                             {teamMember.CWID}
                         </div>
+               
+                   
                     </>
+                 
                 ) : (
                     <div>No team member data available.</div>
                 )}
