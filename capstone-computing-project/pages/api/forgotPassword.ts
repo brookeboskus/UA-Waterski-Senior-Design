@@ -5,7 +5,7 @@ import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken';
 import db from '../../db';
 const SECRET_KEY = process.env.JWT_SECRET;
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
 const isValidUAEmail = (email: string): boolean => {
     //pattern=".+@+(.+\.)?ua\.edu"
@@ -20,8 +20,10 @@ const isEmailRegistered = async (email: string): Promise<boolean> => {
             if (err) {
                 console.error('Database error:', err);
                 reject(err);
-            } else {
+            } else if (Array.isArray(results)) {
                 resolve(results.length > 0);
+            } else {
+                resolve(false); // Return false if results are not in the expected array format
             }
         });
     });
@@ -33,12 +35,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         try {
             if (!isValidUAEmail(email)) {
-                return res.status(400).json({ success: false, message: "Please use a valid email address." }); // Please use a valid University of Alabama (ua.edu) email address.
+                return res.status(400).json({ success: false, message: "Please use a valid email address." });
             }
 
             const emailExists = await isEmailRegistered(email);
             if (!emailExists) {
-                return res.status(400).json({ success: false, message: "If this email is registered, a password reset link has been sent." }); // This email address is not registered for an account with the UA Waterski Team
+                return res.status(400).json({ success: false, message: "If this email is registered, a password reset link has been sent." });
+            }
+
+            if (!SECRET_KEY) {
+                return res.status(500).json({ success: false, message: "Server error: missing secret key for JWT." });
             }
 
             const token = jwt.sign({ email }, SECRET_KEY, { expiresIn: '1h' });
