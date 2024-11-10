@@ -7,7 +7,8 @@ import Image from 'next/image';
 import waterskiClubInfoPhoto1 from '../../components/img/waterski-club-info-1 1.svg';
 
 export default function ClubInfo() {
-    const [activeSection, setActiveSection] = useState<string>('roles');
+    // const [activeSection, setActiveSection] = useState<string>('roles');
+    const [activeSection, setActiveSection] = useState<'roles' | 'bilaws' | 'drivers' | 'judges'>('roles');
     const [isBylawsExpanded, setIsBylawsExpanded] = useState<boolean>(false);
 
     // Set page title
@@ -78,7 +79,7 @@ export default function ClubInfo() {
                                 <p><span style={{ color: '#F11C1C' }}>B.</span> Membership in registered student organizations shall be open to all students of The University of Alabama, without regard to race, religion, sex, ability status, national origin, color, age, gender identity, gender expression, sexual identity, or veteran status except in cases of designated fraternal organizations exempted by federal law from Title IX regulations concerning discrimination on the basis of sex.</p>
                                 <p><span style={{ color: '#F11C1C' }}>C.</span> Members must pay dues of $500. Active members must also be members of USA Waterski for insurance and liability purposes. (State provisions for allocation of any bank account funds held in the name of the organization in the event that the organization goes defunct or is terminated with The SOURCE.)</p>
                                 <p><span style={{ color: '#F11C1C' }}>D.</span> Active members in good standing have access to the team’s practice facility (Lymanland USA), team equipment, team boat* (see article XII, section B), and the use of team gas.</p>
-                                <p><span style={{ color: '#F11C1C' }}>E.</span> In addition to paying dues, active members must sign up for and complete tasks to be done at Lymanland and for tournaments hosted by the University of Alabama. A google document will be kept with jobs that need to be done, it is each skier's responsibility to check the document, sign up for tasks, and complete them in a timely fashion.</p>
+                                <p><span style={{ color: '#F11C1C' }}>E.</span> In addition to paying dues, active members must sign up for and complete tasks to be done at Lymanland and for tournaments hosted by the University of Alabama. A google document will be kept with jobs that need to be done, it is each skier&apos;s responsibility to check the document, sign up for tasks, and complete them in a timely fashion.</p>
                                 <p><span style={{ color: '#F11C1C' }}>F.</span> There are two types of membership, “A-team” skiers and “B-team” skiers, defined as follows:</p>
                             </div>
 
@@ -167,7 +168,7 @@ export default function ClubInfo() {
                                         <li>40% of the score will be based on the team trials score.</li>
                                     </ul>
                                     <p className="text-gray-700 mt-2">
-                                        Last year's NCWSA average may be used if the skier is not a new member. This is subject to officer/advisor discretion.
+                                        Last year&apos;s NCWSA average may be used if the skier is not a new member. This is subject to officer/advisor discretion.
                                     </p>
                                 </div>
                             </div>
@@ -273,7 +274,7 @@ export default function ClubInfo() {
                 <div className="text-center mb-12">
                     <h1 className="text-5xl font-extrabold text-[#9E1B32] mb-6">Club Info</h1>
                     <p className="text-lg text-gray-700 max-w-3xl mx-auto">
-                        The University of Alabama's Water Ski Team has a proud tradition of over 30 years, bringing together passionate athletes from across the country. Our team offers a supportive environment for skiers of all skill levels, from beginners to world champions, allowing them to excel both on and off the water. As one of the top teams in the country, we focus on fostering a strong sense of community and helping our athletes grow both personally and competitively.
+                        The University of Alabama&apos;s Water Ski Team has a proud tradition of over 30 years, bringing together passionate athletes from across the country. Our team offers a supportive environment for skiers of all skill levels, from beginners to world champions, allowing them to excel both on and off the water. As one of the top teams in the country, we focus on fostering a strong sense of community and helping our athletes grow both personally and competitively.
                     </p>
                 </div>
 
