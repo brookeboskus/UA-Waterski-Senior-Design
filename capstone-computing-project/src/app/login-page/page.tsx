@@ -2,11 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import WaterskiImage from '../img/loginSkiIMG.svg';
 import SkiBamaLogo from '../img/skibamalogo.svg';
+
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
+
+
 
 // list of majors offered by UA, think we should take out minors for now. our database only holds one major, but ppl can have multiple as well.
 const majors = [
@@ -110,14 +114,16 @@ const majors = [
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false); 
+    const [showPassword, setShowPassword] = useState(false);
     const [fname, setFname] = useState('');
     const [lname, setLname] = useState('');
     const [cwid, setCwid] = useState('');
     const [phone, setPhone] = useState('');
     const [gradYear, setGradYear] = useState('Freshman');
-    const [selectedMajor, setSelectedMajor] = useState(null);
-    const [PfpImage, setProfilePicture] = useState(null);
+    // const [selectedMajor, setSelectedMajor] = useState(null);
+    const [selectedMajor, setSelectedMajor] = useState<{ value: string, label: string } | null>(null);
+    // const [PfpImage, setProfilePicture] = useState(null);
+    const [PfpImage, setProfilePicture] = useState<File | null>(null);
     const [isLogin, setIsLogin] = useState(true);
     const router = useRouter();
 
@@ -125,8 +131,8 @@ export default function LoginPage() {
         document.title = 'UA Waterski - Login/Sign Up';
     }, []);
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
         if (file) {
             if (file.size > 4 * 1024 * 1024) {
                 alert("File size exceeds 4 MB limit. Please choose a smaller image.");
@@ -145,53 +151,107 @@ export default function LoginPage() {
         }
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const endpoint = isLogin ? 'http://localhost:4000/auth/login' : 'http://localhost:4000/auth/signup';
+    // const handleSubmit = async (e: React.FormEvent) => {
+    //     e.preventDefault();
+    //     const endpoint = isLogin ? `${APP_URL}api/login` : `${APP_URL}api/signup`;
+    //     console.log('endpoint:', endpoint);
 
-        if (isLogin) {
-            const payload = { email, password };
-            try {
-                const response = await axios.post(endpoint, payload);
+    //     if (isLogin) {
+    //         const payload = { email, password };
+    //         try {
+    //             const response = await axios.post(endpoint, payload);
+    //             localStorage.setItem('token', response.data.token);
+    //             router.push('/');
+    //         } catch (error) {
+    //             let errorMessage = "An unexpected error occurred.";
+    //             if (error instanceof AxiosError) {
+    //                 errorMessage = error.response?.data?.message || error.message;
+    //             } else if (error instanceof Error) {
+    //                 errorMessage = error.message;
+    //             }
+    //             console.error('Error:', errorMessage);
+
+    //             document.getElementById('errorBox')?.setAttribute("style", "display: block;");
+    //             document.getElementById('errorText')!.innerText = "Invalid email or password. Please try again.";
+    //         }
+    //     } else {
+    //         const formData = new FormData(); // according to vercel logs, login.js has a different format for req.body compared to signup.js
+    //         // i believe that is why signup.js is not able to recognize like elements from the frontend (like console password, but console req.body is sending the frontnend to backend but not in the right format)
+
+    //         formData.append('email', email);
+    //         console.log('password being sent:', password)
+    //         formData.append('password', password);
+    //         formData.append('fname', fname);
+    //         formData.append('lname', lname);
+    //         formData.append('cwid', cwid);
+    //         formData.append('phone', phone);
+    //         formData.append('gradYear', gradYear);
+    //         formData.append('major', selectedMajor?.value || '');
+
+    //         if (PfpImage) {
+    //             formData.append('pfpimage', PfpImage);
+    //         }
+
+    //         try {
+    //             await axios.post(endpoint, formData, {
+    //                 headers: { 'Content-Type': 'multipart/form-data' },
+    //             });
+    //             setIsLogin(true);
+    //         } catch (error) {
+    //             if (axios.isAxiosError(error)) {
+    //                 console.error('Error:', error.response?.data?.message || error.message);
+    //             } else {
+    //                 console.error('An unexpected error occurred:', error);
+    //             }
+    //         }
+
+    //     }
+    // };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const endpoint = isLogin ? `${APP_URL}api/login` : `${APP_URL}api/signup`;
+        console.log('endpoint:', endpoint);
+    
+        const payload = isLogin
+            ? { email, password }
+            : { email, password, fname, lname, cwid, phone, gradYear, major: selectedMajor?.value || '' };
+    
+        // if (PfpImage && !isLogin) {
+        //     payload.pfpimage = PfpImage; 
+        // }
+    
+        try {
+            const response = await axios.post(endpoint, payload, {
+                headers: { 'Content-Type': 'application/json' },
+            });
+            if (isLogin) {
                 localStorage.setItem('token', response.data.token);
                 router.push('/');
-            } catch (error) {
-                console.error('Error:', error.response?.data?.message || error.message);
-                document.getElementById('errorBox')?.setAttribute("style", "display: block;");
-                document.getElementById('errorText').innerText = "Invalid email or password. Please try again.";
-            }
-        } else {
-            const formData = new FormData();
-            formData.append('email', email);
-            formData.append('password', password);
-            formData.append('fname', fname);
-            formData.append('lname', lname);
-            formData.append('cwid', cwid);
-            formData.append('phone', phone);
-            formData.append('gradYear', gradYear);
-            formData.append('major', selectedMajor.value);
-
-            if (PfpImage) {
-                formData.append('pfpimage', PfpImage);
-            }
-
-            try {
-                const response = await axios.post(endpoint, formData, {
-                    headers: { 'Content-Type': 'multipart/form-data' },
-                });
+            } else {
                 setIsLogin(true);
-            } catch (error) {
-                console.error('Error:', error.response?.data?.message || error.message);
             }
+        } catch (error) {
+            let errorMessage = "An unexpected error occurred.";
+            if (axios.isAxiosError(error)) {
+                errorMessage = error.response?.data?.message || error.message;
+            }
+            console.error('Error:', errorMessage);
+            document.getElementById('errorBox')?.setAttribute("style", "display: block;");
+            document.getElementById('errorText')!.innerText = errorMessage;
         }
     };
+    
+
+
+
 
     return (
         <div className='login-page flex items-center justify-center min-h-screen bg-[#ffffff]'>
             <div className="flex flex-row w-full h-full">
                 <div className="w-2/3 flex flex-col justify-center items-center w-1/2 pr-0">
-                    <div className="mb-8" style={{height: 'auto', width: '300px'}}>
-                        <Image src={SkiBamaLogo} alt="Ski Bama Logo"/>
+                    <div className="mb-8" style={{ height: 'auto', width: '300px' }}>
+                        <Image src={SkiBamaLogo} alt="Ski Bama Logo" />
                     </div>
 
                     <div className='bg-white p-8 rounded-lg shadow-lg w-full max-w-md text-black mt-[-40px]'>
@@ -228,7 +288,7 @@ export default function LoginPage() {
                             />
                             <div className="relative">
                                 <input
-                                    type={showPassword ? 'text' : 'password'} 
+                                    type={showPassword ? 'text' : 'password'}
                                     placeholder="Password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
