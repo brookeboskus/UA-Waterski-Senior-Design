@@ -14,7 +14,7 @@ import StatusImage from '../../img/Text (8).svg';
 import EditPage from '../protected-profile-edit-page/page';
 import axios from 'axios';
 import Link from 'next/link';
-import EditIcon from '../../img/Icon (2).svg';
+import EditIcon from '../../img/EditPFPIcon.svg';
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
