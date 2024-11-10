@@ -13,6 +13,7 @@ import Image from 'next/image';
 import SkiBamaLogo from '../../img/skibamalogo.svg';
 import { fetchSheetData } from "../../googlesheetservices";
 import placeholderhomepageimage from "../../../app/img/placeholderhomepage.svg";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
 export default function Home() {
     const [sheetData, setSheetData] = useState<string[] | null>(null);

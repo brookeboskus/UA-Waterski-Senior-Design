@@ -1,5 +1,6 @@
 "use client"
 import Image from 'next/image';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import FirstNameImage from '../../img/Text (1).svg';
@@ -11,6 +12,7 @@ import CWIDImage from '../../img/Text (6).svg';
 import MajorImage from '../../img/Text (7).svg';
 import StatusImage from '../../img/Text (8).svg';
 import DefaultPFP from '../../img/DefaultPFP.svg';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
 interface TeamMember {
     Fname: string;
@@ -43,7 +45,7 @@ export default function EditProfile() {
             }
 
             try {
-                const response = await axios.get<TeamMember>('http://localhost:4000/auth/profile', {
+                const response = await axios.get<TeamMember>('${APP_URL}/auth/profile', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
