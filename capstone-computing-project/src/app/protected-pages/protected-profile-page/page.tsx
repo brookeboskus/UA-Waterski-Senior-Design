@@ -1,230 +1,273 @@
-// currently not in use. head to login-page and modiy router.push('/') to router.push('/protected-pages/protected-home-page') to see this page
-
-
-// we still need to ensure we added redirection logic (logged in or not)
-// if we want to add elements to this page that is sensitive. 
-// currently this page is accessbile when you're not logged in by typing the page addresss
-// but for now it's not a worry bc it's the same info as regular home page
 
 "use client";
-
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import SkiBamaLogo from '../../img/skibamalogo.svg';
-import { fetchSheetData } from "../../googlesheetservices";
-import placeholderhomepageimage from "../../../app/img/placeholderhomepage.svg";
+import DefaultPFP from '../../img/DefaultPFP.svg';
+import FirstNameImage from '../../img/Text (1).svg';
+import LastNameImage from '../../img/Text (2).svg';
+import GradYearImage from '../../img/Text (3).svg';
+import PhoneNumberImage from '../../img/Text (4).svg';
+import EmailImage from '../../img/Text (5).svg';
+import CWIDImage from '../../img/Text (6).svg';
+import MajorImage from '../../img/Text (7).svg';
+import StatusImage from '../../img/Text (8).svg';
+import EditPage from '../protected-profile-edit-page/page';
+import axios from 'axios';
+import Link from 'next/link';
+import EditIcon from '../../img/Icon (2).svg';
+
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
-export default function Home() {
-    const [sheetData, setSheetData] = useState<string[] | null>(null);
-    const [error, setError] = useState<string | null>(null);
-    const [currentIndex, setCurrentIndex] = useState(2);
-    const [isSliding, setIsSliding] = useState(false);
-    const [direction, setDirection] = useState<"left" | "right">("right");
-    const [loading, setLoading] = useState(true);
-    const [image8B, setImage8B] = useState<string | null>(null);
-    const [textFrom8C, setTextFrom8C] = useState<string | null>(null);
 
-    // Set page title
-    useEffect(() => {
-        document.title = 'UA Waterski - Home';
-    }, []);
+interface TeamMember {
+    Fname: string;
+    Lname: string;
+    GradYear: string;
+    MemberType: string;
+    Major: string;
+    Phone: string;
+    Email: string;
+    CWID: string;
+    PfpImage: string;
+}
 
-    useEffect(() => {
-        // fetching data from Google Sheets
-        const getData = async () => {
-            try {
-                const data = await fetchSheetData("HomePage");
-                if (data) {
-                    const imageUrls = data
-                        .filter((row) => row[0]?.startsWith("http"))
-                        .map((row) => row[0]);
-                    setSheetData(imageUrls);
+export default function ProfilePage() {
+    const [teamMember, setTeamMember] = useState<TeamMember | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [isEditPageOpen, setIsEditPageOpen] = useState(false); // state to manage edit page visibility
+    const toggleEditPage = () => {
+        setIsEditPageOpen(!isEditPageOpen);
+    };
 
-                    const image8BUrl = data[7]?.[1];
-                    if (image8BUrl?.startsWith("http")) {
-                        setImage8B(image8BUrl);
-                    } else {
-                        setImage8B(null);
-                    }
 
-                    const textFrom8C = data[7]?.[2];
-                    if (textFrom8C) {
-                        setTextFrom8C(textFrom8C);
-                    } else {
-                        setTextFrom8C("No content available.");
-                    }
-
-                } else {
-                    setSheetData([]);
-                }
-                setLoading(false);
-            } catch (err) {
-                console.error("Error fetching sheet data:", err);
-                setError("Failed to fetch data");
-                setLoading(false);
+    const fetchProfile = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
             }
-        };
 
-        getData();
+            // const response = await axios.get<TeamMember>('http://localhost:4000/auth/profile', {
+            //     headers: {
+            //         Authorization: `Bearer ${token}` // send the token in the request headers to authenticate
+            //     }
+            // });
+
+            const response = await axios.get<TeamMember>(`${APP_URL}api/profile`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            // console.log('Profile data:', response.data);
+
+            setTeamMember(response.data); // store profile data in state
+        } catch (error) {
+            console.error('Failed to fetch team roster:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchProfile();
     }, []);
 
-    const startSlide = (newIndex: number, dir: "left" | "right") => {
-        setIsSliding(true);
-        setDirection(dir);
-        setTimeout(() => {
-            setCurrentIndex(newIndex);
-            setIsSliding(false);
-        }, 300);
-    };
+    const handleClick = () => {
+        fetchProfile();
+        toggleEditPage();
+    }
 
-    const handleNext = () => {
-        if (sheetData) {
-            const nextIndex = (currentIndex + 1) % sheetData.length;
-            startSlide(nextIndex, "right");
-        }
-    };
 
-    const handlePrev = () => {
-        if (sheetData) {
-            const prevIndex = (currentIndex - 1 + sheetData.length) % sheetData.length;
-            startSlide(prevIndex, "left");
-        }
-    };
+    if (loading) {
+        return <div>Loading...</div>; 
+    }
 
-    const showPrevImage = currentIndex > 0;
-    const showNextImage = sheetData && currentIndex < sheetData.length - 1;
+    if (!teamMember) {
+        return <div>No team member righthere data available.</div>;
+    } else {
 
-    return (
-        <div className="min-h-screen flex flex-col">
-            <main className="flex-grow">
-                <section className="bg-white">
-                    <div className="w-full flex justify-center relative overflow-hidden">
-                        {loading || error ? (
-                            <div className="relative w-full flex justify-center items-center">
-                                <div className="flex justify-center mb-12">
-                                    <Image
-                                        src={placeholderhomepageimage}
-                                        alt="Jeongbin Son"
-                                        width={1000}
-                                        height={1000}
-                                        className="rounded-full w-48 h-48 md:w-100 md:h-100"
-                                    />
-                                </div>
-                            </div>
-                        ) : (
-                            !error && sheetData && sheetData.length > 1 && (
-                                <div className="relative w-full flex justify-center items-center">
-                                    {/* Previous Image */}
-                                    {showPrevImage && (
-                                        <div
-                                            className={`absolute left-0 transition-transform duration-300 transform ${isSliding && direction === "left"
-                                                ? "translate-x-full"
-                                                : isSliding && direction === "right"
-                                                    ? "-translate-x-full"
-                                                    : "translate-x-0"
-                                                } opacity-50 scale-75`}
-                                        >
-                                            <img
-                                                src={sheetData[currentIndex - 1]}
-                                                alt="Previous Image"
-                                                className="object-cover w-[1000px] h-[150px] md:w-[400px] md:h-[400px] rounded-md"
-                                            />
-                                        </div>
-                                    )}
+        return (
+            <div className="relative w-[417px] max-h-full h-[787px] bg-white rounded-[5px] z-40 overflow-y-auto" style={{ top: '0px', right: '5px', borderLeft: '3px solid black' }}>
+                <div className="relative w-full h-full">
+                    {/* red header section */}
+                    <div className="absolute left-0 top-0 w-full h-[320px] bg-[#9e1b32] z-10"></div>
 
-                                    {/* Current Image */}
-                                    <div
-                                        className={`transition-transform duration-300 transform ${isSliding && direction === "right"
-                                            ? "-translate-x-full"
-                                            : isSliding && direction === "left"
-                                                ? "translate-x-full"
-                                                : "translate-x-0"
-                                            } z-10`}
-                                    >
-                                        <img
-                                            src={sheetData[currentIndex]}
-                                            alt="Current Image"
-                                            className="object-cover w-[300px] h-[200px] md:w-[1100px] mt-10 md:h-[500px] rounded-md"
-                                        />
-                                    </div>
+                    {/* user profile image */}
+                    <div className="absolute left-[50%] top-[5%] w-[230px] h-[230px] rounded-full z-20 transform -translate-x-[50%] overflow-hidden">
+                        <Image
+                            src={teamMember.PfpImage ? teamMember.PfpImage : DefaultPFP}
+                            alt={`${teamMember.Fname} ${teamMember.Lname}'s profile image`}
+                            layout="fill"
+                            objectFit="cover"
+                            className="rounded-full"
+                        />
+                    </div>
+                </div>
 
-                                    {/* Next Image */}
-                                    {showNextImage && (
-                                        <div
-                                            className={`absolute right-0 transition-transform duration-300 transform ${isSliding && direction === "right"
-                                                ? "translate-x-full"
-                                                : isSliding && direction === "left"
-                                                    ? "-translate-x-full"
-                                                    : "translate-x-0"
-                                                } opacity-50 scale-75`}
-                                        >
-                                            <img
-                                                src={sheetData[currentIndex + 1]}
-                                                alt="Next Image"
-                                                className="object-cover w-[200px] h-[150px] md:w-[600px] md:h-[400px] rounded-md"
-                                            />
-                                        </div>
-                                    )}
-                                </div>
-                            )
-                        )}
 
-                        {/* Left Arrow */}
-                        <button
-                            onClick={handlePrev}
-                            className={`absolute left-2 md:left-6 top-1/2 transform -translate-y-1/2 bg-[#9E1B32] text-white p-4 md:p-6 rounded-full shadow-lg ${showPrevImage && !loading ? 'opacity-80 hover:opacity-100 hover:bg-[#B32346]' : 'opacity-50 cursor-not-allowed'} transition duration-300`}
-                            disabled={!showPrevImage || loading}
-                        >
-                            &#9664;
+                <div>
+                    {/* edit page */}
+                    <div
+                        className={`fixed top-0 p-2 ${isEditPageOpen ? 'z-0' : 'z-[9999]'}`}
+                        style={{ top: '-5px', right: '10px' }}
+                    >
+                        {/* open the sidebar */}
+                        <button onClick={toggleEditPage} className=" p-20  -m-5 transform translate-x-10">
+                            <Link href="#">
+                                <Image
+                                    src={EditIcon}
+                                    alt="Profile picture"
+                                    width={20}
+                                    height={20}
+                                    className=" shadow-lg hover:shadow-xl transition-shadow duration-300"
+                                />
+                            </Link>
                         </button>
-
-                        {/* Right Arrow */}
-                        <button
-                            onClick={handleNext}
-                            className={`absolute right-2 md:right-6 top-1/2 transform -translate-y-1/2 bg-[#9E1B32] text-white p-4 md:p-6 rounded-full shadow-lg ${showNextImage && !loading ? 'opacity-80 hover:opacity-100 hover:bg-[#B32346]' : 'opacity-50 cursor-not-allowed'} transition duration-300`}
-                            disabled={!showNextImage || loading}
-                        >
-                            &#9654;
-                        </button>
-
                     </div>
 
-                    <div className="container mx-auto text-center flex flex-col justify-center items-center min-h-[50vh] md:min-h-[70vh] px-4">
-                        <div style={{ height: 'auto', width: '400px' }}>
+
+                    {/* sidebar */}
+                    {isEditPageOpen && (
+                        <div
+                            className="fixed right-5 h-full bg-white z-[9998]"
+                            style={{ top: '15px', width: '27%' }}
+                        >
+                            <button onClick={handleClick} className="p-2 text-black">Close</button>
+
+                            {/* render the profile page content */}
+                            <EditPage />
+                        </div>
+
+                    )}
+                </div>
+
+
+                {/* conditionally render the team member info only if teamMember is defined */}
+                {teamMember ? (
+                    <>
+                        {/* "your information" label section */}
+                        <div className="absolute left-[25%] top-[42%] w-[191px] h-[26px] text-center text-black text-xl font-bold transform -translate-x-[50%]">
+                            Your Information
+                        </div>
+
+                        <div className="w-[101px] h-[15px] left-[99px] top-[360px] absolute text-black text-[13px] font-bold">First Name</div>
+                        <div className="absolute left-[50px] top-[365px] w-[15px] h-[30px] z-20 transform -translate-x-[50%]">
                             <Image
-                                src={SkiBamaLogo}
-                                alt="Ski Bama Logo"
-                                className="h-200 w-200 md:h-100 md:w-100 lg:h-200 lg:w-200 object-contain"
-                                priority={true}
+                                src={FirstNameImage}
+                                alt="First Name Icon"
+                                layout="fill"
+                                objectFit="contain"
+                                className="rounded"
                             />
                         </div>
-
-                        <div className="flex flex-col md:flex-row items-center justify-center mt-8 mx-15 border border-gray-300 p-4 rounded-lg min-h-[300px]">
-
-                            {/* Picture from cell 8B */}
-                            {image8B && (
-                                <img
-                                    src={image8B}
-                                    alt="Image from 8B"
-                                    className="h-200px w-200px md:h-250px md:w-250px lg:h-300px lg:w-300px max-w-full object-contain mr-6"
-                                />
-                            )}
-
-                            {/* Text from 8C */}
-                            <div className="flex flex-col justify-center h-full">
-                                <p className="text-lg md:text-xl text-black max-w-3xl">
-                                    {textFrom8C ? textFrom8C : "Loading content..."}
-                                </p>
-                            </div>
+                        <div className="w-[220px] h-[20px] left-[99px] top-[380px] absolute text-[#b9b9b9] text-[13px] font-bold">
+                            {teamMember.Fname}
                         </div>
-                    </div>
-                </section>
-                {/* temp usage of br for spacing on the bottom */}
-                <br />
-                <br />
 
-            </main>
-        </div>
-    );
+                        <div className="w-[101px] h-[15px] left-[99px] top-[410px] absolute text-black text-[13px] font-bold">Last Name</div>
+                        <div className="absolute left-[50px] top-[415px] w-[15px] h-[30px] z-20 transform -translate-x-[50%]">
+                            <Image
+                                src={LastNameImage}
+                                alt="Last Name Icon"
+                                layout="fill"
+                                objectFit="contain"
+                                className="rounded"
+                            />
+                        </div>
+                        <div className="w-[220px] h-[20px] left-[99px] top-[430px] absolute text-[#b9b9b9] text-[13px] font-bold">
+                            {teamMember.Lname}
+                        </div>
+
+                        <div className="w-[125px] h-[15px] left-[99px] top-[460px] absolute text-black text-[13px] font-bold">Graduation Year</div>
+                        <div className="absolute left-[50px] top-[465px] w-[15px] h-[30px] z-20 transform -translate-x-[50%]">
+                            <Image
+                                src={GradYearImage}
+                                alt="Graduation Year Icon"
+                                layout="fill"
+                                objectFit="contain"
+                                className="rounded"
+                            />
+                        </div>
+                        <div className="w-[220px] h-[20px] left-[99px] top-[480px] absolute text-[#b9b9b9] text-[13px] font-bold">
+                            {teamMember.GradYear}
+                        </div>
+
+                        <div className="w-[101px] h-[15px] left-[99px] top-[510px] absolute text-black text-[13px] font-bold">Major</div>
+                        <div className="absolute left-[50px] top-[515px] w-[15px] h-[30px] z-20 transform -translate-x-[50%]">
+                            <Image
+                                src={MajorImage}
+                                alt="Major Icon"
+                                layout="fill"
+                                objectFit="contain"
+                                className="rounded"
+                            />
+                        </div>
+                        <div className="w-[220px] h-[20px] left-[99px] top-[530px] absolute text-[#b9b9b9] text-[13px] font-bold">
+                            {teamMember.Major}
+                        </div>
+
+                        <div className="w-[125px] h-[15px] left-[99px] top-[560px] absolute text-black text-[13px] font-bold">Phone Number</div>
+                        <div className="absolute left-[50px] top-[565px] w-[15px] h-[30px] z-20 transform -translate-x-[50%]">
+                            <Image
+                                src={PhoneNumberImage}
+                                alt="Phone Number Icon"
+                                layout="fill"
+                                objectFit="contain"
+                                className="rounded"
+                            />
+                        </div>
+                        <div className="w-[220px] h-[20px] left-[99px] top-[580px] absolute text-[#b9b9b9] text-[13px] font-bold">
+                            {teamMember.Phone}
+                        </div>
+
+                        <div className="w-[101px] h-[15px] left-[99px] top-[610px] absolute text-black text-[13px] font-bold">E-mail</div>
+                        <div className="absolute left-[50px] top-[615px] w-[15px] h-[30px] z-20 transform -translate-x-[50%]">
+                            <Image
+                                src={EmailImage}
+                                alt="Email Icon"
+                                layout="fill"
+                                objectFit="contain"
+                                className="rounded"
+                            />
+                        </div>
+                        <div className="w-[220px] h-[20px] left-[99px] top-[630px] absolute text-[#b9b9b9] text-[13px] font-bold">
+                            {teamMember.Email}
+                        </div>
+
+                        <div className="w-[101px] h-[15px] left-[99px] top-[660px] absolute text-black text-[13px] font-bold">CWID</div>
+                        <div className="absolute left-[50px] top-[665px] w-[15px] h-[30px] z-20 transform -translate-x-[50%]">
+                            <Image
+                                src={CWIDImage}
+                                alt="CWID Icon"
+                                layout="fill"
+                                objectFit="contain"
+                                className="rounded"
+                            />
+                        </div>
+                        <div className="w-[220px] h-[20px] left-[99px] top-[680px] absolute text-[#b9b9b9] text-[13px] font-bold">
+                            {teamMember.CWID}
+                        </div>
+
+                        <div className="w-[101px] h-[15px] left-[99px] top-[710px] absolute text-black text-[13px] font-bold">Status</div>
+                        <div className="absolute left-[50px] top-[715px] w-[15px] h-[30px] z-20 transform -translate-x-[50%]">
+                            <Image
+                                src={StatusImage}
+                                alt="Status Icon"
+                                layout="fill"
+                                objectFit="contain"
+                                className="rounded"
+                            />
+                        </div>
+                        <div className="w-[220px] h-[20px] left-[99px] top-[730px] absolute text-[#b9b9b9] text-[13px] font-bold">
+                            {teamMember.CWID}
+                        </div>
+                    </>
+                ) : (
+                    <div>No team member data available.</div>
+                )}
+            </div>
+
+        );
+    }
 }
