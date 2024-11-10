@@ -17,7 +17,7 @@ const updateUserPassword = async (email: string, hashedPassword: string) => {
             if (err) {
                 console.error('Database error:', err);
                 reject(err);
-            } else if (results.affectedRows === 0) {
+            } else if (results && 'affectedRows' in results && results.affectedRows === 0) {
                 reject(new Error('User not found.'));
             } else {
                 resolve(results);
@@ -26,12 +26,17 @@ const updateUserPassword = async (email: string, hashedPassword: string) => {
     });
 };
 
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         const { token, newPassword } = req.body;
 
         try {
-            const decoded = jwt.verify(token, SECRET_KEY);
+            if (!SECRET_KEY) {
+                return res.status(500).json({ success: false, message: 'Server error: missing secret key for JWT.' });
+            }
+
+            const decoded = jwt.verify(token, SECRET_KEY) as jwt.JwtPayload;
             const email = decoded.email;
 
             const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -41,7 +46,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             
         } catch (error) {
             console.error('Error during password reset:', error);
-            res.status(400).json({ success: false, error: error.message || 'Invalid or expired token.' });
+
+            const errorMessage = (error instanceof Error) ? error.message : 'Invalid or expired token.';
+            res.status(400).json({ success: false, error: errorMessage });
         }
     } else {
         res.status(405).json({ error: 'Method not allowed' });
