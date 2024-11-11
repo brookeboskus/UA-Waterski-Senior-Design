@@ -27,7 +27,7 @@ export default function Footer() {
                             target="_blank"
                             className="text-white hover:text-black transition duration-300 hover:underline"
                         >
-                            Follow our Instagram
+                            Follow our Instagram TESTING
                         </a>
                     </div>
 
