@@ -48,23 +48,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
 
             const token = jwt.sign({ email }, SECRET_KEY, { expiresIn: '1h' });
-            if (
-                window.location.host.includes("brian") ||
-                window.location.host.includes("lilly") ||
-                window.location.host.includes("brooke") ||
-                window.location.host.includes("anastasia")
-            ) {
-                const host = window.location.host;
-                const baseDomain = "uawaterski.com";
-    
-                if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
-                    APP_URL = `https://${host}/`;
-                }
-    
-                console.log("Current APP_URL:", APP_URL);
-            } else {
-                console.log("oops you coded wrong, what a dummy");
+            
+            const host = req.headers.host || ""; 
+            const baseDomain = "uawaterski.com";
+            
+            if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
+                APP_URL = `https://${host}/`;
             }
+
+            console.log("Current APP_URL:", APP_URL);
             const resetLink = `${APP_URL}/reset-password?token=${token}`;
 
             const transporter = nodemailer.createTransport({
