@@ -8,7 +8,7 @@ import Image from 'next/image';
 import WaterskiImage from '../img/loginSkiIMG.svg';
 import SkiBamaLogo from '../img/skibamalogo.svg';
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
+let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
 
 
@@ -210,6 +210,13 @@ export default function LoginPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (window.location.host.includes("brian")) {
+            //update APP_URL to append brian. to the front of the url
+            APP_URL = "brian." + APP_URL;
+            console.log('Brian is here');
+        } else {
+            console.log('Brian is not here');
+        }
         const endpoint = isLogin ? `${APP_URL}api/login` : `${APP_URL}api/signup`;
         console.log('endpoint:', endpoint);
 
