@@ -169,7 +169,15 @@ export default function Home() {
                             className={`absolute left-2 md:left-6 top-1/2 transform -translate-y-1/2 bg-[#9E1B32] text-white p-4 md:p-6 rounded-full shadow-lg ${showPrevImage && !loading ? 'opacity-80 hover:opacity-100 hover:bg-[#B32346]' : 'opacity-50 cursor-not-allowed'} transition duration-300`}
                             disabled={!showPrevImage || loading}
                         >
-                            &#9664;
+                            {/* &#9664; */}
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="w-6 h-6 md:w-8 md:h-8"
+                            >
+                                <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z" />
+                            </svg>
                         </button>
 
                         {/* Right Arrow */}
@@ -178,7 +186,15 @@ export default function Home() {
                             className={`absolute right-2 md:right-6 top-1/2 transform -translate-y-1/2 bg-[#9E1B32] text-white p-4 md:p-6 rounded-full shadow-lg ${showNextImage && !loading ? 'opacity-80 hover:opacity-100 hover:bg-[#B32346]' : 'opacity-50 cursor-not-allowed'} transition duration-300`}
                             disabled={!showNextImage || loading}
                         >
-                            &#9654;
+                            {/* &#9654; */}
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="w-6 h-6 md:w-8 md:h-8"
+                            >
+                                <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" />
+                            </svg>
                         </button>
 
                     </div>
