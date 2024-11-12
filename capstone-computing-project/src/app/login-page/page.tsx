@@ -211,11 +211,16 @@ export default function LoginPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (window.location.host.includes("brian")) {
-            //update APP_URL to append brian. to the front of the url
-            APP_URL = "brian." + APP_URL;
-            console.log('Brian is here');
+            const host = window.location.host; 
+            const baseDomain = "uawaterski.com"; 
+
+            if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
+                APP_URL = `https://${host}`; 
+            }
+
+            console.log("Current APP_URL:", APP_URL);
         } else {
-            console.log('Brian is not here');
+            console.log('oops you coded wrong, what a dummy');
         }
         const endpoint = isLogin ? `${APP_URL}api/login` : `${APP_URL}api/signup`;
         console.log('endpoint:', endpoint);
@@ -228,12 +233,12 @@ export default function LoginPage() {
                 reader.onerror = reject;
                 reader.readAsDataURL(PfpImage);
             }
-        );
-    }
+            );
+        }
 
         const payload = isLogin
             ? { email, password }
-            : { email, password, fname, lname, cwid, phone, gradYear, major: selectedMajor?.value || '', pfpimage: pfpBase64,};
+            : { email, password, fname, lname, cwid, phone, gradYear, major: selectedMajor?.value || '', pfpimage: pfpBase64, };
 
         // if (PfpImage && !isLogin) {
         //     payload.pfpimage = PfpImage; 
