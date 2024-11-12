@@ -317,6 +317,41 @@ export default function EditProfile() {
                         {PfpImage && <span className="ml-2 text-gray-600">{PfpImage.name}</span>}
                     </div>
 
+                      {/* First Name */}
+                      <div className="text-[#b9b9b9] text-[15px] font-bold">Driver</div>
+                        <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
+                            <input
+                                type="text"
+                                value={fname}
+                                onChange={(e) => setFname(e.target.value)}
+                                className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
+                                placeholder={teamMember.Fname}
+                            />
+                        </div>
+
+                          {/* First Name */}
+                          <div className="text-[#b9b9b9] text-[15px] font-bold">Judge</div>
+                        <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
+                            <input
+                                type="text"
+                                value={fname}
+                                onChange={(e) => setFname(e.target.value)}
+                                className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
+                                placeholder={teamMember.Fname}
+                            />
+                        </div>
+
+                          {/* First Name */}
+                          <div className="text-[#b9b9b9] text-[15px] font-bold">Status</div>
+                        <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
+                            <input
+                                type="text"
+                                value={fname}
+                                onChange={(e) => setFname(e.target.value)}
+                                className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
+                                placeholder={teamMember.Fname}
+                            />
+                        </div>
 
                     {/* Grad Year */}
                     <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Grad Year</div>
