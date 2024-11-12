@@ -660,7 +660,7 @@ const SetListButton = ({
                 : 'Past reservation, cannot register';
 
         buttonClass = reservationState === 'reservedByYou'
-            ? 'bg-black text-black cursor-not-allowed border-2 border-transparent hover:border-black'
+            ? 'bg-[#404040] text-black cursor-not-allowed border-2 border-transparent hover:border-black'
             : reservationState === 'reservedBySomeoneElse'
                 ? 'bg-[#404040] text-white cursor-not-allowed border-2 border-transparent hover:border-black'
                 : 'bg-[#808080] text-black cursor-not-allowed border-2 border-transparent hover:border-black';
