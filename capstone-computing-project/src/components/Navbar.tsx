@@ -299,8 +299,8 @@ export default function Navbar() {
                 {/* sidebar */}
                 {isSidebarOpen && (
                     <div
-                        className="fixed  right-0 h-full bg-[#9E1B32] z-[9998] border-top: darkred overflow-y-auto" 
-                        style={{ top: '56px', width: '27%', borderTop: '3px solid darkred' }}
+                        className="fixed right-0 h-full bg-black z-[9998] border-top: darkred overflow-y-auto" 
+                        style={{ top: '56px', width: '27%', borderTop: '3px solid darkred'}}
                     >
                         <button onClick={toggleSidebar} className="p-2 text-black">Close</button>
                         {/* render the profile page content */}

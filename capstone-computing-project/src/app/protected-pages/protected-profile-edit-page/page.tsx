@@ -76,7 +76,7 @@ export default function EditProfile() {
             const token = localStorage.getItem('token');
             if (!token) {
                 console.error('Authentication token missing. Please log in again.');
-                return; 
+                return;
             }
 
             const payload = {
@@ -115,138 +115,93 @@ export default function EditProfile() {
     }
 
     return (
-        <div className="relative w-[417px] h-[787px] bg-white rounded-[5px] z-40" style={{ top: '0px', right: '5px', borderLeft: '3px solid black' }}>
-            <div className="relative w-full h-full">
-                <div className="absolute left-0 top-0 w-full h-[320px] bg-[#9e1b32] z-10"></div>
-                <div className="absolute left-[50%] top-[5%] w-[230px] h-[230px] rounded-full z-20 transform -translate-x-[50%] overflow-hidden">
-                    <Image
-                        src={teamMember.PfpImage ? teamMember.PfpImage : DefaultPFP}
-                        alt={`${teamMember.Fname} ${teamMember.Lname}'s profile image`}
-                        layout="fill"
-                        objectFit="cover"
-                        className="rounded-full"
-                    />
+        <div className="relative w-[417px] max-h-full h-[787px] bg-white rounded-[5px] z-40 overflow-y-auto flex flex-col items-center overflow-y-auto" style={{ top: '39px', right: '5px', borderLeft: '3px solid black' }}>
+                <div className="relative w-full h-full">
+                    {/* red header section */}
+                    <div className="absolute left-0 top-0 w-full h-[280px] bg-[#9e1b32] z-10"></div>
+
+                    {/* user profile image */}
+                    <div className="absolute left-[50%] top-[5%] w-[230px] h-[230px] rounded-full z-20 transform -translate-x-[50%] overflow-hidden" style={{ top: '-2px' }}>
+                        <Image
+                            src={teamMember.PfpImage ? teamMember.PfpImage : DefaultPFP}
+                            alt={`${teamMember.Fname} ${teamMember.Lname}'s profile image`}
+                            layout="fill"
+                            objectFit="cover"
+                            className="rounded-full"
+                        />
+                    </div>
+                </div>
+                <div>
+
+   
+            <div className="w-[433px] h-[866px] relative bg-white rounded-lg shadow-lg">
+             
+
+                {/* Input Fields */}
+                <div className="absolute p-5" style={{top: '290px'}}>
+                    {/* First Name */}
+                    <div className="text-[#b9b9b9] text-[15px] font-bold">First Name</div>
+                    <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
+                        <input
+                            type="text"
+                            value={teamMember.Fname}
+                            onChange={(e) => setFname(e.target.value)}
+                            className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
+                            placeholder="Your First Name"
+                        />
+                    </div>
+
+                    {/* Last Name */}
+                    <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Last Name</div>
+                    <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
+                        <input
+                            type="text"
+                            value={teamMember.Lname}
+                            onChange={(e) => setLname(e.target.value)}
+                            className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
+                            placeholder="Your Last Name"
+                        />
+                    </div>
+
+                    {/* Phone Number */}
+                    <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Phone Number</div>
+                    <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
+                        <input
+                            type="text"
+                            value={teamMember.Phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
+                            placeholder="123-456-7890"
+                        />
+                    </div>
+
+                    {/* Email */}
+                    <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">E-mail</div>
+                    <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
+                        <input
+                            type="text"
+                            value={teamMember.Email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
+                            placeholder="youremail@email.com"
+                        />
+                    </div>
+                </div>
+
+                {/* Save Button */}
+
+                
+
+                <div  onClick={updateProfile} className="w-[380px] h-[57px] bg-[#9e1b32] rounded-[30px] absolute left-[18px] bottom-[30px]">
+                    <button className="w-full h-full text-[#f7f7f7] text-xl font-bold font-['Inter']">Save</button>
                 </div>
             </div>
-
-            <div className="absolute left-[50%] top-[42%] w-[191px] h-[26px] text-center text-black text-xl font-bold transform -translate-x-[50%]">
-                Your Information
+            <br>
+        </br>
+        <br>
+        </br>
             </div>
-            <div>
-                <button onClick={updateProfile} className="absolute bg-[#9e1b32] left-[60%] top-[40%] text-black p-2 rounded mt-4 ">
-                    Save Changes
-                </button>
-            </div>
-
-            {/* First Name */}
-
-            
-            <div className="w-[101px] h-[15px] left-[99px] top-[360px] absolute text-black text-[13px] font-bold">First Name</div>
-         
-            <div className="w-[401px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] flex justify-center">
-            <div className="w-[220px] h-[20px] left-[99px] top-[380px] absolute">
-                <input
-                    type="text"
-                    value={fname}
-                    onChange={(e) => setFname(e.target.value)}
-                    className="w-full h-full text-[#b9b9b9] text-[13px] font-bold bg-transparent outline-none"
-                    placeholder={teamMember.Fname}
-                />
-           </div>
-            </div>
-            <div className="w-[101px] h-[15px] left-[99px] top-[360px] absolute text-black text-[13px] font-bold">First Name</div>
-         
-            <div className="w-[220px] h-[20px] left-[99px] top-[380px] absolute">
-                <input
-                    type="text"
-                    value={fname}
-                    onChange={(e) => setFname(e.target.value)}
-                    className="w-full h-full text-[#b9b9b9] text-[13px] font-bold bg-transparent outline-none"
-                    placeholder={teamMember.Fname}
-                />
-            </div>
-          
-
-            {/* Last Name */}
-            <div className="w-[101px] h-[15px] left-[99px] top-[410px] absolute text-black text-[13px] font-bold">Last Name</div>
-          
-            <div className="w-[220px] h-[20px] left-[99px] top-[430px] absolute text-[#b9b9b9] text-[13px] font-bold">
-                <input
-                    type="text"
-                    value={lname}
-                    onChange={(e) => setLname(e.target.value)}
-                    className="w-full h-full text-[#b9b9b9] text-[13px] font-bold bg-transparent outline-none"
-                    placeholder={teamMember.Lname}
-                />
-            </div>
-
-            {/* Graduation Year */}
-            <div className="w-[125px] h-[15px] left-[99px] top-[460px] absolute text-black text-[13px] font-bold">Graduation Year</div>
-          
-            <div className="w-[220px] h-[20px] left-[99px] top-[480px] absolute text-[#b9b9b9] text-[13px] font-bold">
-                <input
-                    type="text"
-                    value={gradYear}
-                    onChange={(e) => setGradYear(e.target.value)}
-                    className="w-full h-full text-[#b9b9b9] text-[13px] font-bold bg-transparent outline-none"
-                    placeholder={teamMember.GradYear}
-                />
-            </div>
-
-            {/* Major */}
-            <div className="w-[101px] h-[15px] left-[99px] top-[510px] absolute text-black text-[13px] font-bold">Major</div>
-          
-            <div className="w-[220px] h-[20px] left-[99px] top-[530px] absolute text-[#b9b9b9] text-[13px] font-bold">
-                <input
-                    type="text"
-                    value={selectedMajor}
-                    onChange={(e) => setSelectedMajor(e.target.value)}
-                    className="w-full h-full text-[#b9b9b9] text-[13px] font-bold bg-transparent outline-none"
-                    placeholder={teamMember.Major}
-                />
-            </div>
-
-            {/* Phone Number */}
-            <div className="w-[125px] h-[15px] left-[99px] top-[560px] absolute text-black text-[13px] font-bold">Phone Number</div>
-           
-            <div className="w-[220px] h-[20px] left-[99px] top-[580px] absolute text-[#b9b9b9] text-[13px] font-bold">
-                <input
-                    type="text"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="w-full h-full text-[#b9b9b9] text-[13px] font-bold bg-transparent outline-none"
-                    placeholder={teamMember.Phone}
-                />
-            </div>
-
-            {/* Email */}
-            <div className="w-[101px] h-[15px] left-[99px] top-[610px] absolute text-black text-[13px] font-bold">E-mail</div>
-         
-            <div className="w-[220px] h-[20px] left-[99px] top-[630px] absolute text-[#b9b9b9] text-[13px] font-bold">
-                <input
-                    type="text"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full h-full text-[#b9b9b9] text-[13px] font-bold bg-transparent outline-none"
-                    placeholder={teamMember.Email}
-                />
-            </div>
-
-            {/* CWID */}
-            <div className="w-[101px] h-[15px] left-[99px] top-[660px] absolute text-black text-[13px] font-bold">CWID</div>
-          
-            <div className="w-[220px] h-[20px] left-[99px] top-[680px] absolute text-[#b9b9b9] text-[13px] font-bold">
-                {teamMember.CWID}
-            </div>
-
-            {/* Status */}
-            <div className="w-[101px] h-[15px] left-[99px] top-[710px] absolute text-black text-[13px] font-bold">Status</div>
-          
-            <div className="w-[220px] h-[20px] left-[99px] top-[730px] absolute text-[#b9b9b9] text-[13px] font-bold">
-                {teamMember.CWID}
-            </div>
-           
-           
         </div>
+       
     );
 }
