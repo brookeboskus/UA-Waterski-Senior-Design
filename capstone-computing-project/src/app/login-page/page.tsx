@@ -212,15 +212,26 @@ export default function LoginPage() {
         e.preventDefault();
         const endpoint = isLogin ? `${APP_URL}api/login` : `${APP_URL}api/signup`;
         console.log('endpoint:', endpoint);
-    
+
+        let pfpBase64 = null;
+        if (PfpImage && !isLogin) {
+            const reader = new FileReader();
+            pfpBase64 = await new Promise((resolve, reject) => {
+                reader.onloadend = () => resolve(reader.result?.toString().split(",")[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(PfpImage);
+            }
+        );
+    }
+
         const payload = isLogin
             ? { email, password }
-            : { email, password, fname, lname, cwid, phone, gradYear, major: selectedMajor?.value || '' };
-    
+            : { email, password, fname, lname, cwid, phone, gradYear, major: selectedMajor?.value || '', pfpimage: pfpBase64,};
+
         // if (PfpImage && !isLogin) {
         //     payload.pfpimage = PfpImage; 
         // }
-    
+
         try {
             const response = await axios.post(endpoint, payload, {
                 headers: { 'Content-Type': 'application/json' },
@@ -241,10 +252,6 @@ export default function LoginPage() {
             document.getElementById('errorText')!.innerText = errorMessage;
         }
     };
-    
-
-
-
 
     return (
         <div className='login-page flex items-center justify-center min-h-screen bg-[#ffffff]'>
