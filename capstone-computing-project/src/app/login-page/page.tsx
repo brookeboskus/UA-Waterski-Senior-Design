@@ -290,7 +290,7 @@ export default function LoginPage() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 pattern=".+@+(.+\.)?ua\.edu"
                                 title="Email must be a valid University of Alabama address (i.e. ending in ua.edu)"
-                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
                                 required
                             />
                             <div className="relative">
@@ -299,7 +299,7 @@ export default function LoginPage() {
                                     placeholder="Password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
+                                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
                                     required
                                 />
                                 <button
