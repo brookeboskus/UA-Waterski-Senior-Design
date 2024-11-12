@@ -215,7 +215,7 @@ export default function LoginPage() {
             const baseDomain = "uawaterski.com"; 
 
             if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
-                APP_URL = `https://${host}`; 
+                APP_URL = `https://${host}/`; 
             }
 
             console.log("Current APP_URL:", APP_URL);
