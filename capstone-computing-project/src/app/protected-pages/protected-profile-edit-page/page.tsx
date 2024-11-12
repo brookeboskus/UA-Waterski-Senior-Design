@@ -7,6 +7,18 @@ import Select from 'react-select';
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
+const driverApproved = [
+    { value: 'Yes', label: 'Yes' },
+    { value: 'No', label: 'No' }
+];
+
+const statusOptions = [
+    { value: 'Athlete', label: 'Athlete' },
+    { value: 'Officer', label: 'Officer' }
+];
+
+
+
 const majors = [
     { value: 'Accounting, BS', label: 'Accounting, BS' },
     { value: 'Accounting, MMA', label: 'Accounting, MMA' },
@@ -122,8 +134,12 @@ export default function EditProfile() {
     const [fname, setFname] = useState('');
     const [lname, setLname] = useState('');
     const [selectedMajor, setSelectedMajor] = useState<{ value: string, label: string } | null>(null);
+    const [slalomDriver, setslalomDriver] = useState('');
+    const [trickDriver, settrickDriver] = useState('');
+    const [jumpDriver, setjumpDriver] = useState('');
     const [phone, setPhone] = useState('');
     const [gradYear, setGradYear] = useState('');
+    const [status, setStatus] = useState<{ value: string, label: string } | null>(null);
 
     const [PfpImage, setProfilePicture] = useState<File | null>(null);
 
@@ -198,7 +214,10 @@ export default function EditProfile() {
                 Major: selectedMajor,
                 Phone: phone,
                 Email: email,
-                CWID: teamMember?.CWID
+                Status: status,
+                JumpDriver: jumpDriver,
+                SlalomDriver: slalomDriver,
+                TrickDriver: trickDriver
             };
 
             const response = await fetch('/api/updateProfile', {
@@ -287,109 +306,135 @@ export default function EditProfile() {
                             />
                         </div>
 
+
+                        {/* Grad Year */}
+                        <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Grad Year</div>
+                        <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
+                            <select
+
+                                value={gradYear}
+                                onChange={(e) => setGradYear(e.target.value)}
+                                className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
+
+                            >
+                                <option value="Freshman">Freshman</option>
+                                <option value="Sophomore">Sophomore</option>
+                                <option value="Junior">Junior</option>
+                                <option value="Senior">Senior</option>
+                            </select>
+                        </div>
+
+
+
+
+
+
+
+
+                        {/* Profile Photo */}
+                        <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Profile Photo</div>
+                        <div className="w-[380px] h-[68px] bg-gray-200 rounded-[20px] border-2 border-[#9e1b32] mt-1 flex items-center">
+                            <label className="w-full h-full text-black text-[15px] font-bold  outline-none p-28 flex items-center">
+                                <span className="text-gray-700">Click to Upload</span>
+                                <input
+                                    type="file"
+                                    accept=".png, .jpg, .jpeg, .webp"
+                                    onChange={handleFileChange}
+                                    className="hidden"
+                                />
+                            </label>
+                            {PfpImage && <span className="ml-2 text-gray-600">{PfpImage.name}</span>}
+                        </div>
+
                         {/* Major */}
                         <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Major</div>
-                  
-                            <Select
-                                placeholder="Select your Major"
-                                value={selectedMajor}
-                                onChange={setSelectedMajor}
-                                options={majors}
-                                className="w-full"
-                                required
-                            />
-                   
-                 
+
+                        <Select
+                            placeholder="Select your Major"
+                            value={selectedMajor}
+                            onChange={setSelectedMajor}
+                            options={majors}
+                            className="w-full"
+                            required
+                        />
+
+                        {/* First Name */}
+                        <div className="text-[#b9b9b9] text-[15px] font-bold">Status</div>
+                        <Select
+                            placeholder="Select your Major"
+                            value={status}
+                            onChange={setStatus}
+                            options={statusOptions}
+                            className="w-full"
+                            required
+                        />
+
+                        {/* Slalom Driver */}
+                        <div className="text-[#b9b9b9] text-[15px] font-bold">Slalom Driver</div>
+                        <Select
+                         placeholder="Approved?"
+                            value={driverApproved.find(option => option.value === slalomDriver)} // Find option by value
+                            onChange={(option) => setslalomDriver(option.value)} // Store only the value
+                          
+                            options={driverApproved}
+                            className="w-full"
+                            required
+                        />
 
 
-                    {/* Profile Photo */}
-                    <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Profile Photo</div>
-                    <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1 flex items-center">
-                        <label className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4 flex items-center">
-                            <span className="text-gray-700">Click to Upload</span>
-                            <input
-                                type="file"
-                                accept=".png, .jpg, .jpeg, .webp"
-                                onChange={handleFileChange}
-                                className="hidden"
-                            />
-                        </label>
-                        {PfpImage && <span className="ml-2 text-gray-600">{PfpImage.name}</span>}
+                        {/* Trick Driver */}
+                        <div className="text-[#b9b9b9] text-[15px] font-bold">Trick Driver</div>
+                        <Select
+                            placeholder="Approved?"
+                            value={driverApproved.find(option => option.value === trickDriver)} // Find option by value
+                            onChange={(option) => settrickDriver(option.value)} // Store only the value
+                            options={driverApproved}
+                            className="w-full"
+                            required
+                        />
+
+                        {/* Jump Driver */}
+                        <div className="text-[#b9b9b9] text-[15px] font-bold">Jump Driver</div>
+                        <Select
+                         placeholder="Approved?"
+                            value={driverApproved.find(option => option.value === jumpDriver)} // Find option by value
+                            onChange={(option) => setjumpDriver(option.value)} // Store only the value
+                      
+                            options={driverApproved}
+                            className="w-full"
+                            required
+                        />
+
+
+
                     </div>
 
-                      {/* First Name */}
-                      <div className="text-[#b9b9b9] text-[15px] font-bold">Driver</div>
-                        <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
-                            <input
-                                type="text"
-                                value={fname}
-                                onChange={(e) => setFname(e.target.value)}
-                                className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
-                                placeholder={teamMember.Fname}
-                            />
-                        </div>
+                    {/* Save Button */}
 
-                          {/* First Name */}
-                          <div className="text-[#b9b9b9] text-[15px] font-bold">Judge</div>
-                        <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
-                            <input
-                                type="text"
-                                value={fname}
-                                onChange={(e) => setFname(e.target.value)}
-                                className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
-                                placeholder={teamMember.Fname}
-                            />
-                        </div>
 
-                          {/* First Name */}
-                          <div className="text-[#b9b9b9] text-[15px] font-bold">Status</div>
-                        <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
-                            <input
-                                type="text"
-                                value={fname}
-                                onChange={(e) => setFname(e.target.value)}
-                                className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
-                                placeholder={teamMember.Fname}
-                            />
-                        </div>
 
-                    {/* Grad Year */}
-                    <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Grad Year</div>
-                    <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
-                        <select
-
-                            value={gradYear}
-                            onChange={(e) => setGradYear(e.target.value)}
-                            className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
-
-                        >
-                            <option value="Freshman">Freshman</option>
-                            <option value="Sophomore">Sophomore</option>
-                            <option value="Junior">Junior</option>
-                            <option value="Senior">Senior</option>
-                        </select>
+                    <div onClick={updateProfile} className="w-[380px] h-[57px] bg-[#9e1b32] rounded-[30px] absolute left-[18px] bottom-[-400px]">
+                        <button className="w-full h-full text-[#f7f7f7] text-xl font-bold font-['Inter']">Save</button>
                     </div>
 
                 </div>
-
-                {/* Save Button */}
-
-
-
-                <div onClick={updateProfile} className="w-[380px] h-[57px] bg-[#9e1b32] rounded-[30px] absolute left-[18px] bottom-[-150px]">
-                    <button className="w-full h-full text-[#f7f7f7] text-xl font-bold font-['Inter']">Save</button>
-                </div>
-
+                <br>
+                </br>
+                <br>
+                </br>
+                <br>
+                </br>
+                <br>
+                </br>
+                <br>
+                </br>
+                <br>
+                </br>
+                <br>
+                </br>
+                <br>
+                </br>
             </div>
-            <br>
-            </br>
-            <br>
-            </br>
-            <br>
-            </br>
-            <br>
-            </br>
-        </div>
         </div >
 
     );

@@ -15,7 +15,10 @@ interface UserProfilePayload {
     Major?: string;
     Phone?: string;
     Email?: string;
-    CWID?: string;
+    Status?: string;
+    JumpDriver?: string;
+    SlalomDriver?: string;
+    TrickDriver?: string;
 }
 
 
@@ -49,13 +52,25 @@ const updateUserProfile = async (email: string, payload: UserProfilePayload) => 
             query += `Phone = ?, `;
             values.push(phone);
         }
-        if (payload.Email) {
-            query += `Email = ?, `;
-            values.push(payload.Email);
+        if (payload.Status) {
+            query += `Status = ?, `;
+            values.push(payload.Status);
         }
-        if (payload.CWID) {
-            query += `CWID = ?, `;
-            values.push(payload.CWID);
+        if (payload.JumpDriver) {
+            query += `JumpDriver = ?, `;
+            values.push(payload.JumpDriver);
+        }
+        if (payload.SlalomDriver) {
+            query += `SlalomDriver = ?, `;
+            values.push(payload.SlalomDriver);
+        }
+        if (payload.JumpDriver) {
+            query += `JumpDriver = ?, `;
+            values.push(payload.JumpDriver);
+        }
+        if (payload.TrickDriver) {
+            query += `TrickDriver = ?, `;
+            values.push(payload.TrickDriver);
         }
 
         query = query.slice(0, -2); // Remove the trailing comma
