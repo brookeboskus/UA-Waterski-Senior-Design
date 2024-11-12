@@ -5,7 +5,7 @@ import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken';
 import db from '../../db';
 const SECRET_KEY = process.env.JWT_SECRET;
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
+let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
 const isValidUAEmail = (email: string): boolean => {
     //pattern=".+@+(.+\.)?ua\.edu"
@@ -48,6 +48,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
 
             const token = jwt.sign({ email }, SECRET_KEY, { expiresIn: '1h' });
+            if (
+                window.location.host.includes("brian") ||
+                window.location.host.includes("lilly") ||
+                window.location.host.includes("brooke") ||
+                window.location.host.includes("anastasia")
+            ) {
+                const host = window.location.host;
+                const baseDomain = "uawaterski.com";
+    
+                if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
+                    APP_URL = `https://${host}/`;
+                }
+    
+                console.log("Current APP_URL:", APP_URL);
+            } else {
+                console.log("oops you coded wrong, what a dummy");
+            }
             const resetLink = `${APP_URL}/reset-password?token=${token}`;
 
             const transporter = nodemailer.createTransport({
