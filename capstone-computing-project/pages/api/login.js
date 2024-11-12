@@ -1,9 +1,10 @@
-require('dotenv').config();
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const db = require('../../db');
+import 'dotenv/config'; 
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import db from '../../db.js';
 
 const login = async (req, res) => {
+
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method Not Allowed' });
     }

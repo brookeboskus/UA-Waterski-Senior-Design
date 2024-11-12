@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -7,6 +7,9 @@ import BlankPfp from '../img/blankpfp.svg';
 import React from 'react';
 import Select, { SingleValue, MultiValue } from 'react-select';
 import { useRouter } from 'next/navigation';
+
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
+
 
 const yearOptions = [
     { value: 'Freshman', label: 'Freshman' },
@@ -34,6 +37,9 @@ interface TeamMember {
     PfpImage: string;
     Email?: string;
     Phone?: string;
+    SlalomDriver?: string;
+    TrickDriver?: string;
+    JumpDriver?: string;
 }
 
 interface Option {
@@ -81,9 +87,15 @@ export default function RosterPage() {
                     throw new Error('No token available');
                 }
 
-                const response = await axios.get<TeamMember[]>('http://localhost:4000/auth/roster', {
+                // const response = await axios.get<TeamMember[]>('http://localhost:4000/auth/roster', {
+                //     headers: {
+                //         'Authorization': `Bearer ${token}`,
+                //     },
+                // });
+
+                const response = await axios.get<TeamMember[]>(`${APP_URL}api/roster`, {
                     headers: {
-                        'Authorization': `Bearer ${token}`,
+                        Authorization: `Bearer ${token}`,
                     },
                 });
 
@@ -232,7 +244,7 @@ export default function RosterPage() {
                                                 {member.Fname} {member.Lname}
                                             </h2>
                                             <p className="text-gray-700">
-                                                <strong>Member Type:</strong> {member.MemberType}
+                                                <strong>Status:</strong> {member.MemberType}
                                             </p>
                                             <p className="text-gray-700">
                                                 <strong>Graduation Year:</strong> {member.GradYear}
@@ -253,7 +265,7 @@ export default function RosterPage() {
                                                 className="rounded-full border shadow"
                                             />
                                         </div>
-                                        <h2 className="text-xl font-semibold text-center mb-4">
+                                        <h2 className="text-xl font-semibold text-center mb-1">
                                             {member.Fname} {member.Lname}
                                         </h2>
                                         <p>
@@ -261,6 +273,15 @@ export default function RosterPage() {
                                         </p>
                                         <p>
                                             <strong>Phone:</strong> {member.Phone || 'N/A'}
+                                        </p>
+                                        <p>
+                                            <strong>Slalom Driver:</strong> {member.SlalomDriver}
+                                        </p>
+                                        <p>
+                                            <strong>Trick Driver:</strong> {member.TrickDriver}
+                                        </p>
+                                        <p>
+                                            <strong>Jump Driver:</strong> {member.JumpDriver}
                                         </p>
                                     </div>
                                 </div>

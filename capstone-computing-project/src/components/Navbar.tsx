@@ -11,6 +11,9 @@ import ProtectedProfilePage from '../app/protected-pages/protected-profile-page/
 import defaultPfpImage from './img/DefaultPFP.svg';
 import axios from 'axios';
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
+
+
 interface TeamMember {
     PfpImage: string;
     MemberType: string;
@@ -45,7 +48,14 @@ export default function Navbar() {
                 throw new Error('No token found');
             }
 
-            const response = await axios.get<TeamMember>('http://localhost:4000/auth/profile', {
+            // const response = await axios.get<TeamMember>('http://localhost:4000/auth/profile', {
+            //     headers: {
+            //         Authorization: `Bearer ${token}`,
+            //     },
+            // });
+
+
+            const response = await axios.get<TeamMember>(`${APP_URL}api/profile`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
