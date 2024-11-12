@@ -374,8 +374,13 @@ export default function EditProfile() {
                         <Select
                          placeholder="Approved?"
                             value={driverApproved.find(option => option.value === slalomDriver)} // Find option by value
-                            onChange={(option) => setslalomDriver(option.value)} // Store only the value
-                          
+                    
+                            onChange={(option) => {
+                                // Check if the option is not null or undefined
+                                if (option?.value) {
+                                  setslalomDriver(option.value); // Store only the value
+                                }
+                              }}
                             options={driverApproved}
                             className="w-full"
                             required
@@ -387,7 +392,12 @@ export default function EditProfile() {
                         <Select
                             placeholder="Approved?"
                             value={driverApproved.find(option => option.value === trickDriver)} // Find option by value
-                            onChange={(option) => settrickDriver(option.value)} // Store only the value
+                            onChange={(option) => {
+                                // Check if the option is not null or undefined
+                                if (option?.value) {
+                                  settrickDriver(option.value); // Store only the value
+                                }
+                              }}
                             options={driverApproved}
                             className="w-full"
                             required
@@ -398,8 +408,12 @@ export default function EditProfile() {
                         <Select
                          placeholder="Approved?"
                             value={driverApproved.find(option => option.value === jumpDriver)} // Find option by value
-                            onChange={(option) => setjumpDriver(option.value)} // Store only the value
-                      
+                            onChange={(option) => {
+                                // Check if the option is not null or undefined
+                                if (option?.value) {
+                                  setjumpDriver(option.value); // Store only the value
+                                }
+                              }}
                             options={driverApproved}
                             className="w-full"
                             required
