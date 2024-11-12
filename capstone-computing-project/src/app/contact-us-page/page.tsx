@@ -1,8 +1,8 @@
 "use client";
-import {useEffect, useState} from 'react';
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
+import { useEffect, useState } from 'react';
+let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
-export default function ContactUs () {
+export default function ContactUs() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
@@ -16,7 +16,23 @@ export default function ContactUs () {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (
+            window.location.host.includes("brian") ||
+            window.location.host.includes("lilly") ||
+            window.location.host.includes("brooke") ||
+            window.location.host.includes("anastasia")
+        ) {
+            const host = window.location.host;
+            const baseDomain = "uawaterski.com";
 
+            if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
+                APP_URL = `https://${host}/`;
+            }
+
+            console.log("Current APP_URL:", APP_URL);
+        } else {
+            console.log("oops you coded wrong, what a dummy");
+        }
         const apiUrl = process.env.NODE_ENV === 'production'
             ? `${APP_URL}/api/sendEmail`
             : '/api/sendEmail';
@@ -104,11 +120,11 @@ export default function ContactUs () {
                             <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
                                 You are...
                             </label>
-                            <select 
-                                id="role" 
-                                name="role" 
-                                value={role} 
-                                onChange={handleRoleChange} 
+                            <select
+                                id="role"
+                                name="role"
+                                value={role}
+                                onChange={handleRoleChange}
                                 className="bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9E1B32] focus:border-[#9E1B32] block w-full p-2.5"
                                 required
                             >

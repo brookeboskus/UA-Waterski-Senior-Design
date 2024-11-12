@@ -16,7 +16,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import EditIcon from '../../img/EditPFPIcon.svg';
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
+let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
 
 interface TeamMember {
@@ -53,6 +53,23 @@ export default function ProfilePage() {
             //     }
             // });
 
+            if (
+                window.location.host.includes("brian") ||
+                window.location.host.includes("lilly") ||
+                window.location.host.includes("brooke") ||
+                window.location.host.includes("anastasia")
+            ) {
+                const host = window.location.host;
+                const baseDomain = "uawaterski.com";
+    
+                if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
+                    APP_URL = `https://${host}/`;
+                }
+    
+                console.log("Current APP_URL:", APP_URL);
+            } else {
+                console.log("oops you coded wrong, what a dummy");
+            }
             const response = await axios.get<TeamMember>(`${APP_URL}api/profile`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -89,7 +106,7 @@ export default function ProfilePage() {
 
         return (
             <div className="relative w-[417px] max-h-full h-[787px] bg-white rounded-[5px] z-40 overflow-y-auto" style={{ top: '0px', right: '5px', borderLeft: '3px solid black' }}>
-                <div className="relative w-full h-full">
+                <div className="relative w-full h-full overflow-y-auto">
                     {/* red header section */}
                     <div className="absolute left-0 top-0 w-full h-[320px] bg-[#9e1b32] z-10"></div>
 
@@ -130,7 +147,7 @@ export default function ProfilePage() {
                     {/* sidebar */}
                     {isEditPageOpen && (
                         <div
-                            className="fixed right-0 h-full bg-[#9E1B32] z-[9998] overflow-y-auto "
+                            className="fixed right-0 h-full bg-black z-[9998] border-top: darkred overflow-y-auto "
                             style={{ top: '56px', width: '27%', borderTop: '3px solid darkred' }}
                         >
                             <button onClick={handleClick} className="p-2 text-black">Close</button>
@@ -147,7 +164,7 @@ export default function ProfilePage() {
                 {teamMember ? (
                     <>
                         {/* "your information" label section */}
-                        <div className="absolute left-[50%] top-[42%] w-[191px] h-[26px] text-center text-black text-xl font-bold transform -translate-x-[50%]">
+                        <div className="absolute left-[50%] top-[45%] w-[191px] h-[26px] text-center text-black text-xl font-bold transform -translate-x-[50%]">
                             Your Information
                         </div>
 

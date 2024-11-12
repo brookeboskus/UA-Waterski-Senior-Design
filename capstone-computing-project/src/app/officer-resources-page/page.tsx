@@ -5,6 +5,9 @@ import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
+let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
+
+
 type Note = {
     id: number;
     title: string;
@@ -25,7 +28,25 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: MeetingNotes
 
     const fetchNotes = useCallback(async () => {
         try {
-            const response = await axios.get("http://localhost:4000/auth/meetingnotes");
+            if (
+                window.location.host.includes("brian") ||
+                window.location.host.includes("lilly") ||
+                window.location.host.includes("brooke") ||
+                window.location.host.includes("anastasia")
+            ) {
+                const host = window.location.host;
+                const baseDomain = "uawaterski.com";
+    
+                if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
+                    APP_URL = `https://${host}/`;
+                }
+    
+                console.log("Current APP_URL:", APP_URL);
+            } else {
+                console.log("oops you coded wrong, what a dummy");
+            }
+            const response = await axios.get(`${APP_URL}api/meetingnotes`);
+
             const formattedNotes = response.data.map((note: Note) => ({
                 ...note,
                 date: new Date(note.date)
@@ -53,7 +74,25 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: MeetingNotes
                 content: newNote.content || '',
             };
 
-            await axios.post('http://localhost:4000/auth/meetingnotes', noteData, {
+            if (
+                window.location.host.includes("brian") ||
+                window.location.host.includes("lilly") ||
+                window.location.host.includes("brooke") ||
+                window.location.host.includes("anastasia")
+            ) {
+                const host = window.location.host;
+                const baseDomain = "uawaterski.com";
+    
+                if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
+                    APP_URL = `https://${host}/`;
+                }
+    
+                console.log("Current APP_URL:", APP_URL);
+            } else {
+                console.log("oops you coded wrong, what a dummy");
+            }
+
+            await axios.post(`${APP_URL}api/meetingnotes`, noteData, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -67,9 +106,27 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: MeetingNotes
         }
     };
 
+
     const deleteNote = async (id: number) => {
         try {
-            await axios.delete(`http://localhost:4000/auth/meetingnotes/${id}`);
+            if (
+                window.location.host.includes("brian") ||
+                window.location.host.includes("lilly") ||
+                window.location.host.includes("brooke") ||
+                window.location.host.includes("anastasia")
+            ) {
+                const host = window.location.host;
+                const baseDomain = "uawaterski.com";
+    
+                if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
+                    APP_URL = `https://${host}/`;
+                }
+    
+                console.log("Current APP_URL:", APP_URL);
+            } else {
+                console.log("oops you coded wrong, what a dummy");
+            }
+            await axios.delete(`${APP_URL}api/meetingnotes?id=${id}`);
             fetchNotes();
         } catch (error) {
             console.error("Error deleting note:", error);
@@ -172,7 +229,30 @@ export default function OfficerResourcesPage() {
             }
 
             try {
-                const response = await axios.get('http://localhost:4000/auth/profile', {
+                // const response = await axios.get('http://localhost:4000/auth/profile', {
+                //     headers: {
+                //         Authorization: `Bearer ${token}`,
+                //     },
+                // });
+
+                if (
+                    window.location.host.includes("brian") ||
+                    window.location.host.includes("lilly") ||
+                    window.location.host.includes("brooke") ||
+                    window.location.host.includes("anastasia")
+                ) {
+                    const host = window.location.host;
+                    const baseDomain = "uawaterski.com";
+        
+                    if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
+                        APP_URL = `https://${host}/`;
+                    }
+        
+                    console.log("Current APP_URL:", APP_URL);
+                } else {
+                    console.log("oops you coded wrong, what a dummy");
+                }
+                const response = await axios.get(`${APP_URL}api/profile`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

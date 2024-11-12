@@ -8,7 +8,7 @@ import Image from 'next/image';
 import WaterskiImage from '../img/loginSkiIMG.svg';
 import SkiBamaLogo from '../img/skibamalogo.svg';
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
+let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
 
 
@@ -210,17 +210,46 @@ export default function LoginPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (
+            window.location.host.includes("brian") ||
+            window.location.host.includes("lilly") ||
+            window.location.host.includes("brooke") ||
+            window.location.host.includes("anastasia")
+        ) {
+            const host = window.location.host;
+            const baseDomain = "uawaterski.com";
+
+            if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
+                APP_URL = `https://${host}/`;
+            }
+
+            console.log("Current APP_URL:", APP_URL);
+        } else {
+            console.log("oops you coded wrong, what a dummy");
+        }
+
         const endpoint = isLogin ? `${APP_URL}api/login` : `${APP_URL}api/signup`;
         console.log('endpoint:', endpoint);
-    
+
+        let pfpBase64 = null;
+        if (PfpImage && !isLogin) {
+            const reader = new FileReader();
+            pfpBase64 = await new Promise((resolve, reject) => {
+                reader.onloadend = () => resolve(reader.result?.toString().split(",")[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(PfpImage);
+            }
+            );
+        }
+
         const payload = isLogin
             ? { email, password }
-            : { email, password, fname, lname, cwid, phone, gradYear, major: selectedMajor?.value || '' };
-    
+            : { email, password, fname, lname, cwid, phone, gradYear, major: selectedMajor?.value || '', pfpimage: pfpBase64, };
+
         // if (PfpImage && !isLogin) {
         //     payload.pfpimage = PfpImage; 
         // }
-    
+
         try {
             const response = await axios.post(endpoint, payload, {
                 headers: { 'Content-Type': 'application/json' },
@@ -241,10 +270,6 @@ export default function LoginPage() {
             document.getElementById('errorText')!.innerText = errorMessage;
         }
     };
-    
-
-
-
 
     return (
         <div className='login-page flex items-center justify-center min-h-screen bg-[#ffffff]'>
@@ -283,7 +308,7 @@ export default function LoginPage() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 pattern=".+@+(.+\.)?ua\.edu"
                                 title="Email must be a valid University of Alabama address (i.e. ending in ua.edu)"
-                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
                                 required
                             />
                             <div className="relative">
@@ -292,7 +317,7 @@ export default function LoginPage() {
                                     placeholder="Password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
+                                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
                                     required
                                 />
                                 <button
