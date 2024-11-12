@@ -493,6 +493,9 @@ interface TeamMember {
     PfpImage?: string;
     Email?: string;
     Phone?: string;
+    SlalomDriver?: string;
+    TrickDriver?: string;
+    JumpDriver?: string;
 }
 
 const Button = ({ onClick, className, children }: { onClick: () => void; className: string; children: React.ReactNode }) => {
@@ -508,7 +511,7 @@ function Popup({ children, isOpen, onClose }: { children: React.ReactNode; isOpe
         <div className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
             <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
                 {children}
-                <button onClick={onClose} className="mt-4 w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600">Close</button>
+                <button onClick={onClose} className="mt-4 w-full bg-[#931b32] text-white py-2 rounded-lg hover:bg-[#8b0000]">Close</button>
             </div>
         </div>
     );
@@ -567,6 +570,7 @@ const deleteReservation = async (date: Date) => {
 };
 
 function popupContent(info: TeamMember) {
+    console.log(info);
     return (
         <div className="p-4">
             <div className="relative w-24 h-24 mx-auto mb-4">
@@ -580,11 +584,13 @@ function popupContent(info: TeamMember) {
             </div>
             <h2 className="text-center text-2xl font-semibold text-gray-800">{info.Fname} {info.Lname}</h2>
             <div className="mt-2 text-gray-700 text-sm">
-                <p><span className="font-bold">Member Type:</span> {info.MemberType}</p>
+                <p><span className="font-bold">Status:</span> {info.MemberType}</p>
                 <p><span className="font-bold">Graduation Year:</span> {info.GradYear}</p>
                 <p><span className="font-bold">Major:</span> {info.Major || 'N/A'}</p>
-                <p><span className="font-bold">Email:</span> {info.Email || 'N/A'}</p>
                 <p><span className="font-bold">Phone:</span> {info.Phone || 'N/A'}</p>
+                <p><span className="font-bold">Slalom Driver:</span> {info.SlalomDriver}</p>
+                <p><span className="font-bold">Trick Driver:</span> {info.TrickDriver}</p>
+                <p><span className="font-bold">Jump Driver:</span> {info.JumpDriver}</p>
             </div>
         </div>
     );
@@ -654,18 +660,18 @@ const SetListButton = ({
                 : 'Past reservation, cannot register';
 
         buttonClass = reservationState === 'reservedByYou'
-            ? 'bg-[#D7D7E0] text-black cursor-not-allowed border-2 border-transparent hover:border-black'
+            ? 'bg-black text-black cursor-not-allowed border-2 border-transparent hover:border-black'
             : reservationState === 'reservedBySomeoneElse'
-                ? 'bg-black text-white cursor-not-allowed border-2 border-transparent hover:border-black'
-                : 'bg-[#D7D7E0] text-black cursor-not-allowed border-2 border-transparent hover:border-black';
+                ? 'bg-[#404040] text-white cursor-not-allowed border-2 border-transparent hover:border-black'
+                : 'bg-[#808080] text-black cursor-not-allowed border-2 border-transparent hover:border-black';
     } else {
         buttonClass = reservationState === 'open'
-            ? 'bg-[#FFD8D8] text-black border-2 border-transparent hover:border-red-600'
+            ? 'bg-[#D7D7E0] text-black border-2 border-transparent hover:border-[#9e1b32]'
             : reservationState === 'reservedByYou'
-                ? 'bg-red-500 text-white hover:bg-red-600'
-                : 'bg-gray-800 text-white cursor-not-allowed';
+                ? 'bg-black text-white hover:border-[#808080]'
+                : 'bg-[#800020] text-white cursor-not-allowed';
         buttonText = reservationState === 'open'
-            ? 'Slot available. Click to reserve'
+            ? 'Slot available'
             : reservationState === 'reservedByYou'
                 ? 'Slot reserved by you. Click to cancel'
                 : `Reserved by ${reservationName}`;

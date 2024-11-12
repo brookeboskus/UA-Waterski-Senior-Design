@@ -30,7 +30,7 @@ import db from '../../db.js';
 const router = express.Router();
 
 const getRoster = async (req, res) => {
-    db.query('SELECT Fname, Lname, GradYear, MemberType, Major, Phone, Email, PfpImage FROM User', (err, results) => {
+    db.query('SELECT Fname, Lname, GradYear, MemberType, Major, Phone, Email, PfpImage, SlalomDriver, TrickDriver, JumpDriver FROM User', (err, results) => {
         if (err) {
             return res.status(500).json({ message: 'Database error' });
         }
