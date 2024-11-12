@@ -130,7 +130,7 @@ export default function ProfilePage() {
                     {/* sidebar */}
                     {isEditPageOpen && (
                         <div
-                            className="fixed right-0  bg-black z-[9998] border-top: darkred overflow-y-auto "
+                            className="fixed right-0 h-full bg-black z-[9998] border-top: darkred overflow-y-auto "
                             style={{ top: '56px', width: '27%', borderTop: '3px solid darkred' }}
                         >
                             <button onClick={handleClick} className="p-2 text-black">Close</button>

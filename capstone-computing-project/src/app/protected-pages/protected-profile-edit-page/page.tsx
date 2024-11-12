@@ -34,8 +34,29 @@ export default function EditProfile() {
     const [phone, setPhone] = useState('');
     const [gradYear, setGradYear] = useState('');
     const [selectedMajor, setSelectedMajor] = useState('');
+    const [PfpImage, setProfilePicture] = useState<File | null>(null);
 
     const [teamMember, setTeamMember] = useState<TeamMember | null>(null);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            if (file.size > 4 * 1024 * 1024) {
+                alert("File size exceeds 4 MB limit. Please choose a smaller image.");
+                return;
+            }
+
+            const img = new window.Image();
+            img.src = URL.createObjectURL(file);
+            img.onload = () => {
+                if (img.width > 1536 || img.height > 1536) {
+                    alert("Image dimensions exceed 1536 x 1536 pixels. Please choose a smaller image.");
+                } else {
+                    setProfilePicture(file);
+                }
+            };
+        }
+    };
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -115,93 +136,120 @@ export default function EditProfile() {
     }
 
     return (
-        <div className="relative w-[417px] max-h-full h-[787px] bg-white rounded-[5px] z-40 overflow-y-auto flex flex-col items-center overflow-y-auto" style={{ top: '39px', right: '5px', borderLeft: '3px solid black' }}>
-                <div className="relative w-full h-full">
-                    {/* red header section */}
-                    <div className="absolute left-0 top-0 w-full h-[280px] bg-[#9e1b32] z-10"></div>
+        <div className="relative w-[417px] max-h-full h-[800px] bg-white rounded-[5px] z-40 overflow-y-auto flex flex-col items-center overflow-y-auto" style={{ top: '39px', right: '5px', borderLeft: '3px solid black' }}>
+            <div className="relative w-full h-full">
+                {/* red header section */}
+                <div className="absolute left-0 top-0 w-full h-[280px] bg-[#9e1b32] z-10"></div>
 
-                    {/* user profile image */}
-                    <div className="absolute left-[50%] top-[5%] w-[230px] h-[230px] rounded-full z-20 transform -translate-x-[50%] overflow-hidden" style={{ top: '-2px' }}>
-                        <Image
-                            src={teamMember.PfpImage ? teamMember.PfpImage : DefaultPFP}
-                            alt={`${teamMember.Fname} ${teamMember.Lname}'s profile image`}
-                            layout="fill"
-                            objectFit="cover"
-                            className="rounded-full"
-                        />
-                    </div>
-                </div>
-                <div>
-
-   
-            <div className="w-[433px] h-[866px] relative bg-white rounded-lg shadow-lg">
-             
-
-                {/* Input Fields */}
-                <div className="absolute p-5" style={{top: '290px'}}>
-                    {/* First Name */}
-                    <div className="text-[#b9b9b9] text-[15px] font-bold">First Name</div>
-                    <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
-                        <input
-                            type="text"
-                            value={teamMember.Fname}
-                            onChange={(e) => setFname(e.target.value)}
-                            className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
-                            placeholder="Your First Name"
-                        />
-                    </div>
-
-                    {/* Last Name */}
-                    <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Last Name</div>
-                    <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
-                        <input
-                            type="text"
-                            value={teamMember.Lname}
-                            onChange={(e) => setLname(e.target.value)}
-                            className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
-                            placeholder="Your Last Name"
-                        />
-                    </div>
-
-                    {/* Phone Number */}
-                    <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Phone Number</div>
-                    <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
-                        <input
-                            type="text"
-                            value={teamMember.Phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                            className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
-                            placeholder="123-456-7890"
-                        />
-                    </div>
-
-                    {/* Email */}
-                    <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">E-mail</div>
-                    <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
-                        <input
-                            type="text"
-                            value={teamMember.Email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
-                            placeholder="youremail@email.com"
-                        />
-                    </div>
-                </div>
-
-                {/* Save Button */}
-
-                
-
-                <div  onClick={updateProfile} className="w-[380px] h-[57px] bg-[#9e1b32] rounded-[30px] absolute left-[18px] bottom-[30px]">
-                    <button className="w-full h-full text-[#f7f7f7] text-xl font-bold font-['Inter']">Save</button>
+                {/* user profile image */}
+                <div className="absolute left-[50%] top-[5%] w-[230px] h-[230px] rounded-full z-20 transform -translate-x-[50%] overflow-hidden" style={{ top: '-2px' }}>
+                    <Image
+                        src={teamMember.PfpImage ? teamMember.PfpImage : DefaultPFP}
+                        alt={`${teamMember.Fname} ${teamMember.Lname}'s profile image`}
+                        layout="fill"
+                        objectFit="cover"
+                        className="rounded-full"
+                    />
                 </div>
             </div>
-            <br>
-        </br>
-        <br>
-        </br>
+            <div>
+
+
+                <div className="w-[433px] h-[866px] relative bg-white rounded-lg shadow-lg">
+
+
+                    {/* Input Fields */}
+                    <div className="absolute p-5" style={{ top: '290px' }}>
+                        {/* First Name */}
+                        <div className="text-[#b9b9b9] text-[15px] font-bold">First Name</div>
+                        <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
+                            <input
+                                type="text"
+                                value={fname}
+                                onChange={(e) => setFname(e.target.value)}
+                                className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
+                                placeholder={teamMember.Fname}
+                            />
+                        </div>
+
+                        {/* Last Name */}
+                        <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Last Name</div>
+                        <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
+                            <input
+                                type="text"
+                                value={lname}
+                                onChange={(e) => setLname(e.target.value)}
+                                className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
+                                placeholder={teamMember.Lname}
+                            />
+                        </div>
+
+                        {/* Phone Number */}
+                        <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Phone Number</div>
+                        <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
+                            <input
+                                type="text"
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
+                                className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
+                                placeholder={teamMember.Phone}
+                            />
+                        </div>
+
+                        {/* Profile Photo */}
+                        <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Profile Photo</div>
+                        <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1 flex items-center">
+                            <label className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4 flex items-center">
+                                <span className="text-gray-700">Click to Upload</span>
+                                <input
+                                    type="file"
+                                    accept=".png, .jpg, .jpeg, .webp"
+                                    onChange={handleFileChange}
+                                    className="hidden"
+                                />
+                            </label>
+                            {PfpImage && <span className="ml-2 text-gray-600">{PfpImage.name}</span>}
+                        </div>
+
+
+                        {/* Grad Year */}
+                        <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Grad Year</div>
+                        <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
+                            <select
+
+                                value={gradYear}
+                                onChange={(e) => setGradYear(e.target.value)}
+                                className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
+
+                            >
+                                <option value="Freshman">Freshman</option>
+                                <option value="Sophomore">Sophomore</option>
+                                <option value="Junior">Junior</option>
+                                <option value="Senior">Senior</option>
+                            </select>
+                        </div>
+                  
+                    </div>
+
+                    {/* Save Button */}
+
+
+
+                    <div onClick={updateProfile} className="w-[380px] h-[57px] bg-[#9e1b32] rounded-[30px] absolute left-[18px] bottom-[-70px]">
+                        <button className="w-full h-full text-[#f7f7f7] text-xl font-bold font-['Inter']">Save</button>
+                    </div>
+
+                </div>
+                <br>
+                </br>
+                <br>
+                </br>
+                <br>
+                </br>
+                <br>
+                </br>
             </div>
         </div>
-       
+
     );
 }
