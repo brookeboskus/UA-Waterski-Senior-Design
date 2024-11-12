@@ -289,7 +289,7 @@ export default function EditProfile() {
 
                         {/* Major */}
                         <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Major</div>
-                        <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1 flex items-center">
+                  
                             <Select
                                 placeholder="Select your Major"
                                 value={selectedMajor}
@@ -299,7 +299,7 @@ export default function EditProfile() {
                                 required
                             />
                    
-                    </div>
+                 
 
 
                     {/* Profile Photo */}
