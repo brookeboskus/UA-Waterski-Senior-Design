@@ -212,7 +212,7 @@ export default function LoginPage() {
         e.preventDefault();
         if (window.location.host.includes("brian")) {
             const host = window.location.host; 
-            const baseDomain = "uawaterski.com/"; 
+            const baseDomain = "uawaterski.com"; 
 
             if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
                 APP_URL = `https://${host}`; 
