@@ -281,7 +281,7 @@ export default function Navbar() {
 
                 {/* login/logout button */}
                 <div className="hidden md:flex items-center space-x-2 -mr-20">
-                    <Link href="/contact-us-page" className="bg-white-500 text-white text-base py-2 px-2 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300">
+                    <Link href="/contact-us-page" className="bg-white-500 text-white text-base py-2 px-2 rounded hover:underline hover:text-black">
                         Contact Us
                     </Link>
 
@@ -398,13 +398,17 @@ export default function Navbar() {
                     </Link>
                 )}
 
-                <div className="hidden md:block">
+                <Link href="/contact-us-page" className="block text-white text-lg hover:text-black transition duration-300">
+                    Contact Us
+                </Link>
+
+                <div className="md:block">
                     {isLoggedIn ? (
-                        <button onClick={handleLogout} className="bg-white-500 text-white text-base py-2 px-4 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300 pl-8">
+                        <button onClick={handleLogout} className="block text-white text-lg hover:text-black transition duration-300">
                             Log Out
                         </button>
                     ) : (
-                        <Link href="/login-page" className="bg-white-500 text-white text-base py-2 px-4 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300">
+                        <Link href="/login-page" className="block text-white text-lg hover:text-black transition duration-300">
                             Login
                         </Link>
                     )}
