@@ -401,6 +401,26 @@ export default function Navbar() {
                 <Link href="/contact-us-page" className="block text-white text-lg hover:text-black transition duration-300">
                     Contact Us
                 </Link>
+                <div>
+                    {isLoggedIn && isProfileFetched ? (
+                        <button className="block text-white text-lg hover:text-black transition duration-300">
+                            <Link href="/protected-pages/protected-profile-page">
+                                <div className="flex flex-row items-center space-x-4">
+                                    <Image
+                                        src={profilePic}
+                                        alt="Profile picture"
+                                        width={50}
+                                        height={50}
+                                        className="h-12 w-12 rounded-full border-2 border-white shadow-lg hover:shadow-xl transition-shadow duration-300"
+                                    />
+                                    My Profile
+                                </div>
+                            </Link>
+                        </button>
+                    ) : (
+                        <div></div>
+                    )}
+                </div>
 
                 <div className="md:block">
                     {isLoggedIn ? (
