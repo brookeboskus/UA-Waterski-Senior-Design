@@ -274,7 +274,7 @@ export default function LoginPage() {
     return (
         <div className='login-page flex items-center justify-center min-h-screen bg-[#ffffff]'>
             <div className="flex flex-row w-full h-full">
-                <div className="w-2/3 flex flex-col justify-center items-center w-1/2 pr-0">
+                <div className="w-full md:w-2/3 flex flex-col justify-center items-center pr-0">
                     <div className="mb-8" style={{ height: 'auto', width: '300px' }}>
                         <Image src={SkiBamaLogo} alt="Ski Bama Logo" />
                     </div>
@@ -427,7 +427,7 @@ export default function LoginPage() {
 
                 </div>
 
-                <div className="rounded-tl-[55px] rounded-bl-[55px] relative" style={{ maxWidth: '100%', height: 'auto' }}>
+                <div className="hidden md:block rounded-tl-[55px] rounded-bl-[55px] relative" style={{ maxWidth: '100%', height: 'auto' }}>
                     <Image
                         src={WaterskiImage}
                         alt="Water ski image"
@@ -435,7 +435,6 @@ export default function LoginPage() {
                         style={{ width: '100%', height: 'auto' }}
                     />
                 </div>
-
             </div>
         </div>
     );
