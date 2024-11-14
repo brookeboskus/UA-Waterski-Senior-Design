@@ -2,6 +2,8 @@
 "use client";
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+
 
 function ResetPasswordForm() {
     const [newPassword, setNewPassword] = useState('');
@@ -12,10 +14,13 @@ function ResetPasswordForm() {
     const [error, setError] = useState('');
     const searchParams = useSearchParams();
     const token = searchParams?.get('token') || '';
+    const router = useRouter();
+
 
     useEffect(() => {
         if (!token) {
             setError("Invalid or missing token.");
+            router.push('/login-page');
         }
     }, [token]);
 
