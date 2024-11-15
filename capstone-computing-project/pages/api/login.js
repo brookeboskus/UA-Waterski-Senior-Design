@@ -110,6 +110,9 @@ import 'dotenv/config';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import db from '../../db.js';
+import csrfProtection from 'express-csrf-protect';
+
+const csrfMiddleware = csrfProtection();
 
 const login = async (req, res) => {
 
@@ -117,8 +120,15 @@ const login = async (req, res) => {
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
 
-    const { email, password } = req.body;
+    csrfMiddleware(req, res, async () => {
+
+    //const { email, password } = req.body;
+    const { email, password, csrfToken } = req.body;
     console.log('req.body for login:', req.body);
+
+    if (!csrfToken || csrfToken !== req.csrfToken()) {
+        return res.status(403).json({ message: 'Invalid CSRF token' });
+    }
 
     try {
         const [results] = await db.query('SELECT * FROM User WHERE Email = ?', [email]);
@@ -144,6 +154,7 @@ const login = async (req, res) => {
         console.error('Unexpected error during login:', error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
+});
 };
 
 export default login;
