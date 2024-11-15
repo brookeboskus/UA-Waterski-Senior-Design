@@ -163,63 +163,6 @@ export default function LoginPage() {
         }
     };
 
-    // const handleSubmit = async (e: React.FormEvent) => {
-    //     e.preventDefault();
-    //     const endpoint = isLogin ? `${APP_URL}api/login` : `${APP_URL}api/signup`;
-    //     console.log('endpoint:', endpoint);
-
-    //     if (isLogin) {
-    //         const payload = { email, password };
-    //         try {
-    //             const response = await axios.post(endpoint, payload);
-    //             localStorage.setItem('token', response.data.token);
-    //             router.push('/');
-    //         } catch (error) {
-    //             let errorMessage = "An unexpected error occurred.";
-    //             if (error instanceof AxiosError) {
-    //                 errorMessage = error.response?.data?.message || error.message;
-    //             } else if (error instanceof Error) {
-    //                 errorMessage = error.message;
-    //             }
-    //             console.error('Error:', errorMessage);
-
-    //             document.getElementById('errorBox')?.setAttribute("style", "display: block;");
-    //             document.getElementById('errorText')!.innerText = "Invalid email or password. Please try again.";
-    //         }
-    //     } else {
-    //         const formData = new FormData(); // according to vercel logs, login.js has a different format for req.body compared to signup.js
-    //         // i believe that is why signup.js is not able to recognize like elements from the frontend (like console password, but console req.body is sending the frontnend to backend but not in the right format)
-
-    //         formData.append('email', email);
-    //         console.log('password being sent:', password)
-    //         formData.append('password', password);
-    //         formData.append('fname', fname);
-    //         formData.append('lname', lname);
-    //         formData.append('cwid', cwid);
-    //         formData.append('phone', phone);
-    //         formData.append('gradYear', gradYear);
-    //         formData.append('major', selectedMajor?.value || '');
-
-    //         if (PfpImage) {
-    //             formData.append('pfpimage', PfpImage);
-    //         }
-
-    //         try {
-    //             await axios.post(endpoint, formData, {
-    //                 headers: { 'Content-Type': 'multipart/form-data' },
-    //             });
-    //             setIsLogin(true);
-    //         } catch (error) {
-    //             if (axios.isAxiosError(error)) {
-    //                 console.error('Error:', error.response?.data?.message || error.message);
-    //             } else {
-    //                 console.error('An unexpected error occurred:', error);
-    //             }
-    //         }
-
-    //     }
-    // };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (
