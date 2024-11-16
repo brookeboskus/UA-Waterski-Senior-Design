@@ -5,6 +5,7 @@ import Image from 'next/image';
 import BlankPfp from '../img/blankpfp.svg';
 import { useRouter } from 'next/navigation';
 import ReactDOMServer from 'react-dom/server';
+import boatSVG from '../img/boat.svg';
 
 let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -25,9 +26,9 @@ interface TeamMember {
     PfpImage?: string;
     Email?: string;
     Phone?: string;
-    SlalomDriver?: string;
-    TrickDriver?: string;
-    JumpDriver?: string;
+    SlalomDriver?: string | null;
+    TrickDriver?: string | null;
+    JumpDriver?: string | null;
 }
 
 const Button = ({ onClick, className, children }: { onClick: () => void; className: string; children: React.ReactNode }) => {
@@ -136,7 +137,7 @@ const deleteReservation = async (date: Date) => {
 };
 
 function popupContent(info: TeamMember) {
-    console.log(info);
+    // console.log(info);
     return (
         <div className="p-4">
             <div className="relative w-24 h-24 mx-auto mb-4">
@@ -170,6 +171,7 @@ function setUserInfo(info: TeamMember) {
     }
 };
 
+
 const SetListButton = ({
     date,
     reservationState,
@@ -186,6 +188,8 @@ const SetListButton = ({
     const [showModal, setShowModal] = useState(false);
     const [modalAction, setModalAction] = useState<'reserve' | 'cancel' | null>(null);
     const info = userInfo;
+
+    const info2: TeamMember | null = userInfo;
 
     const handleReservationAction = () => {
         if (modalAction === 'reserve') {
@@ -218,6 +222,10 @@ const SetListButton = ({
 
     let buttonClass, buttonText;
 
+    
+
+
+
     if (date < new Date()) {
         buttonText = reservationState === 'reservedByYou'
             ? 'Past reservation, reserved by you'
@@ -241,6 +249,37 @@ const SetListButton = ({
             : reservationState === 'reservedByYou'
                 ? 'Slot reserved by you. Click to cancel'
                 : `Reserved by ${reservationName}`;
+
+        
+        // info2 and check for slalomdriver, console.log("CHECKING:", info2.SlalomDriver);
+        // if (info2 != null) {
+        //     if (info2.SlalomDriver != null) {
+        //         console.log("YES IM SLALOM DRIVER")
+        //         buttonText = reservationState === 'open'
+        //             ? 'Slot available'
+        //             : reservationState === 'reservedByYou'
+        //                 ? 'Slot reserved by you. Click to cancel'
+        //                 : `Reserved by ${reservationName}`;
+        //     } else {
+        //         console.log("NO IM NOT")
+        //         buttonText = reservationState === 'open'
+        //             ? 'Slot available'
+        //             : reservationState === 'reservedByYou'
+        //                 ? 'Slot reserved by you. Click to cancel'
+        //                 : `Reserved by ${reservationName}`;
+        //     }
+        // } else {
+        //     buttonText = reservationState === 'open'
+        //             ? 'Slot available'
+        //             : reservationState === 'reservedByYou'
+        //                 ? 'Slot reserved by you. Click to cancel'
+        //                 : `Reserved by ${reservationName}`;
+        // }
+        
+
+
+
+        
     }
 
     return (
