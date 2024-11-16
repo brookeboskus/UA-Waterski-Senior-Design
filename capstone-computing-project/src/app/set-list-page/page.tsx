@@ -5,7 +5,7 @@ import Image from 'next/image';
 import BlankPfp from '../img/blankpfp.svg';
 import { useRouter } from 'next/navigation';
 import ReactDOMServer from 'react-dom/server';
-import boatSVG from '../img/boat.svg';
+import boatSVG from '../img/boat-svgrepo-com.svg';
 
 let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -222,8 +222,6 @@ const SetListButton = ({
 
     let buttonClass, buttonText;
 
-    
-
 
 
     if (date < new Date()) {
@@ -244,42 +242,64 @@ const SetListButton = ({
             : reservationState === 'reservedByYou'
                 ? 'bg-black text-white hover:border-[#808080] w-50'
                 : 'bg-[#800020] text-white cursor-not-allowed';
-        buttonText = reservationState === 'open'
-            ? 'Slot available'
-            : reservationState === 'reservedByYou'
-                ? 'Slot reserved by you. Click to cancel'
-                : `Reserved by ${reservationName}`;
-
-        
-        // info2 and check for slalomdriver, console.log("CHECKING:", info2.SlalomDriver);
-        // if (info2 != null) {
-        //     if (info2.SlalomDriver != null) {
-        //         console.log("YES IM SLALOM DRIVER")
-        //         buttonText = reservationState === 'open'
-        //             ? 'Slot available'
-        //             : reservationState === 'reservedByYou'
-        //                 ? 'Slot reserved by you. Click to cancel'
-        //                 : `Reserved by ${reservationName}`;
-        //     } else {
-        //         console.log("NO IM NOT")
-        //         buttonText = reservationState === 'open'
-        //             ? 'Slot available'
-        //             : reservationState === 'reservedByYou'
-        //                 ? 'Slot reserved by you. Click to cancel'
-        //                 : `Reserved by ${reservationName}`;
-        //     }
-        // } else {
-        //     buttonText = reservationState === 'open'
-        //             ? 'Slot available'
-        //             : reservationState === 'reservedByYou'
-        //                 ? 'Slot reserved by you. Click to cancel'
-        //                 : `Reserved by ${reservationName}`;
-        // }
-        
+        // buttonText = reservationState === 'open'
+        //     ? 'Slot available'
+        //     : reservationState === 'reservedByYou'
+        //         ? 'Slot reserved by you. Click to cancel'
+        //         : `Reserved by ${reservationName}`;
 
 
+        //info2 and check for slalomdriver, console.log("CHECKING:", info2.SlalomDriver);
+        if (info2 != null) {
+            if (info2.SlalomDriver === "Yes") {
+                console.log("YES IM SLALOM DRIVER")
+                console.log("BOAT SVG", boatSVG)
 
-        
+                // then append the slalom driver svg to Reserved by Reservation Name
+
+                buttonText = reservationState === 'open'
+                    ? 'Slot available'
+                    : reservationState === 'reservedByYou'
+                        ? 'Slot reserved by you. Click to cancel'
+                        : (
+                            <>
+                                <div className="space-y-2">
+                                    <div>
+                                        <Image src={boatSVG.src} alt="Boat SVG" width={24} height={24} className="ml-16" />
+                                    </div>
+                                    <div>
+                                        Reserved by {reservationName}
+                                    </div>
+                                </div>
+
+
+                            </>
+                        );
+
+
+            } else {
+                console.log("NO IM NOT")
+                buttonText = reservationState === 'open'
+                    ? 'Slot available'
+                    : reservationState === 'reservedByYou'
+                        ? 'Slot reserved by you. Click to cancel'
+                        : `Reserved by ${reservationName}`;
+
+            }
+        } else {
+            console.log("NO INFO")
+            buttonText = reservationState === 'open'
+                ? 'Slot available'
+                : reservationState === 'reservedByYou'
+                    ? 'Slot reserved by you. Click to cancel'
+                    : `Reserved by ${reservationName}`;
+
+        }
+
+
+
+
+
     }
 
     return (
@@ -379,11 +399,11 @@ export default function SetListPage() {
                 ) {
                     const host = window.location.host;
                     const baseDomain = "uawaterski.com";
-        
+
                     if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
                         APP_URL = `https://${host}/`;
                     }
-        
+
                     console.log("Current APP_URL:", APP_URL);
                 } else {
                     console.log("oops you coded wrong, what a dummy");
@@ -424,11 +444,11 @@ export default function SetListPage() {
                 ) {
                     const host = window.location.host;
                     const baseDomain = "uawaterski.com";
-        
+
                     if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
                         APP_URL = `https://${host}/`;
                     }
-        
+
                     console.log("Current APP_URL:", APP_URL);
                 } else {
                     console.log("oops you coded wrong, what a dummy");
@@ -495,7 +515,7 @@ export default function SetListPage() {
                                         reservationName={name}
                                         userInfo={userInfo}
                                         setIsPopupOpen={setIsPopupOpen}
-                                  
+
                                     />
                                 </td>
                             );
