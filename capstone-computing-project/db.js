@@ -69,7 +69,6 @@ const pool = mysql.createPool({
     waitForConnections: true,
     connectionLimit: 250, 
     queueLimit: 0,
-    queryTimeout: 6000
 });
 
 export default pool.promise();
