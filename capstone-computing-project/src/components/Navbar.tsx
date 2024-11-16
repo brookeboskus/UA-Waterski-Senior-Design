@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from "jwt-decode"; // needed this for token expiration!!
 import ProtectedProfilePage from '../app/protected-pages/protected-profile-page/page';
-import defaultPfpImage from './img/DefaultPFP.svg';
+import defaultPfpImage from '../app/img/blankpfp.svg';
 import axios from 'axios';
 
 let APP_URL = process.env.NEXT_PUBLIC_APP_URL;

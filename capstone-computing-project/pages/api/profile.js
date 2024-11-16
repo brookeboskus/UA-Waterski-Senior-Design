@@ -94,7 +94,7 @@ const profileHandler = async (req, res) => {
         const { email } = req.user; // get email from decoded token
 
         const [results] = await db.query(
-            'SELECT Fname, Lname, GradYear, MemberType, Major, Phone, Email, CWID, PfpImage FROM User WHERE Email = ?', 
+            'SELECT Fname, Lname, GradYear, MemberType, Major, Phone, Email, CWID, SlalomDriver, TrickDriver, JumpDriver, PfpImage FROM User WHERE Email = ?', 
             [email]
         );
 
