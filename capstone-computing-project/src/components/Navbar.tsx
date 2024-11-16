@@ -176,7 +176,7 @@ export default function Navbar() {
             <div className="container mx-auto flex justify-between items-center px-4 h-20 md:h-14 lg:h-15">
                 {/* where legends are made logo */}
                 <Link href="/">
-                    <div className="relative" style={{ height: 'auto', width: '250px' }}>
+                    <div className="relative" style={{ height: '100%', width: '250px' }}>
                         <Image
                             src={HeaderWLAM}
                             alt="Header WLAM image"

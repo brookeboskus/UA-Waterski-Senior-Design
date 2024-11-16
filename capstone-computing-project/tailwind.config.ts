@@ -12,8 +12,13 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      imageRendering: {
+        crisp: 'crisp-edges',
+        pixel: 'pixelated',
+        optimize: '-webkit-optimize-contrast', 
+      },
     },
   },
-  plugins: [],
+  plugins: []
 };
 export default config;
