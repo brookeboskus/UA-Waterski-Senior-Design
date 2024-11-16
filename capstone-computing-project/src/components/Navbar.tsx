@@ -8,8 +8,11 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from "jwt-decode"; // needed this for token expiration!!
 import ProtectedProfilePage from '../app/protected-pages/protected-profile-page/page';
+import EditPage from '../app/protected-pages/protected-profile-edit-page/page';
 import defaultPfpImage from '../app/img/blankpfp.svg';
 import axios from 'axios';
+import CloseButton from './img/Vector (1).svg'
+import EditIcon from '../app/img/EditPFPIcon.svg'
 
 let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -27,6 +30,7 @@ export default function Navbar() {
     const [isProfileFetched, setIsProfileFetched] = useState<boolean>(false); // track if profile image has been fetched
     const [memberType, setMemberType] = useState<string>(''); // track user's member type
     const router = useRouter();
+    const [isEditPageOpen, setIsEditPageOpen] = useState(false);
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -40,6 +44,14 @@ export default function Navbar() {
         setIsDropdownOpen(!isDropdownOpen);
     };
 
+    const toggleEditPage = () => {
+        setIsEditPageOpen(!isEditPageOpen);
+    };
+
+    const handleClick = () => {
+        fetchProfile();
+        toggleEditPage();
+    }
     // fetch the profile data including PfpImage and MemberType
     const fetchProfile = async () => {
         try {
@@ -47,12 +59,6 @@ export default function Navbar() {
             if (!token) {
                 throw new Error('No token found');
             }
-
-            // const response = await axios.get<TeamMember>('http://localhost:4000/auth/profile', {
-            //     headers: {
-            //         Authorization: `Bearer ${token}`,
-            //     },
-            // });
 
 
             if (
@@ -63,11 +69,11 @@ export default function Navbar() {
             ) {
                 const host = window.location.host;
                 const baseDomain = "uawaterski.com";
-    
+
                 if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
                     APP_URL = `https://${host}/`;
                 }
-    
+
                 console.log("Current APP_URL:", APP_URL);
             } else {
                 console.log("oops you coded wrong, what a dummy");
@@ -183,7 +189,7 @@ export default function Navbar() {
                             alt="Header WLAM image"
                             className="cursor-pointer"
                             priority={true}
-                           
+
                         />
                     </div>
                 </Link>
@@ -274,15 +280,15 @@ export default function Navbar() {
                         </ul>
                     </div>
 
-                    {isLoggedIn && memberType === 'Officer' && ( // only show Officer Resources if user is an officer
+                     {isLoggedIn && memberType === 'Officer' && ( // only show Officer Resources if user is an officer
                         <Link href="/officer-resources-page" className="text-white text-base hover:text-black hover:underline transition duration-300">
                             Officer Resources
                         </Link>
                     )}
                 </div>
 
-                {/* login/logout button */}
-                <div className="hidden md:flex items-center space-x-2 -mr-20">
+                  {/* login/logout button */}
+                  <div className="hidden md:flex items-center space-x-2 -mr-20">
                     <Link href="/contact-us-page" className="bg-white-500 text-white text-base py-2 px-2 rounded hover:underline hover:text-black">
                         Contact Us
                     </Link>
@@ -297,8 +303,8 @@ export default function Navbar() {
                         </Link>
                     )}
 
-                    {/* Reserve space for profile picture, even if it's not visible */}
-                    <div className="relative w-12 h-12">
+                  {/* Reserve space for profile picture, even if it's not visible */}
+                  <div className="relative w-12 h-12">
                         {isLoggedIn && isProfileFetched ? (
                             <button onClick={toggleSidebar} className="p-0 m-0">
                                 <Link href="#">
@@ -319,17 +325,79 @@ export default function Navbar() {
                 </div>
 
 
+
                 {/* sidebar */}
                 {isSidebarOpen && (
                     <div
-                        className="fixed right-5 h-full bg-white z-[9998] overflow-y-auto"
-                        style={{ top: '56px', width: '27%' }}
+                        className="fixed right-0 h-full bg-[#9E1B32] z-[9998] overflow-y-auto"
+                        style={{ top: '56px', width: '28%', borderTop: '3px solid maroon' }}
                     >
-                        <button onClick={toggleSidebar} className="p-2 text-black">Close</button>
+                        <div className="relative">
+                            <button onClick={toggleSidebar} className="p-2 text-black">
+                                <Image
+                                    src={CloseButton}
+                                    alt="Close"
+                                    width={12}
+                                    height={12}
+                                    className="object-cover"
+                                />
+                            </button>
+
+                            <button
+                                onClick={toggleEditPage}
+                                className="absolute top-0 right-1 p-2 z-50"
+                            >
+                                <Link href="#">
+                                    <Image
+                                        src={EditIcon}
+                                        alt="Edit"
+                                        width={20}
+                                        height={20}
+                                        className="object-cover"
+                                    />
+                                </Link>
+                            </button>
+                        </div>
+
+
                         {/* render the profile page content */}
                         <ProtectedProfilePage />
                     </div>
                 )}
+
+
+
+                <div>
+
+
+
+                    {/* sidebar */}
+                    {isEditPageOpen && (
+                        <div
+                        className="fixed right-0 h-full bg-[#9E1B32] z-[9998] overflow-y-auto"
+                        style={{ top: '56px', width: '28%', borderTop: '3px solid maroon' }}
+                    >
+                        <div className="relative">
+                            <button onClick={handleClick} className="p-2 text-black">
+                                <Image
+                                    src={CloseButton}
+                                    alt="Close"
+                                    width={12}
+                                    height={12}
+                                    className="object-cover"
+                                />
+                            </button>
+
+                            
+                        </div>
+
+                            {/* render the profile page content */}
+                            <EditPage />
+                        </div>
+
+                    )}
+                </div>
+
 
                 {/* background overlay when sidebar is open */}
                 {isSidebarOpen && <div className="fixed inset-0 bg-black opacity-40 z-40" style={{ top: '56px', width: '72.5%' }} onClick={toggleSidebar} />}
@@ -415,7 +483,7 @@ export default function Navbar() {
                                         height={50}
                                         className="h-12 w-12 rounded-full border-2 border-white shadow-lg hover:shadow-xl transition-shadow duration-300"
                                     />
-                                    
+
                                 </div>
                             </Link>
                         </button>

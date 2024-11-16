@@ -39,10 +39,8 @@ interface TeamMember {
 export default function ProfilePage() {
     const [teamMember, setTeamMember] = useState<TeamMember | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
-    const [isEditPageOpen, setIsEditPageOpen] = useState(false); // state to manage edit page visibility
-    const toggleEditPage = () => {
-        setIsEditPageOpen(!isEditPageOpen);
-    };
+ // state to manage edit page visibility
+  
 
 
     const fetchProfile = async () => {
@@ -95,18 +93,14 @@ export default function ProfilePage() {
         fetchProfile();
     }, []);
 
-    const handleClick = () => {
-        fetchProfile();
-        toggleEditPage();
-    }
-
+   
 
     if (loading) {
         return <div>Loading...</div>; 
     }
 
     if (!teamMember) {
-        return <div>No team member righthere data available.</div>;
+        return <div>No team member data available.</div>;
     } else {
 
         return (
@@ -128,41 +122,8 @@ export default function ProfilePage() {
                 </div>
 
 
-                <div>
-                    {/* edit page */}
-                    <div
-                        className={`fixed top-0 p-2 ${isEditPageOpen ? 'z-0' : 'z-[9999]'}`}
-                        style={{ top: '-5px', right: '10px' }}
-                    >
-                        {/* open the sidebar */}
-                        <button onClick={toggleEditPage} className=" p-20  -m-5 transform translate-x-10">
-                            <Link href="#">
-                                <Image
-                                    src={EditIcon}
-                                    alt="Profile picture"
-                                    width={20}
-                                    height={20}
-                                    className=" shadow-lg hover:shadow-xl transition-shadow duration-300"
-                                />
-                            </Link>
-                        </button>
-                    </div>
 
-
-                    {/* sidebar */}
-                    {isEditPageOpen && (
-                        <div
-                            className="fixed right-0 h-full bg-black z-[9998] border-top: darkred overflow-y-auto "
-                            style={{ top: '56px', width: '27%', borderTop: '3px solid darkred' }}
-                        >
-                            <button onClick={handleClick} className="p-2 text-black">Close</button>
-
-                            {/* render the profile page content */}
-                            <EditPage />
-                        </div>
-
-                    )}
-                </div>
+                
 
 
                 {/* conditionally render the team member info only if teamMember is defined */}
