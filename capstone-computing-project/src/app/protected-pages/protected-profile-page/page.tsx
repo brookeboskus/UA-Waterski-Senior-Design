@@ -164,7 +164,7 @@ export default function ProfilePage() {
                 {teamMember ? (
                     <>
                         {/* "your information" label section */}
-                        <div className="absolute left-[50%] top-[45%] w-[191px] h-[26px] text-center text-black text-xl font-bold transform -translate-x-[50%]">
+                        <div className="absolute left-[50%] top-[42%] w-[191px] h-[26px] text-center text-black text-xl font-bold transform -translate-x-[50%]">
                             Your Information
                         </div>
 
@@ -279,7 +279,7 @@ export default function ProfilePage() {
                         <div className="w-[220px] h-[20px] left-[99px] top-[730px] absolute text-[#b9b9b9] text-[13px] font-bold">
                             {teamMember.CWID}
                         </div>
-               
+                       
                    
                     </>
                  

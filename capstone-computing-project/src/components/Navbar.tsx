@@ -321,8 +321,8 @@ export default function Navbar() {
                 {/* sidebar */}
                 {isSidebarOpen && (
                     <div
-                        className="fixed right-5 h-full bg-white z-[9998]"
-                        style={{ top: '15px', width: '27%' }}
+                        className="fixed right-5 h-full bg-white z-[9998] overflow-y-auto"
+                        style={{ top: '56px', width: '27%' }}
                     >
                         <button onClick={toggleSidebar} className="p-2 text-black">Close</button>
                         {/* render the profile page content */}
@@ -331,7 +331,7 @@ export default function Navbar() {
                 )}
 
                 {/* background overlay when sidebar is open */}
-                {isSidebarOpen && <div className="fixed inset-0 bg-black opacity-40 z-40" style={{ top: '15px', width: '71.5%' }} onClick={toggleSidebar} />}
+                {isSidebarOpen && <div className="fixed inset-0 bg-black opacity-40 z-40" style={{ top: '56px', width: '72.5%' }} onClick={toggleSidebar} />}
             </div>
 
             {/* mobile menu */}
