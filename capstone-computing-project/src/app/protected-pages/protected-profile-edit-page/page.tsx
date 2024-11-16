@@ -17,6 +17,12 @@ const statusOptions = [
     { value: 'Officer', label: 'Officer' }
 ];
 
+const grades = [
+{value: 'Freshman', label: 'Freshman'},
+{value: 'Sophmore', label: 'Sophmore'},
+{value: 'Junior' , label: 'Junior'},
+{value: 'Senior', label: 'Senior'},
+];
 
 
 const majors = [
@@ -188,11 +194,11 @@ export default function EditProfile() {
                 ) {
                     const host = window.location.host;
                     const baseDomain = "uawaterski.com";
-        
+
                     if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
                         APP_URL = `https://${host}/`;
                     }
-        
+
                     console.log("Current APP_URL:", APP_URL);
                 } else {
                     console.log("oops you coded wrong, what a dummy");
@@ -264,21 +270,21 @@ export default function EditProfile() {
 
     return (
         <div className="relative w-[417px] max-h-full h-[787px] bg-white  z-40 overflow-y-auto" style={{ top: '0px', right: '5px', borderLeft: '3px solid black' }}>
-        <div className="relative w-full h-full overflow-y-auto">
-            {/* red header section */}
-            <div className="absolute left-0 top-0 w-full h-[320px] bg-[#9e1b32] z-10"></div>
+            <div className="relative w-full h-full overflow-y-auto">
+                {/* red header section */}
+                <div className="absolute left-0 top-0 w-full h-[320px] bg-[#9e1b32] z-10"></div>
 
-            {/* user profile image */}
-            <div className="absolute left-[50%] top-[5%] w-[230px] h-[230px] rounded-full z-20 transform -translate-x-[50%] overflow-hidden">
-                <Image
-                    src={teamMember.PfpImage ? teamMember.PfpImage : DefaultPFP}
-                    alt={`${teamMember.Fname} ${teamMember.Lname}'s profile image`}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-full"
-                />
+                {/* user profile image */}
+                <div className="absolute left-[50%] top-[5%] w-[230px] h-[230px] rounded-full z-20 transform -translate-x-[50%] overflow-hidden">
+                    <Image
+                        src={teamMember.PfpImage ? teamMember.PfpImage : DefaultPFP}
+                        alt={`${teamMember.Fname} ${teamMember.Lname}'s profile image`}
+                        layout="fill"
+                        objectFit="cover"
+                        className="rounded-full"
+                    />
+                </div>
             </div>
-        </div>
             <div>
 
 
@@ -286,7 +292,7 @@ export default function EditProfile() {
 
 
                     {/* Input Fields */}
-                    <div className="absolute p-5" style={{ top: '290px' }}>
+                    <div className="absolute p-5">
                         {/* First Name */}
                         <div className="text-[#b9b9b9] text-[15px] font-bold">First Name</div>
                         <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
@@ -324,22 +330,7 @@ export default function EditProfile() {
                         </div>
 
 
-                        {/* Grad Year */}
-                        <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Grad Year</div>
-                        <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
-                            <select
-
-                                value={gradYear}
-                                onChange={(e) => setGradYear(e.target.value)}
-                                className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
-
-                            >
-                                <option value="Freshman">Freshman</option>
-                                <option value="Sophomore">Sophomore</option>
-                                <option value="Junior">Junior</option>
-                                <option value="Senior">Senior</option>
-                            </select>
-                        </div>
+                   
 
 
 
@@ -351,8 +342,8 @@ export default function EditProfile() {
                         {/* Profile Photo */}
                         <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Profile Photo</div>
                         <div className="w-[380px] h-[68px] bg-gray-200 rounded-[20px] border-2 border-[#9e1b32] mt-1 flex items-center">
-                            <label className="w-full h-full text-black text-[15px] font-bold  outline-none p-28 flex items-center">
-                                <span className="text-gray-700">Click to Upload</span>
+                            <label className=" w-[380px] h-[68px]  text-black  font-bold  outline-none flex justify-center p-0">
+                                <span className="text-gray-700 mt-5 p-0">Click to Upload</span>
                                 <input
                                     type="file"
                                     accept=".png, .jpg, .jpeg, .webp"
@@ -363,43 +354,62 @@ export default function EditProfile() {
                             {PfpImage && <span className="ml-2 text-gray-600">{PfpImage.name}</span>}
                         </div>
 
-                        {/* Major */}
-                        <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Major</div>
+                        {/* grad Year*/}
+                        <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Grad Year</div>
 
                         <Select
-                            placeholder="Select your Major"
+                            placeholder="Select your grade"
+                        
+                            value={grades.find(option => option.value === gradYear)}
+                            onChange={(option) => {
+                                // Check if the option is not null or undefined
+                                if (option?.value) {
+                                    setGradYear(option.value); // Store only the value
+                                }
+                            }}
+                            options={grades}
+                            className="w-full text-black"
+                            required
+                            
+                        />
+
+                        {/* Major */}
+                        <div className="text-[#b9b9b9] text-[15px] font-bold">Major</div>
+
+                        <Select
+                            placeholder="Select your major"
                             value={selectedMajor}
                             onChange={setSelectedMajor}
                             options={majors}
-                            className="w-full"
+                            className="w-full text-black"
                             required
                         />
 
-                        {/* First Name */}
+                        {/* Status */}
                         <div className="text-[#b9b9b9] text-[15px] font-bold">Status</div>
                         <Select
                             placeholder="Select your Major"
                             value={status}
                             onChange={setStatus}
                             options={statusOptions}
-                            className="w-full"
+                            className="w-full text-black"
                             required
                         />
 
                         {/* Slalom Driver */}
                         <div className="text-[#b9b9b9] text-[15px] font-bold">Slalom Driver</div>
                         <Select
-                         placeholder="Approved?"
+                            placeholder="Approved?"
                             value={driverApproved.find(option => option.value === slalomDriver)} // Find option by value
-                    
+
                             onChange={(option) => {
                                 // Check if the option is not null or undefined
                                 if (option?.value) {
-                                  setslalomDriver(option.value); // Store only the value
+                                    setslalomDriver(option.value); // Store only the value
                                 }
-                              }}
+                            }}
                             options={driverApproved}
-                            className="w-full"
+                            className="w-full text-black"
                             required
                         />
 
@@ -412,27 +422,27 @@ export default function EditProfile() {
                             onChange={(option) => {
                                 // Check if the option is not null or undefined
                                 if (option?.value) {
-                                  settrickDriver(option.value); // Store only the value
+                                    settrickDriver(option.value); // Store only the value
                                 }
-                              }}
+                            }}
                             options={driverApproved}
-                            className="w-full"
+                            className="w-full text-black"
                             required
                         />
 
                         {/* Jump Driver */}
                         <div className="text-[#b9b9b9] text-[15px] font-bold">Jump Driver</div>
                         <Select
-                         placeholder="Approved?"
+                            placeholder="Approved?"
                             value={driverApproved.find(option => option.value === jumpDriver)} // Find option by value
                             onChange={(option) => {
                                 // Check if the option is not null or undefined
                                 if (option?.value) {
-                                  setjumpDriver(option.value); // Store only the value
+                                    setjumpDriver(option.value); // Store only the value
                                 }
-                              }}
+                            }}
                             options={driverApproved}
-                            className="w-full"
+                            className="w-full text-black"
                             required
                         />
 
@@ -444,7 +454,7 @@ export default function EditProfile() {
 
 
 
-                    <div onClick={updateProfile} className="w-[380px] h-[57px] bg-[#9e1b32] rounded-[30px] absolute left-[18px] bottom-[-400px]">
+                    <div onClick={updateProfile} className="w-[380px] h-[57px] bg-[#9e1b32] rounded-[30px] absolute left-[18px] bottom-[-100px]">
                         <button className="w-full h-full text-[#f7f7f7] text-xl font-bold font-['Inter']">Save</button>
                     </div>
 
