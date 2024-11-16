@@ -305,7 +305,7 @@ export default function Navbar() {
                                         alt="Profile picture"
                                         width={50}
                                         height={50}
-                                        className="object-cover h-12 w-12 rounded-full border-2 border-white shadow-lg hover:shadow-xl transition-shadow duration-300"
+                                        className="object-cover h-12 w-12 rounded-full"
                                     />
                                 </Link>
                             </button>
@@ -315,8 +315,6 @@ export default function Navbar() {
                         )}
                     </div>
                 </div>
-
-
 
 
                 {/* sidebar */}
