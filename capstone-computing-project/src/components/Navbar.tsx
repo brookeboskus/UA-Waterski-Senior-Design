@@ -155,8 +155,8 @@ export default function Navbar() {
 
 
     return (
-        <nav className="bg-[#9E1B32] shadow-md sticky top-0 z-[9999] w-full">
-            <div className="container mx-auto flex justify-between items-center px-4 h-20 md:h-14 lg:h-15">
+        <nav className="bg-[#9E1B32] shadow-md sticky top-0 z-[9999] w-full relative">
+            <div className="container mx-auto flex justify-between items-center px-4 h-20 md:h-14 lg:h-15 relative">
                 {/* where legends are made logo */}
                 <Link href="/">
                     <div className="relative" style={{ height: 'auto', width: '250px' }}>
@@ -165,6 +165,7 @@ export default function Navbar() {
                             alt="Header WLAM image"
                             className="cursor-pointer"
                             priority={true}
+                           
                         />
                     </div>
                 </Link>

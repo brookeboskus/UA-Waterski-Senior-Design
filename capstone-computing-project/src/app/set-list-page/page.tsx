@@ -660,15 +660,15 @@ const SetListButton = ({
                 : 'Past reservation, cannot register';
 
         buttonClass = reservationState === 'reservedByYou'
-            ? 'bg-[#404040] text-black cursor-not-allowed border-2 border-transparent hover:border-black'
+            ? 'bg-[#404040] text-black cursor-not-allowed border-2 border-transparent hover:border-black w-50'
             : reservationState === 'reservedBySomeoneElse'
-                ? 'bg-[#404040] text-white cursor-not-allowed border-2 border-transparent hover:border-black'
-                : 'bg-[#808080] text-black cursor-not-allowed border-2 border-transparent hover:border-black';
+                ? 'bg-[#404040] text-white cursor-not-allowed border-2 border-transparent hover:border-black w-50'
+                : 'bg-[#808080] text-black cursor-not-allowed border-2 border-transparent hover:border-black w-50';
     } else {
         buttonClass = reservationState === 'open'
-            ? 'bg-[#D7D7E0] text-black border-2 border-transparent hover:border-[#9e1b32]'
+            ? 'bg-[#D7D7E0] text-black border-2 border-transparent hover:border-[#9e1b32] w-50'
             : reservationState === 'reservedByYou'
-                ? 'bg-black text-white hover:border-[#808080]'
+                ? 'bg-black text-white hover:border-[#808080] w-50'
                 : 'bg-[#800020] text-white cursor-not-allowed';
         buttonText = reservationState === 'open'
             ? 'Slot available'
@@ -679,7 +679,7 @@ const SetListButton = ({
 
     return (
         <>
-            <Button onClick={handleClick} className={`${buttonClass} w-full`}>
+            <Button onClick={handleClick} className={`${buttonClass} w-full h-full`}>
                 {buttonText}
             </Button>
 
@@ -884,17 +884,17 @@ export default function SetListPage() {
 
     function TimeTable() {
         return (
-            <table className="bg-white rounded-lg w-full text-center overflow-hidden shadow-lg">
+            <table className="bg-white rounded-lg h-full text-center overflow-hidden shadow-lg">
                 <thead>
                     <tr className="text-center bg-[#A0A0A6] font-semibold text-lg text-gray-800">
-                        <th className="text-center p-2">Time</th>
-                        <th>Sunday</th>
-                        <th>Monday</th>
-                        <th>Tuesday</th>
-                        <th>Wednesday</th>
-                        <th>Thursday</th>
-                        <th>Friday</th>
-                        <th>Saturday</th>
+                        <th className="p-2 text-center">Time</th>
+                        <th className="p-2 text-center">Sunday</th>
+                        <th className="p-2 text-center">Monday</th>
+                        <th className="p-2 text-center">Tuesday</th>
+                        <th className="p-2 text-center">Wednesday</th>
+                        <th className="p-2 text-center">Thursday</th>
+                        <th className="p-2 text-center">Friday</th>
+                        <th className="p-2 text-center">Saturday</th>
                     </tr>
                 </thead>
                 {TimeTableBody()}
