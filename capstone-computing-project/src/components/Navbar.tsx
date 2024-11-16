@@ -143,6 +143,7 @@ export default function Navbar() {
         setMemberType(''); // reset member type
         router.push('/'); // redirects to login page after logout
         // console.log('Logged out and redirected to home page');
+        toggleMenu()
     };
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false); // state to manage sidebar visibility
@@ -397,14 +398,16 @@ export default function Navbar() {
                     </Link>
                 )}
 
-                <Link href="/contact-us-page" className="block text-white text-lg hover:text-black transition duration-300">
+                <Link href="/contact-us-page" onClick={toggleMenu} className="block text-white text-lg hover:text-black transition duration-300">
                     Contact Us
                 </Link>
                 <div>
                     {isLoggedIn && isProfileFetched ? (
-                        <button className="block text-white text-lg hover:text-black transition duration-300">
+                        <button onClick={toggleMenu} className="block text-white text-lg hover:text-black transition duration-300">
                             <Link href="/protected-pages/protected-profile-page">
-                                <div className="flex flex-row items-center space-x-4">
+                                <div className="flex flex-row items-center space-x-10">
+                                    My Profile
+                                    <br></br>
                                     <Image
                                         src={profilePic}
                                         alt="Profile picture"
@@ -412,7 +415,7 @@ export default function Navbar() {
                                         height={50}
                                         className="h-12 w-12 rounded-full border-2 border-white shadow-lg hover:shadow-xl transition-shadow duration-300"
                                     />
-                                    My Profile
+                                    
                                 </div>
                             </Link>
                         </button>
@@ -427,7 +430,7 @@ export default function Navbar() {
                             Log Out
                         </button>
                     ) : (
-                        <Link href="/login-page" className="block text-white text-lg hover:text-black transition duration-300">
+                        <Link onClick={toggleMenu} href="/login-page" className="block text-white text-lg hover:text-black transition duration-300">
                             Login
                         </Link>
                     )}
