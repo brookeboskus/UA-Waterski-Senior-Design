@@ -16,7 +16,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import EditIcon from '../../img/EditPFPIcon.svg';
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
+let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
 
 interface TeamMember {
@@ -53,6 +53,23 @@ export default function ProfilePage() {
             //     }
             // });
 
+            if (
+                window.location.host.includes("brian") ||
+                window.location.host.includes("lilly") ||
+                window.location.host.includes("brooke") ||
+                window.location.host.includes("anastasia")
+            ) {
+                const host = window.location.host;
+                const baseDomain = "uawaterski.com";
+    
+                if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
+                    APP_URL = `https://${host}/`;
+                }
+    
+                console.log("Current APP_URL:", APP_URL);
+            } else {
+                console.log("oops you coded wrong, what a dummy");
+            }
             const response = await axios.get<TeamMember>(`${APP_URL}api/profile`, {
                 headers: {
                     Authorization: `Bearer ${token}`,

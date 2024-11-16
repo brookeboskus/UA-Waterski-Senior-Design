@@ -474,7 +474,7 @@ import BlankPfp from '../img/blankpfp.svg';
 import { useRouter } from 'next/navigation';
 import ReactDOMServer from 'react-dom/server';
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
+let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
 interface SetListReservation {
     Date: string;
@@ -528,6 +528,23 @@ const makeReservation = async (date: Date) => {
             'reserveDate': date.getTime()
         };
 
+        if (
+            window.location.host.includes("brian") ||
+            window.location.host.includes("lilly") ||
+            window.location.host.includes("brooke") ||
+            window.location.host.includes("anastasia")
+        ) {
+            const host = window.location.host;
+            const baseDomain = "uawaterski.com";
+
+            if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
+                APP_URL = `https://${host}/`;
+            }
+
+            console.log("Current APP_URL:", APP_URL);
+        } else {
+            console.log("oops you coded wrong, what a dummy");
+        }
         await axios.post(`${APP_URL}api/setlist`, payload, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -559,6 +576,23 @@ const deleteReservation = async (date: Date) => {
             }
         };
 
+        if (
+            window.location.host.includes("brian") ||
+            window.location.host.includes("lilly") ||
+            window.location.host.includes("brooke") ||
+            window.location.host.includes("anastasia")
+        ) {
+            const host = window.location.host;
+            const baseDomain = "uawaterski.com";
+
+            if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
+                APP_URL = `https://${host}/`;
+            }
+
+            console.log("Current APP_URL:", APP_URL);
+        } else {
+            console.log("oops you coded wrong, what a dummy");
+        }
         await axios.delete(`${APP_URL}api/setlist`, payload);
 
     } catch (error) {
@@ -766,6 +800,23 @@ export default function SetListPage() {
                     throw new Error('No token available');
                 }
 
+                if (
+                    window.location.host.includes("brian") ||
+                    window.location.host.includes("lilly") ||
+                    window.location.host.includes("brooke") ||
+                    window.location.host.includes("anastasia")
+                ) {
+                    const host = window.location.host;
+                    const baseDomain = "uawaterski.com";
+        
+                    if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
+                        APP_URL = `https://${host}/`;
+                    }
+        
+                    console.log("Current APP_URL:", APP_URL);
+                } else {
+                    console.log("oops you coded wrong, what a dummy");
+                }
                 const response = await axios.get<TeamMember[]>(`${APP_URL}api/roster`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -794,6 +845,23 @@ export default function SetListPage() {
                     throw new Error('No token found');
                 }
 
+                if (
+                    window.location.host.includes("brian") ||
+                    window.location.host.includes("lilly") ||
+                    window.location.host.includes("brooke") ||
+                    window.location.host.includes("anastasia")
+                ) {
+                    const host = window.location.host;
+                    const baseDomain = "uawaterski.com";
+        
+                    if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
+                        APP_URL = `https://${host}/`;
+                    }
+        
+                    console.log("Current APP_URL:", APP_URL);
+                } else {
+                    console.log("oops you coded wrong, what a dummy");
+                }
                 const response = await axios.get<SetListReservation[]>(`${APP_URL}api/setlist`, {
                     headers: {
                         Authorization: `Bearer ${token}`

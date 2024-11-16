@@ -11,7 +11,7 @@ import ProtectedProfilePage from '../app/protected-pages/protected-profile-page/
 import defaultPfpImage from './img/DefaultPFP.svg';
 import axios from 'axios';
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
+let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
 
 interface TeamMember {
@@ -55,6 +55,23 @@ export default function Navbar() {
             // });
 
 
+            if (
+                window.location.host.includes("brian") ||
+                window.location.host.includes("lilly") ||
+                window.location.host.includes("brooke") ||
+                window.location.host.includes("anastasia")
+            ) {
+                const host = window.location.host;
+                const baseDomain = "uawaterski.com";
+    
+                if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
+                    APP_URL = `https://${host}/`;
+                }
+    
+                console.log("Current APP_URL:", APP_URL);
+            } else {
+                console.log("oops you coded wrong, what a dummy");
+            }
             const response = await axios.get<TeamMember>(`${APP_URL}api/profile`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -159,7 +176,7 @@ export default function Navbar() {
             <div className="container mx-auto flex justify-between items-center px-4 h-20 md:h-14 lg:h-15 relative">
                 {/* where legends are made logo */}
                 <Link href="/">
-                    <div className="relative" style={{ height: 'auto', width: '250px' }}>
+                    <div className="relative" style={{ height: '100%', width: '250px' }}>
                         <Image
                             src={HeaderWLAM}
                             alt="Header WLAM image"
@@ -265,7 +282,7 @@ export default function Navbar() {
 
                 {/* login/logout button */}
                 <div className="hidden md:flex items-center space-x-2 -mr-20">
-                    <Link href="/contact-us-page" className="bg-white-500 text-white text-base py-2 px-2 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300">
+                    <Link href="/contact-us-page" className="bg-white-500 text-white text-base py-2 px-2 rounded hover:underline hover:text-black">
                         Contact Us
                     </Link>
 
@@ -289,7 +306,7 @@ export default function Navbar() {
                                         alt="Profile picture"
                                         width={50}
                                         height={50}
-                                        className="object-cover h-12 w-12 rounded-full border-2 border-white shadow-lg hover:shadow-xl transition-shadow duration-300"
+                                        className="object-cover h-12 w-12 rounded-full"
                                     />
                                 </Link>
                             </button>
@@ -299,8 +316,6 @@ export default function Navbar() {
                         )}
                     </div>
                 </div>
-
-
 
 
                 {/* sidebar */}
@@ -382,13 +397,37 @@ export default function Navbar() {
                     </Link>
                 )}
 
-                <div className="hidden md:block">
+                <Link href="/contact-us-page" className="block text-white text-lg hover:text-black transition duration-300">
+                    Contact Us
+                </Link>
+                <div>
+                    {isLoggedIn && isProfileFetched ? (
+                        <button className="block text-white text-lg hover:text-black transition duration-300">
+                            <Link href="/protected-pages/protected-profile-page">
+                                <div className="flex flex-row items-center space-x-4">
+                                    <Image
+                                        src={profilePic}
+                                        alt="Profile picture"
+                                        width={50}
+                                        height={50}
+                                        className="h-12 w-12 rounded-full border-2 border-white shadow-lg hover:shadow-xl transition-shadow duration-300"
+                                    />
+                                    My Profile
+                                </div>
+                            </Link>
+                        </button>
+                    ) : (
+                        <div></div>
+                    )}
+                </div>
+
+                <div className="md:block">
                     {isLoggedIn ? (
-                        <button onClick={handleLogout} className="bg-white-500 text-white text-base py-2 px-4 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300 pl-8">
+                        <button onClick={handleLogout} className="block text-white text-lg hover:text-black transition duration-300">
                             Log Out
                         </button>
                     ) : (
-                        <Link href="/login-page" className="bg-white-500 text-white text-base py-2 px-4 rounded hover:bg-white hover:text-[#9E1B32] transition duration-300">
+                        <Link href="/login-page" className="block text-white text-lg hover:text-black transition duration-300">
                             Login
                         </Link>
                     )}
