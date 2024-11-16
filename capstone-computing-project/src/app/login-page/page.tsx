@@ -8,7 +8,7 @@ import Image from 'next/image';
 import WaterskiImage from '../img/loginSkiIMG.svg';
 import SkiBamaLogo from '../img/skibamalogo.svg';
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
+let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
 
 
@@ -210,6 +210,24 @@ export default function LoginPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (
+            window.location.host.includes("brian") ||
+            window.location.host.includes("lilly") ||
+            window.location.host.includes("brooke") ||
+            window.location.host.includes("anastasia")
+        ) {
+            const host = window.location.host;
+            const baseDomain = "uawaterski.com";
+
+            if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
+                APP_URL = `https://${host}/`;
+            }
+
+            console.log("Current APP_URL:", APP_URL);
+        } else {
+            console.log("oops you coded wrong, what a dummy");
+        }
+
         const endpoint = isLogin ? `${APP_URL}api/login` : `${APP_URL}api/signup`;
         console.log('endpoint:', endpoint);
 
@@ -221,12 +239,12 @@ export default function LoginPage() {
                 reader.onerror = reject;
                 reader.readAsDataURL(PfpImage);
             }
-        );
-    }
+            );
+        }
 
         const payload = isLogin
             ? { email, password }
-            : { email, password, fname, lname, cwid, phone, gradYear, major: selectedMajor?.value || '', pfpimage: pfpBase64,};
+            : { email, password, fname, lname, cwid, phone, gradYear, major: selectedMajor?.value || '', pfpimage: pfpBase64, };
 
         // if (PfpImage && !isLogin) {
         //     payload.pfpimage = PfpImage; 
@@ -256,7 +274,7 @@ export default function LoginPage() {
     return (
         <div className='login-page flex items-center justify-center min-h-screen bg-[#ffffff]'>
             <div className="flex flex-row w-full h-full">
-                <div className="w-2/3 flex flex-col justify-center items-center w-1/2 pr-0">
+                <div className="w-full md:w-2/3 flex flex-col justify-center items-center pr-0">
                     <div className="mb-8" style={{ height: 'auto', width: '300px' }}>
                         <Image src={SkiBamaLogo} alt="Ski Bama Logo" />
                     </div>
@@ -328,7 +346,7 @@ export default function LoginPage() {
                                         placeholder="First Name"
                                         value={fname}
                                         onChange={(e) => setFname(e.target.value)}
-                                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
+                                        className="col-span-2 md:col-span-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
                                         required
                                     />
                                     <input
@@ -336,7 +354,7 @@ export default function LoginPage() {
                                         placeholder="Last Name"
                                         value={lname}
                                         onChange={(e) => setLname(e.target.value)}
-                                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
+                                        className="col-span-2 md:col-span-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
                                         required
                                     />
                                     <input
@@ -344,7 +362,7 @@ export default function LoginPage() {
                                         placeholder="CWID"
                                         value={cwid}
                                         onChange={(e) => setCwid(e.target.value)}
-                                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
+                                        className="col-span-2 md:col-span-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
                                         required
                                     />
                                     <input
@@ -352,7 +370,7 @@ export default function LoginPage() {
                                         placeholder="Phone Number"
                                         value={phone}
                                         onChange={(e) => setPhone(e.target.value)}
-                                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
+                                        className="col-span-2 md:col-span-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
                                         required
                                     />
                                     <div className="col-span-2">
@@ -409,7 +427,7 @@ export default function LoginPage() {
 
                 </div>
 
-                <div className="rounded-tl-[55px] rounded-bl-[55px] relative" style={{ maxWidth: '100%', height: 'auto' }}>
+                <div className="hidden md:block rounded-tl-[55px] rounded-bl-[55px] relative" style={{ maxWidth: '100%', height: 'auto' }}>
                     <Image
                         src={WaterskiImage}
                         alt="Water ski image"
@@ -417,7 +435,6 @@ export default function LoginPage() {
                         style={{ width: '100%', height: 'auto' }}
                     />
                 </div>
-
             </div>
         </div>
     );
