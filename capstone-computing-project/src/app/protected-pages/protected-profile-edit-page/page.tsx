@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import DefaultPFP from '../../img/DefaultPFP.svg';
+import DefaultPFP from '../../img/blankpfp.svg';
 import Select from 'react-select';
 
 let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
@@ -263,22 +263,22 @@ export default function EditProfile() {
     }
 
     return (
-        <div className="relative w-[417px] max-h-full h-[800px] bg-white rounded-[5px] z-40 overflow-y-auto flex flex-col items-center overflow-y-auto" style={{ top: '39px', right: '5px', borderLeft: '3px solid black' }}>
-            <div className="relative w-full h-full">
-                {/* red header section */}
-                <div className="absolute left-0 top-0 w-full h-[280px] bg-[#9e1b32] z-10"></div>
+        <div className="relative w-[417px] max-h-full h-[787px] bg-white  z-40 overflow-y-auto" style={{ top: '0px', right: '5px', borderLeft: '3px solid black' }}>
+        <div className="relative w-full h-full overflow-y-auto">
+            {/* red header section */}
+            <div className="absolute left-0 top-0 w-full h-[320px] bg-[#9e1b32] z-10"></div>
 
-                {/* user profile image */}
-                <div className="absolute left-[50%] top-[5%] w-[230px] h-[230px] rounded-full z-20 transform -translate-x-[50%] overflow-hidden" style={{ top: '-2px' }}>
-                    <Image
-                        src={teamMember.PfpImage ? teamMember.PfpImage : DefaultPFP}
-                        alt={`${teamMember.Fname} ${teamMember.Lname}'s profile image`}
-                        layout="fill"
-                        objectFit="cover"
-                        className="rounded-full"
-                    />
-                </div>
+            {/* user profile image */}
+            <div className="absolute left-[50%] top-[5%] w-[230px] h-[230px] rounded-full z-20 transform -translate-x-[50%] overflow-hidden">
+                <Image
+                    src={teamMember.PfpImage ? teamMember.PfpImage : DefaultPFP}
+                    alt={`${teamMember.Fname} ${teamMember.Lname}'s profile image`}
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-full"
+                />
             </div>
+        </div>
             <div>
 
 
