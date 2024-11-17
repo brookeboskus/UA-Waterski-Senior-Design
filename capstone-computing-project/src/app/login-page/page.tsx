@@ -131,16 +131,16 @@ export default function LoginPage() {
 
     useEffect(() => {
         document.title = 'UA Waterski - Login/Sign Up';
-        const fetchCSRFToken = async () => {
-            try {
-                const response = await axios.get('/api/csrf-token');
-                setCsrfToken(response.data.csrfToken);
-            } catch (error) {
-                console.error ('Error fetching CSRF token:', error);
-            }
-        };
+        // const fetchCSRFToken = async () => {
+        //     try {
+        //         const response = await axios.get('/api/csrf-token');
+        //         setCsrfToken(response.data.csrfToken);
+        //     } catch (error) {
+        //         console.error ('Error fetching CSRF token:', error);
+        //     }
+        // };
 
-        fetchCSRFToken();
+        // fetchCSRFToken();
     }, []);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -198,15 +198,19 @@ export default function LoginPage() {
             );
         }
 
+        // const payload = isLogin
+        //     ? { email, password, csrfToken }
+        //     : { email, password, csrfToken, fname, lname, cwid, phone, gradYear, major: selectedMajor?.value || '', pfpimage: pfpBase64, };
+
         const payload = isLogin
-            ? { email, password, csrfToken }
-            : { email, password, csrfToken, fname, lname, cwid, phone, gradYear, major: selectedMajor?.value || '', pfpimage: pfpBase64, };
+        ? { email, password }
+        : { email, password, fname, lname, cwid, phone, gradYear, major: selectedMajor?.value || '', pfpimage: pfpBase64, };
 
         try {
             const response = await axios.post(endpoint, payload, {
                 headers: { 
                     'Content-Type': 'application/json',
-                    'csrf-token': csrfToken, 
+                    //'csrf-token': csrfToken, 
                 },
             });
             if (isLogin) {
