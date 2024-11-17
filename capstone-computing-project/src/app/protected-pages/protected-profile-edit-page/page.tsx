@@ -269,8 +269,8 @@ export default function EditProfile() {
     }
 
     return (
-        <div className="relative w-[417px] max-h-full h-[787px] bg-white  z-40 overflow-y-auto" style={{ top: '0px', right: '5px', borderLeft: '3px solid black' }}>
-            <div className="relative w-full h-full overflow-y-auto">
+        <div className="relative w-[417px] h-full  h-[325px] bg-white z-40 overflow-y-auto" >
+            <div className="relative w-full h-full ">
                 {/* red header section */}
                 <div className="absolute left-0 top-0 w-full h-[320px] bg-[#9e1b32] z-10"></div>
 
@@ -285,10 +285,10 @@ export default function EditProfile() {
                     />
                 </div>
             </div>
-            <div>
+            
 
 
-                <div className="w-[433px] h-[866px] relative bg-white rounded-lg shadow-lg">
+              
 
 
                     {/* Input Fields */}
@@ -448,16 +448,17 @@ export default function EditProfile() {
 
 
 
-                    </div>
+                  
 
                     {/* Save Button */}
 
 
 
-                    <div onClick={updateProfile} className="w-[380px] h-[57px] bg-[#9e1b32] rounded-[30px] absolute left-[18px] bottom-[-100px]">
+                    <div onClick={updateProfile} className="w-[380px] h-[57px] bg-[#9e1b32] rounded-[30px] absolute left-[18px] bottom-[125px]">
                         <button className="w-full h-full text-[#f7f7f7] text-xl font-bold font-['Inter']">Save</button>
                     </div>
-
+                 
+                    <div>
                 </div>
                 <br>
                 </br>
@@ -475,6 +476,7 @@ export default function EditProfile() {
                 </br>
                 <br>
                 </br>
+                
             </div>
         </div >
 
