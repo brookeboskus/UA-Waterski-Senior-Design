@@ -13,7 +13,8 @@ dotenv.config();
 const app = express();
 
 const corsOptions = {
-    origin: process.env.NEXT_PUBLIC_APP_URL,
+    //origin: process.env.NEXT_PUBLIC_APP_URL,
+    origin: 'https://brooke.uawaterski.com',
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'csrf-token'],
     credentials: true,
@@ -36,6 +37,7 @@ const token = new csrf();
 //const csrfMiddleware = csrf();
 
 app.get('/api/csrf-token', (req, res) => {
+    console.log("CSRF token request received");
     const csrfToken = token.create(process.env.JWT_SECRET);
     res.json({ csrfToken});
 });
