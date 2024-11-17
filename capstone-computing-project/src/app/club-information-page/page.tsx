@@ -1,4 +1,4 @@
-//a. officer roles b. Bi-laws c. team history d. team drivers e. team judges
+//a. officer roles b. Bi-laws c. team history d. team drivers e. 
 
 
 "use client";
@@ -8,7 +8,7 @@ import waterskiClubInfoPhoto1 from '../../components/img/waterski-club-info-1 1.
 
 export default function ClubInfo() {
     // const [activeSection, setActiveSection] = useState<string>('roles');
-    const [activeSection, setActiveSection] = useState<'roles' | 'bilaws' | 'drivers' | 'judges'>('roles');
+    const [activeSection, setActiveSection] = useState<'roles' | 'bilaws' | 'drivers'>('roles');
     const [isBylawsExpanded, setIsBylawsExpanded] = useState<boolean>(false);
 
     // Set page title
@@ -29,15 +29,15 @@ export default function ClubInfo() {
                 </p>
                 <br></br>
                 <br></br>
-                <p className="pl-4"><span style={{ color: '#F11C1C' }}>The President </span>will be appointed by a majority vote of the Water Ski Team members. The President must have held a previous leadership position. They shall preside at all team meetings. He/she is responsible for calling all team meetings and may call unscheduled meetings at their discretion. They are the mediator between the Water Ski Team and Sports Clubs and SGA and are expected to abide by all rules and attend mandatory meetings and trainings. President is responsible for being in communication with Lyman about what needs to be done out at the lake and delegating to team members. </p>
+                <p className="pl-4"><span style={{ color: '#9E1B32' }}>The President </span>will be appointed by a majority vote of the Water Ski Team members. The President must have held a previous leadership position. They shall preside at all team meetings. He/she is responsible for calling all team meetings and may call unscheduled meetings at their discretion. They are the mediator between the Water Ski Team and Sports Clubs and SGA and are expected to abide by all rules and attend mandatory meetings and trainings. President is responsible for being in communication with Lyman about what needs to be done out at the lake and delegating to team members. </p>
                 <br></br>
-                <p className="pl-4"><span style={{ color: '#F11C1C' }}>Vice President </span>, during the absence and/or inability of the President to render and perform his duties or exercise his powers, the same will be performed and exercised by the Vice President, and when so acting, he shall have all the powers and be subject to all the responsibilities hereby given to or imposed upon the President. </p>
+                <p className="pl-4"><span style={{ color: '#9E1B32' }}>Vice President </span>, during the absence and/or inability of the President to render and perform his duties or exercise his powers, the same will be performed and exercised by the Vice President, and when so acting, he shall have all the powers and be subject to all the responsibilities hereby given to or imposed upon the President. </p>
                 <br></br>
-                <p className="pl-4"><span style={{ color: '#F11C1C' }}>Secretary </span>shall keep all records of absences, excused, points and meeting minutes. The Secretary will send the meeting overview to members who missed the meeting with an excused absence. The Secretary maintains a Google document with each member’s points for the semester.  The secretary will promote the Water Ski Team via social media and community outreach and volunteer opportunities as well as t-shirts and stickers. </p>
+                <p className="pl-4"><span style={{ color: '#9E1B32' }}>Secretary </span>shall keep all records of absences, excused, points and meeting minutes. The Secretary will send the meeting overview to members who missed the meeting with an excused absence. The Secretary maintains a Google document with each member’s points for the semester.  The secretary will promote the Water Ski Team via social media and community outreach and volunteer opportunities as well as t-shirts and stickers. </p>
                 <br></br>
-                <p className="pl-4"><span style={{ color: '#F11C1C' }}>Treasurer </span>is the chief financial officer of the team and shall be responsible for the control of funds. The treasurer shall present and maintain a budget each year for the finances of the team and its operations. The treasurer is responsible for collecting team dues at the first meeting of every new season/semester. In addition, the treasurer will seek out fund raising opportunities for the team. </p>
+                <p className="pl-4"><span style={{ color: '#9E1B32' }}>Treasurer </span>is the chief financial officer of the team and shall be responsible for the control of funds. The treasurer shall present and maintain a budget each year for the finances of the team and its operations. The treasurer is responsible for collecting team dues at the first meeting of every new season/semester. In addition, the treasurer will seek out fund raising opportunities for the team. </p>
                 <br></br>
-                <p className="pl-4"><span style={{ color: '#F11C1C' }}>Team Captain </span>is in charge of representing the team at all tournaments and events and coordinating with the officials before each tournament. If any tournament decisions or changes must be made the Captain will vote and represent the team in its entirety. The Team Captain must confirm the ski team roster before each tournament. Team captain must keep track of practice records during tournament season.</p>
+                <p className="pl-4"><span style={{ color: '##9E1B32' }}>Team Captain </span>is in charge of representing the team at all tournaments and events and coordinating with the officials before each tournament. If any tournament decisions or changes must be made the Captain will vote and represent the team in its entirety. The Team Captain must confirm the ski team roster before each tournament. Team captain must keep track of practice records during tournament season.</p>
                 <br></br>
                 <div className="border-t border-[#9E1B32] border-2 my-2"></div>
                 <br></br>
@@ -257,14 +257,7 @@ export default function ClubInfo() {
                 </p>
             </div>
         ),
-        judges: (
-            <div>
-                <h2 className="text-3xl font-bold text-[#9E1B32] mb-4">Team Judges</h2>
-                <p className="text-gray-700 leading-relaxed">
-                    Judges oversee competitions and ensure that all participants adhere to the rules of the sport.
-                </p>
-            </div>
-        ),
+     
     };
 
     return (
@@ -312,12 +305,7 @@ export default function ClubInfo() {
                         >
                             Team Drivers
                         </button>
-                        <button
-                            className={`px-4 py-2 mx-2 ${activeSection === 'judges' ? 'bg-[#9E1B32] text-white' : 'bg-white text-[#9E1B32] border border-[#9E1B32]'}`}
-                            onClick={() => setActiveSection('judges')}
-                        >
-                            Team Judges
-                        </button>
+                       
                     </div>
 
                     {/* Active Section Content */}

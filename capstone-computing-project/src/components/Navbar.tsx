@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from "jwt-decode"; // needed this for token expiration!!
 import ProtectedProfilePage from '../app/protected-pages/protected-profile-page/page';
-import defaultPfpImage from './img/DefaultPFP.svg';
+import defaultPfpImage from '../app/img/blankpfp.svg';
 import axios from 'axios';
 
 let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
@@ -143,6 +143,7 @@ export default function Navbar() {
         setMemberType(''); // reset member type
         router.push('/'); // redirects to login page after logout
         // console.log('Logged out and redirected to home page');
+        toggleMenu()
     };
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false); // state to manage sidebar visibility
@@ -172,16 +173,17 @@ export default function Navbar() {
 
 
     return (
-        <nav className="bg-[#9E1B32] shadow-md sticky top-0 z-[9999] w-full">
-            <div className="container mx-auto flex justify-between items-center px-4 h-20 md:h-14 lg:h-15">
+        <nav className="bg-[#9E1B32] shadow-md sticky top-0 z-[9999] w-full relative">
+            <div className="container mx-auto flex justify-between items-center px-4 h-20 md:h-14 lg:h-15 relative">
                 {/* where legends are made logo */}
                 <Link href="/">
-                    <div className="relative" style={{ height: 'auto', width: '250px' }}>
+                    <div className="relative" style={{ height: '100%', width: '250px' }}>
                         <Image
                             src={HeaderWLAM}
                             alt="Header WLAM image"
                             className="cursor-pointer"
                             priority={true}
+                           
                         />
                     </div>
                 </Link>
@@ -305,7 +307,7 @@ export default function Navbar() {
                                         alt="Profile picture"
                                         width={50}
                                         height={50}
-                                        className="object-cover h-12 w-12 rounded-full border-2 border-white shadow-lg hover:shadow-xl transition-shadow duration-300"
+                                        className="object-cover h-12 w-12 rounded-full"
                                     />
                                 </Link>
                             </button>
@@ -317,13 +319,11 @@ export default function Navbar() {
                 </div>
 
 
-
-
                 {/* sidebar */}
                 {isSidebarOpen && (
                     <div
-                        className="fixed right-5 h-full bg-white z-[9998]"
-                        style={{ top: '15px', width: '27%' }}
+                        className="fixed right-5 h-full bg-white z-[9998] overflow-y-auto"
+                        style={{ top: '56px', width: '27%' }}
                     >
                         <button onClick={toggleSidebar} className="p-2 text-black">Close</button>
                         {/* render the profile page content */}
@@ -332,7 +332,7 @@ export default function Navbar() {
                 )}
 
                 {/* background overlay when sidebar is open */}
-                {isSidebarOpen && <div className="fixed inset-0 bg-black opacity-40 z-40" style={{ top: '15px', width: '71.5%' }} onClick={toggleSidebar} />}
+                {isSidebarOpen && <div className="fixed inset-0 bg-black opacity-40 z-40" style={{ top: '56px', width: '72.5%' }} onClick={toggleSidebar} />}
             </div>
 
             {/* mobile menu */}
@@ -398,14 +398,16 @@ export default function Navbar() {
                     </Link>
                 )}
 
-                <Link href="/contact-us-page" className="block text-white text-lg hover:text-black transition duration-300">
+                <Link href="/contact-us-page" onClick={toggleMenu} className="block text-white text-lg hover:text-black transition duration-300">
                     Contact Us
                 </Link>
                 <div>
                     {isLoggedIn && isProfileFetched ? (
-                        <button className="block text-white text-lg hover:text-black transition duration-300">
+                        <button onClick={toggleMenu} className="block text-white text-lg hover:text-black transition duration-300">
                             <Link href="/protected-pages/protected-profile-page">
-                                <div className="flex flex-row items-center space-x-4">
+                                <div className="flex flex-row items-center space-x-10">
+                                    My Profile
+                                    <br></br>
                                     <Image
                                         src={profilePic}
                                         alt="Profile picture"
@@ -413,7 +415,7 @@ export default function Navbar() {
                                         height={50}
                                         className="h-12 w-12 rounded-full border-2 border-white shadow-lg hover:shadow-xl transition-shadow duration-300"
                                     />
-                                    My Profile
+                                    
                                 </div>
                             </Link>
                         </button>
@@ -428,7 +430,7 @@ export default function Navbar() {
                             Log Out
                         </button>
                     ) : (
-                        <Link href="/login-page" className="block text-white text-lg hover:text-black transition duration-300">
+                        <Link onClick={toggleMenu} href="/login-page" className="block text-white text-lg hover:text-black transition duration-300">
                             Login
                         </Link>
                     )}
