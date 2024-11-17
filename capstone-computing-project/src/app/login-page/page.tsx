@@ -202,10 +202,6 @@ export default function LoginPage() {
             ? { email, password, csrfToken }
             : { email, password, csrfToken, fname, lname, cwid, phone, gradYear, major: selectedMajor?.value || '', pfpimage: pfpBase64, };
 
-        // if (PfpImage && !isLogin) {
-        //     payload.pfpimage = PfpImage; 
-        // }
-
         try {
             const response = await axios.post(endpoint, payload, {
                 headers: { 

@@ -6,12 +6,22 @@ import cors from 'cors';
 import csrf from 'csrf';
 import db from './db.js';
 import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 
+const corsOptions = {
+    origin: process.env.NEXT_PUBLIC_APP_URL,
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'csrf-token'],
+    credentials: true,
+}
+
 app.use(cookieParser());
 
-app.use(cors()); 
+app.use(cors(corsOptions)); 
 app.use(bodyParser.json());
 
 // Initialize CSRF protection
@@ -20,7 +30,7 @@ app.use(bodyParser.json());
 //     cookie: { httpOnly: true, secure: process.env.NODE_ENV === 'production' },  // Secure cookies
 // });
 
-const tokens = new csrf();
+const token = new csrf();
 
 
 //const csrfMiddleware = csrf();
@@ -40,7 +50,7 @@ app.use((err, req, res, next) => {
     }
 });
 
-const PORT = 3008       ; //localhost
+const PORT = 3000; //localhost
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
