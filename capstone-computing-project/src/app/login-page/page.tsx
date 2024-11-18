@@ -135,7 +135,7 @@ export default function LoginPage() {
                 const response = await axios.get(`${APP_URL}api/csrf-token`);
                 setCsrfToken(response.data.csrfToken);
             } catch (error) {
-                console.error ('Error fetching CSRF token:', error);
+                console.error ('Error fetching CSRF token in the login-page:', error);
             }
         };
 
@@ -196,7 +196,7 @@ export default function LoginPage() {
             }
             );
         }
-        
+
         const payload = isLogin
         ? { email, password }
         : { email, password, fname, lname, cwid, phone, gradYear, major: selectedMajor?.value || '', pfpimage: pfpBase64, };
