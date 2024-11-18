@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import DefaultPFP from '../../img/blankpfp.svg';
 import Select from 'react-select';
+import { PDFPageProxy } from 'pdfjs-dist/types/src/display/api';
 
 let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -123,6 +124,8 @@ const majors = [
     { value: 'Women\'s Studies, BA', label: 'Women\'s Studies, BA' },
 ];
 
+
+
 interface TeamMember {
     Fname: string;
     Lname: string;
@@ -134,6 +137,8 @@ interface TeamMember {
     CWID: string;
     PfpImage: string;
 }
+
+
 
 export default function EditProfile() {
     const [email, setEmail] = useState('');
@@ -151,7 +156,7 @@ export default function EditProfile() {
 
 
 
-    const [pfpImage, setProfilePicture] = useState<File | null>(null);
+    const [PfpImage, setProfilePicture] = useState<File | null>(null);
 
     const [teamMember, setTeamMember] = useState<TeamMember | null>(null);
 
@@ -172,10 +177,19 @@ export default function EditProfile() {
                     setProfilePicture(file);
                 }
             };
-
-            
         }
     };
+    
+    
+    const convertToBase64 = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = (error) => reject(error);
+        });
+    };
+    
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -215,6 +229,18 @@ export default function EditProfile() {
                     },
                 });
 
+        //     let pfpBase64 = null;
+        // if (PfpImage) {
+        //     const reader = new FileReader();
+        //     pfpBase64 = await new Promise((resolve, reject) => {
+        //         reader.onloadend = () => resolve(reader.result?.toString().split(",")[1]);
+        //         reader.onerror = reject;
+        //         reader.readAsDataURL(PfpImage);
+        //     }
+        //     );
+        // }
+
+
                 const data = response.data;
                 setTeamMember(data);
 
@@ -235,6 +261,17 @@ export default function EditProfile() {
                 return;
             }
 
+            let pfpBase64 = null;
+        if (PfpImage) {
+            const reader = new FileReader();
+            pfpBase64 = await new Promise((resolve, reject) => {
+                reader.onloadend = () => resolve(reader.result?.toString().split(",")[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(PfpImage);
+            }
+            );
+        }
+
             const payload = {
                 Fname: fname,
                 Lname: lname,
@@ -246,7 +283,7 @@ export default function EditProfile() {
                 JumpDriver: jumpDriver,
                 SlalomDriver: slalomDriver,
                 TrickDriver: trickDriver,
-                PfpImage: pfpImage
+                PfpImage: pfpBase64
             };
 
             const response = await fetch('/api/updateProfile', {
@@ -360,7 +397,7 @@ export default function EditProfile() {
                             className="hidden"
                         />
                     </label>
-                    {pfpImage && <span className="ml-2 text-gray-600">{pfpImage.name}</span>}
+                    {PfpImage && <span className="ml-2 text-gray-600">{PfpImage.name}</span>}
                 </div>
 
                 {/* grad Year*/}
