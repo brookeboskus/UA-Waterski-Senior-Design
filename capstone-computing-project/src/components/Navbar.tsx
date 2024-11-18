@@ -383,7 +383,7 @@ export default function Navbar() {
                     {/* sidebar */}
                     {isEditPageOpen && (
                         <div
-                        className="fixed right-0 h-full bg-[#9E1B32] z-[9998] overflow-y-auto"
+                        className="fixed right-0 h-full bg-[#9E1B32]  z-[9998] overflow-y-auto"
                         style={{ top: '56px', width: '28%', borderTop: '3px solid maroon' }}
                     >
                         <div className="relative">
@@ -411,6 +411,9 @@ export default function Navbar() {
                 {/* background overlay when sidebar is open */}
                 {isSidebarOpen && <div className="fixed inset-0 bg-black opacity-40 z-40" style={{ top: '56px', width: '72.5%' }} onClick={toggleSidebar} />}
             </div>
+
+            {isEditPageOpen && <div className="fixed inset-0 bg-black opacity-40 z-40" style={{ top: '56px', width: '72.5%' }} onClick={toggleSidebar} />}
+         
 
             {/* mobile menu */}
             <div className={`md:hidden ${isOpen ? 'block' : 'hidden'} mt-4 space-y-4`}>

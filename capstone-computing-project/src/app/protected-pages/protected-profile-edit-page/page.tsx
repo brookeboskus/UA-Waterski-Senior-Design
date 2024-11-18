@@ -315,8 +315,8 @@ export default function EditProfile() {
     }
 
     return (
-        <div className="relative w-[417px] h-full  h-[325px] bg-white z-40 overflow-y-auto" >
-            <div className="relative w-full h-full ">
+        <div className="relative w-[415px] h-full bg-white z-40 overflow-y-auto" >
+            <div className="relative w-full h-[325px] ">
                 {/* red header section */}
                 <div className="absolute left-0 top-0 w-full h-[320px] bg-[#9e1b32] z-10"></div>
 
@@ -331,11 +331,6 @@ export default function EditProfile() {
                     />
                 </div>
             </div>
-
-
-
-
-
 
             {/* Input Fields */}
             <div className="absolute p-5">
@@ -374,16 +369,6 @@ export default function EditProfile() {
                         placeholder={teamMember.Phone}
                     />
                 </div>
-
-
-
-
-
-
-
-
-
-
 
                 {/* Profile Photo */}
                 <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Profile Photo</div>
