@@ -1,14 +1,14 @@
 //a. officer roles b. Bylaws c. team history d. team drivers e. 
 
-interface TeamMember {
+interface TeamDriver {
     Fname: string;
     Lname: string;
-    GradYear: string;
-    MemberType: string;
-    Major: string;
-    PfpImage: string;
-    Email?: string;
-    Phone?: string;
+    // GradYear: string;
+    // MemberType: string;
+    // Major: string;
+    // PfpImage: string;
+    // Email?: string;
+    // Phone?: string;
     SlalomDriver?: string;
     TrickDriver?: string;
     JumpDriver?: string;
@@ -27,10 +27,14 @@ let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
 export default function ClubInfo() {
     // const [activeSection, setActiveSection] = useState<string>('roles');
-    const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+    //const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
     const [activeSection, setActiveSection] = useState<'roles' | 'bylaws' | 'drivers'>('roles');
     const [isBylawsExpanded, setIsBylawsExpanded] = useState<boolean>(false);
-    const [drivers, setDrivers] = useState<any[]>([]);
+    const [drivers, setDrivers] = useState<{ slalomDrivers: TeamDriver[]; trickDrivers: TeamDriver[]; jumpDrivers: TeamDriver[]}>({
+        slalomDrivers: [],
+        trickDrivers: [],
+        jumpDrivers: [],
+    });
     const [loading, setLoading] = useState<boolean>(true); // Track loading state
     const router = useRouter();
 
@@ -42,44 +46,34 @@ export default function ClubInfo() {
 
     useEffect(() => {
         const fetchDrivers = async () => {
-            //const fetchRoster = async () => {
-                try {
-                    // const token = localStorage.getItem('token');
-                    // if (!token) {
-                    //     throw new Error('No token available');
-                    // }
-        
-                    if (
-                        window.location.host.includes("brian") ||
-                        window.location.host.includes("lilly") ||
-                        window.location.host.includes("brooke") ||
-                        window.location.host.includes("anastasia")
-                    ) {
-                        const host = window.location.host;
-                        const baseDomain = "uawaterski.com";
-        
-                        if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
-                            APP_URL = `https://${host}/`;
-                        }
-        
-                        console.log("Current APP_URL:", APP_URL);
-                    } else {
-                        console.log("oops you coded wrong, what a dummy");
+            try {
+    
+                if (
+                    window.location.host.includes("brian") ||
+                    window.location.host.includes("lilly") ||
+                    window.location.host.includes("brooke") ||
+                    window.location.host.includes("anastasia")
+                ) {
+                    const host = window.location.host;
+                    const baseDomain = "uawaterski.com";
+    
+                    if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
+                        APP_URL = `https://${host}/`;
                     }
-                    // const response = await axios.get<TeamMember[]>(`${APP_URL}api/drivers`, {
-                    //     headers: {
-                    //         Authorization: `Bearer ${token}`,
-                    //     },
-                    //});
-                    const response = await axios.get<TeamMember[]>(`${APP_URL}api/drivers`);
-
-                    setTeamMembers(response.data);
-                } catch (error) {
-                    console.error('Failed to fetch team roster:', error);
-                    //router.push('/login-page');
-                } finally {
-                    setLoading(false);
+        
+                    console.log("Current APP_URL:", APP_URL);
+                } else {
+                    console.log("oops you coded wrong, what a dummy");
                 }
+
+                const response = await axios.get<{slalomDrivers: TeamDriver[]; trickDrivers: TeamDriver[]; jumpDrivers: TeamDriver[]}>(`${APP_URL}api/drivers`);
+
+                setDrivers(response.data);
+            } catch (error) {
+                console.error('Failed to fetch driver', error);
+            } finally {
+                setLoading(false);
+            }
         };
     
         fetchDrivers();
@@ -323,27 +317,21 @@ export default function ClubInfo() {
             <div>
                 <h2 className="text-3xl font-bold text-[#9E1B32] mb-4">Team Drivers</h2>
                 <p className="text-gray-700 leading-relaxed">
-                    Only team members who have been assessed and approved by an officer are allowed to drive the team boat. Please see the list below for the currently approved team drivers. 
+                    Only team members who have been assessed and approved by an officer are allowed to drive the team boat. Please see the list below for the currently approved team drivers.
+                </p>
+                <p className="text-2xl font-bold text-[#9E1B32] mb-2 mt-6">
+                    Slalom Drivers
                 </p>
                 {loading ? (
                     <p>Loading drivers...</p>
                 ) : (
                     <ul className="list-disc pl-6 text-gray-700">
-                        {drivers.length > 0 ? (
-                            drivers.map((driver, index) => (
+                        {drivers.slalomDrivers.length > 0 ? (
+                            drivers.slalomDrivers.map((driver, index) => (
                                 <li key={index}>
                                     <div className="flex items-center space-x-4">
-                                        <div className="relative w-12 h-12">
-                                            <Image
-                                                src={driver.PfpImage || '/default-pfp.jpg'} // Default image if none exists
-                                                alt={`${driver.Fname} ${driver.Lname}'s profile image`}
-                                                layout="fill"
-                                                objectFit="cover"
-                                                className="rounded-full"
-                                            />
-                                        </div>
                                         <div>
-                                            <strong>{driver.Fname} {driver.Lname}</strong>
+                                            {driver.Fname} {driver.Lname}
                                         </div>
                                     </div>
                                 </li>
@@ -353,6 +341,52 @@ export default function ClubInfo() {
                         )}
                     </ul>
                 )}
+
+                <p className="text-2xl font-bold text-[#9E1B32] mb-2 mt-6">
+                    Trick Drivers
+                </p>
+                {loading ? (
+                    <p>Loading drivers...</p>
+                ) : (
+                    <ul className="list-disc pl-6 text-gray-700">
+                        {drivers.trickDrivers.length > 0 ? (
+                            drivers.trickDrivers.map((driver, index) => (
+                                <li key={index}>
+                                    <div className="flex items-center space-x-4">
+                                        <div>
+                                            {driver.Fname} {driver.Lname}
+                                        </div>
+                                    </div>
+                                </li>
+                            ))
+                        ) : (
+                            <p className="text-gray-700">No approved drivers at the moment.</p>
+                        )}
+                    </ul>
+                )}
+
+                <p className="text-2xl font-bold text-[#9E1B32] mb-2 mt-6">
+                    Jump Drivers
+                </p>
+                {loading ? (
+                    <p>Loading drivers...</p>
+                ) : (
+                    <ul className="list-disc pl-6 text-gray-700">
+                        {drivers.jumpDrivers.length > 0 ? (
+                            drivers.jumpDrivers.map((driver, index) => (
+                                <li key={index}>
+                                    <div className="flex items-center space-x-4">
+                                        <div>
+                                            {driver.Fname} {driver.Lname}
+                                        </div>
+                                    </div>
+                                </li>
+                            ))
+                        ) : (
+                            <p className="text-gray-700">No approved drivers at the moment.</p>
+                        )}
+                    </ul>
+                )}  
             </div>
         ),
      

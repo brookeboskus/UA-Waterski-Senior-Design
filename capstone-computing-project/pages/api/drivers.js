@@ -9,11 +9,24 @@ const getDrivers = async (req, res) => {
         const [slalomDrivers] = await db.query(
             `SELECT Fname, Lname
             FROM User 
-            WHERE SlalomDriver = 'approved'`
+            WHERE SlalomDriver = 'Yes'`
+        );
+
+        const [trickDrivers] = await db.query(
+            `SELECT Fname, Lname
+            FROM User 
+            WHERE TrickDriver = 'Yes'`
+        );
+
+        const [jumpDrivers] = await db.query(
+            `SELECT Fname, Lname
+            FROM User 
+            WHERE JumpDriver = 'Yes'`
         );
 
         //Return list of approved drivers
-        res.status(200).jsoon(slalomDrivers);
+        res.status(200).json({slalomDrivers, trickDrivers, jumpDrivers });
+
     } catch (err) {
         console.error('Database error:', err);
         res.status(500).json({message: 'Failed to fetch drivers'});
