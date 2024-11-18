@@ -139,13 +139,13 @@ export default function EditProfile() {
     const [email, setEmail] = useState('');
     const [fname, setFname] = useState('');
     const [lname, setLname] = useState('');
-    const [selectedMajor, setSelectedMajor] = useState<{ value: string, label: string } | null>(null);
+    const [selectedMajor, setSelectedMajor] = useState('');
     const [slalomDriver, setslalomDriver] = useState('');
     const [trickDriver, settrickDriver] = useState('');
     const [jumpDriver, setjumpDriver] = useState('');
     const [phone, setPhone] = useState('');
     const [gradYear, setGradYear] = useState('');
-    const [status, setStatus] = useState<{ value: string, label: string } | null>(null);
+    const [memberType, setStatus] = useState('');
 
     const [PfpImage, setProfilePicture] = useState<File | null>(null);
 
@@ -237,7 +237,7 @@ export default function EditProfile() {
                 Major: selectedMajor,
                 Phone: phone,
                 Email: email,
-                Status: status,
+                MemberType: memberType,
                 JumpDriver: jumpDriver,
                 SlalomDriver: slalomDriver,
                 TrickDriver: trickDriver
@@ -378,8 +378,13 @@ export default function EditProfile() {
 
                         <Select
                             placeholder="Select your major"
-                            value={selectedMajor}
-                            onChange={setSelectedMajor}
+                            value={majors.find(option => option.value === selectedMajor)}
+                            onChange={(option) => {
+                                // Check if the option is not null or undefined
+                                if (option?.value) {
+                                    setSelectedMajor(option.value); // Store only the value
+                                }
+                            }}
                             options={majors}
                             className="w-full text-black"
                             required
@@ -388,9 +393,14 @@ export default function EditProfile() {
                         {/* Status */}
                         <div className="text-[#b9b9b9] text-[15px] font-bold">Status</div>
                         <Select
-                            placeholder="Select your Major"
-                            value={status}
-                            onChange={setStatus}
+                            placeholder="Select status"
+                            value={statusOptions.find(option => option.value === memberType)} 
+                            onChange={(option) => {
+                                // Check if the option is not null or undefined
+                                if (option?.value) {
+                                    setStatus(option.value); // Store only the value
+                                }
+                            }}
                             options={statusOptions}
                             className="w-full text-black"
                             required

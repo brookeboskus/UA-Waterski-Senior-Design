@@ -140,8 +140,7 @@ interface UserProfilePayload {
     GradYear?: string;
     Major?: string;
     Phone?: string;
-    Email?: string;
-    Status?: string;
+    MemberType?: string;
     JumpDriver?: string;
     SlalomDriver?: string;
     TrickDriver?: string;
@@ -175,9 +174,9 @@ const updateUserProfile = async (email: string, payload: UserProfilePayload) => 
         query += `Phone = ?, `;
         values.push(phone);
     }
-    if (payload.Status) {
-        query += `Status = ?, `;
-        values.push(payload.Status);
+    if (payload.MemberType) {
+        query += `MemberType = ?, `;
+        values.push(payload.MemberType);
     }
     if (payload.JumpDriver) {
         query += `JumpDriver = ?, `;
