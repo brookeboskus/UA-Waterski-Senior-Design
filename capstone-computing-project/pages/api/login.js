@@ -7,22 +7,22 @@ import db from '../../db.js';
 import csrf from 'csrf';
 
 
-//const tokens = new csrf();
+const tokens = new csrf();
 
 //const csrfMiddleware = csrfProtection();
 
 const login = async (req, res) => {
 
-    //const csrfToken = req.headers['csrf-token'];
+    const csrfToken = req.headers['csrf-token'];
 
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
 
-    // Validate the CSRF token
-    // if (!tokens.verify(process.env.JWT_SECRET, csrfToken)) {
-    //     return res.status(403).json({ message: 'Invalid CSRF token' }); // Reject if invalid
-    // }
+    //Validate the CSRF token
+    if (!tokens.verify(process.env.JWT_SECRET, csrfToken)) {
+        return res.status(403).json({ message: 'Invalid CSRF token' }); // Reject if invalid
+    }
 
     const { email, password } = req.body;
     console.log('req.body for login:', req.body);

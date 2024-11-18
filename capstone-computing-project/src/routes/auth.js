@@ -59,6 +59,7 @@ import { getSetList, registerReservation, deleteReservation } from '../../pages/
 import profile from '../../pages/api/profile.js';
 import drivers from '../../pages/api/drivers.js';
 import { getMeetingNotes, addMeetingNote, deleteMeetingNote } from '../../pages/api/meetingnotes.js';
+import csrfToken from '../../pages/api/csrf-token.js';
 
 const router = express.Router();
 
@@ -95,5 +96,6 @@ router.get('/meetingnotes', getMeetingNotes);
 router.post('/meetingnotes', upload.single('file'), addMeetingNote);
 router.delete('/meetingnotes/:id', deleteMeetingNote);
 
+//router.get('/csrf-token', getCSRFToken);
 // Export router for use in index.js
 export default router;
