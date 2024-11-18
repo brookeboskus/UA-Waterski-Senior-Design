@@ -14,8 +14,9 @@ Steps to get started:
 3. Ensure that you have a .env file located within the capstone-computing-project, and ensure that it contains the correct information for the project to run.
 > [!WARNING]
 > This project does not provide the .env file required to run, as it contains sensitive information. Contact the project manager for more information on the .env file.
-4. Run the command `npm i` within the terminal to install necessary dependencies for the project.
-5. Run the command `npm run dev` to begin the server. A localhost server running the website should now be available to browse the website.
+4. Run the command `npm start` within the terminal to start the localhost server. This concurrently runs 'node index.js' from package.json for future reference.
+5. If necessary and the localhost server did not start, run the command `npm i` within the terminal to install necessary dependencies for the project.
+
 
 ## Backend information
 
@@ -30,3 +31,5 @@ Persistent information such as set list times and team roster info is stored off
 ## Updating the site's content
 
 The site is connected to a private Google Sheets page that allows for the site administrators to update the page as they see fit. This content is dynamically pulled from the Google Sheet on page load and displayed to the user.
+
+A Headless CMS such as Strapi (Strapi.io) may be possible with this Project's tech stack.
