@@ -20,7 +20,7 @@ const statusOptions = [
 
 const grades = [
     { value: 'Freshman', label: 'Freshman' },
-    { value: 'Sophmore', label: 'Sophmore' },
+    { value: 'Sophomore', label: 'Sophomore' },
     { value: 'Junior', label: 'Junior' },
     { value: 'Senior', label: 'Senior' },
 ];
