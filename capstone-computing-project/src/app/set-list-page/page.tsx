@@ -5,6 +5,7 @@ import Image from 'next/image';
 import BlankPfp from '../img/blankpfp.svg';
 import { useRouter } from 'next/navigation';
 import ReactDOMServer from 'react-dom/server';
+import boatSVG from '../img/boat-svgrepo-com.svg';
 
 let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -25,14 +26,22 @@ interface TeamMember {
     PfpImage?: string;
     Email?: string;
     Phone?: string;
-    SlalomDriver?: string;
-    TrickDriver?: string;
-    JumpDriver?: string;
+    SlalomDriver?: string | null;
+    TrickDriver?: string | null;
+    JumpDriver?: string | null;
 }
 
 const Button = ({ onClick, className, children }: { onClick: () => void; className: string; children: React.ReactNode }) => {
+    // return (
+    //     <button className={`${className} p-2 rounded-md transition-all duration-300 hover:scale-105`} onClick={onClick}>
+    //         {children}
+    //     </button>
+    // );
     return (
-        <button className={`${className} p-2 rounded-md transition-all duration-300 hover:scale-105`} onClick={onClick}>
+        <button
+            className={`${className} w-full h-full block overflow-hidden text-ellipsis whitespace-pre-wrap`}
+            onClick={onClick}
+        >
             {children}
         </button>
     );
@@ -136,7 +145,7 @@ const deleteReservation = async (date: Date) => {
 };
 
 function popupContent(info: TeamMember) {
-    console.log(info);
+    // console.log(info);
     return (
         <div className="p-4">
             <div className="relative w-24 h-24 mx-auto mb-4">
@@ -170,6 +179,7 @@ function setUserInfo(info: TeamMember) {
     }
 };
 
+
 const SetListButton = ({
     date,
     reservationState,
@@ -186,6 +196,8 @@ const SetListButton = ({
     const [showModal, setShowModal] = useState(false);
     const [modalAction, setModalAction] = useState<'reserve' | 'cancel' | null>(null);
     const info = userInfo;
+
+    const info2: TeamMember | null = userInfo;
 
     const handleReservationAction = () => {
         if (modalAction === 'reserve') {
@@ -218,29 +230,70 @@ const SetListButton = ({
 
     let buttonClass, buttonText;
 
+
+
     if (date < new Date()) {
         buttonText = reservationState === 'reservedByYou'
-            ? 'Past reservation, reserved by you'
+            ? 'My past reservation' // past reservation made by you
             : reservationState === 'reservedBySomeoneElse'
-                ? `Past reservation, reserved by ${reservationName}`
-                : 'Past reservation, cannot register';
+                ? `${reservationName}'s past reservation` // past reservation made by someone else
+                : ''; // past reserveration
 
         buttonClass = reservationState === 'reservedByYou'
-            ? 'bg-[#404040] text-black cursor-not-allowed border-2 border-transparent hover:border-black w-50'
+            ? 'bg-[#855454] text-white cursor-not-allowed border-2 border-transparent hover:border-black w-50'
             : reservationState === 'reservedBySomeoneElse'
                 ? 'bg-[#404040] text-white cursor-not-allowed border-2 border-transparent hover:border-black w-50'
                 : 'bg-[#808080] text-black cursor-not-allowed border-2 border-transparent hover:border-black w-50';
     } else {
         buttonClass = reservationState === 'open'
-            ? 'bg-[#D7D7E0] text-black border-2 border-transparent hover:border-[#9e1b32] w-50'
+            ? 'bg-[#D7D7E0] text-black border-2 border-transparent hover:border-[#9e1b32] w-full h-full'
             : reservationState === 'reservedByYou'
-                ? 'bg-black text-white hover:border-[#808080] w-50'
-                : 'bg-[#800020] text-white cursor-not-allowed';
-        buttonText = reservationState === 'open'
-            ? 'Slot available'
-            : reservationState === 'reservedByYou'
-                ? 'Slot reserved by you. Click to cancel'
-                : `Reserved by ${reservationName}`;
+                ? 'bg-black text-white hover:border-[#808080] w-full h-full'
+                : 'bg-[#800020] text-white cursor-not-allowed w-full h-full';
+
+        if (info2 != null) {
+            if (info2.SlalomDriver === "Yes" || info2.JumpDriver === "Yes" || info2.TrickDriver === "Yes") {
+                console.log("YES IM A DRIVER")
+                console.log("BOAT SVG", boatSVG)
+
+                buttonText = reservationState === 'open'
+                    ? 'Slot available'
+                    : reservationState === 'reservedByYou'
+                        ? 'Click to cancel reservation' // slot reserved by user, not past reserveration time
+                        : (
+                            <>
+                                <div className="space-y-2">
+                                    <div>
+                                        <Image src={boatSVG.src} alt="Boat SVG" width={24} height={24} className="ml-16" />
+                                    </div>
+                                    <div>
+                                        Reserved by {reservationName}
+                                    </div>
+                                </div>
+
+
+                            </>
+                        );
+
+            } else {
+                console.log("NO IM NOT A DRIVER")
+                buttonText = reservationState === 'open'
+                    ? 'Slot available'
+                    : reservationState === 'reservedByYou'
+                        ? 'Slot reserved by you. Click to cancel'
+                        : `Reserved by ${reservationName}`;
+
+            }
+        } else {
+            console.log("NO INFO")
+            buttonText = reservationState === 'open'
+                ? 'Slot available'
+                : reservationState === 'reservedByYou'
+                    ? 'Slot reserved by you. Click to cancel'
+                    : `Reserved by ${reservationName}`;
+
+        }
+
     }
 
     return (
@@ -340,11 +393,11 @@ export default function SetListPage() {
                 ) {
                     const host = window.location.host;
                     const baseDomain = "uawaterski.com";
-        
+
                     if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
                         APP_URL = `https://${host}/`;
                     }
-        
+
                     console.log("Current APP_URL:", APP_URL);
                 } else {
                     console.log("oops you coded wrong, what a dummy");
@@ -385,11 +438,11 @@ export default function SetListPage() {
                 ) {
                     const host = window.location.host;
                     const baseDomain = "uawaterski.com";
-        
+
                     if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
                         APP_URL = `https://${host}/`;
                     }
-        
+
                     console.log("Current APP_URL:", APP_URL);
                 } else {
                     console.log("oops you coded wrong, what a dummy");
@@ -418,6 +471,91 @@ export default function SetListPage() {
         }
     }, [isLoggedIn, dateRangeEndString, dateRangeStartString]);
 
+    // function TimeTableBody() {
+    //     const rows = [];
+
+    //     const currentWeekDropDown = document.getElementById("dateRangeDropDown") as HTMLInputElement;
+    //     if (currentWeekDropDown == null) return;
+
+    //     const currentWeekStartDate = new Date(Number(currentWeekDropDown.value) * 1000);
+
+    //     for (let hour = 7; hour <= 17; hour++) {
+    //         for (let minutes = 0; minutes < 60; minutes += 15) {
+    //             if (hour === 17 && minutes !== 0) continue;
+
+    //             const cells = [];
+    //             const hourString = hour <= 12 ? hour.toString() : (hour - 12).toString();
+    //             const minuteString = minutes === 0 ? minutes.toString() + "0" : minutes.toString();
+    //             const amPMString = hour < 12 ? "am" : "pm";
+    //             const timeString = hourString + ":" + minuteString + amPMString;
+
+    //             cells.push(<td key={"timeCell_" + hour + "_" + minutes} className="text-right p-2 font-medium text-gray-600">{timeString}</td>);
+
+    //             for (let day = 0; day <= 6; day++) {
+    //                 const thisButtonDate = new Date(new Date(currentWeekStartDate).setDate(currentWeekStartDate.getDate() + day));
+    //                 thisButtonDate.setHours(hour, minutes, 0, 0);
+
+    //                 if (timesSet.has(thisButtonDate.getTime())) {
+    //                     const reservation = getReservationInfo(reservations, thisButtonDate);
+    //                     if (reservation) {
+    //                         const userInfo = getTeamMemberInfo(teamMembers, reservation.Email);
+    //                         const state = reservation.RegisteredBy === "you" ? "reservedByYou" : "reservedBySomeoneElse";
+    //                         const name = reservation.Fname + " " + reservation.Lname;
+    //                         cells.push(
+    //                             <td key={day + "_" + hour + "_" + minutes}>
+    //                                 <SetListButton
+    //                                     date={thisButtonDate}
+    //                                     reservationState={state}
+    //                                     reservationName={name}
+    //                                     userInfo={userInfo}
+    //                                     setIsPopupOpen={setIsPopupOpen}
+
+    //                                 />
+    //                             </td>
+    //                         );
+    //                     }
+    //                 } else {
+    //                     cells.push(
+    //                         <td key={day + "_" + hour + "_" + minutes}>
+    //                             <SetListButton
+    //                                 date={thisButtonDate}
+    //                                 reservationState="open"
+    //                                 reservationName=""
+    //                                 userInfo={null}
+    //                                 setIsPopupOpen={setIsPopupOpen}
+    //                             />
+    //                         </td>
+    //                     );
+    //                 }
+    //             }
+
+    //             rows.push(<tr key={"row_" + hour + "_" + minutes}>{cells}</tr>);
+    //         }
+    //     }
+
+    //     return <tbody>{rows}</tbody>;
+    // }
+
+    // function TimeTable() {
+    //     return (
+    //         <table className="bg-white rounded-lg h-full text-center overflow-hidden shadow-lg">
+    //             <thead>
+    //                 <tr className="text-center bg-[#A0A0A6] font-semibold text-lg text-gray-800">
+    //                     <th className="p-2 text-center">Time</th>
+    //                     <th className="p-2 text-center">Sunday</th>
+    //                     <th className="p-2 text-center">Monday</th>
+    //                     <th className="p-2 text-center">Tuesday</th>
+    //                     <th className="p-2 text-center">Wednesday</th>
+    //                     <th className="p-2 text-center">Thursday</th>
+    //                     <th className="p-2 text-center">Friday</th>
+    //                     <th className="p-2 text-center">Saturday</th>
+    //                 </tr>
+    //             </thead>
+    //             {TimeTableBody()}
+    //         </table>
+    //     );
+    // }
+
     function TimeTableBody() {
         const rows = [];
 
@@ -436,7 +574,14 @@ export default function SetListPage() {
                 const amPMString = hour < 12 ? "am" : "pm";
                 const timeString = hourString + ":" + minuteString + amPMString;
 
-                cells.push(<td key={"timeCell_" + hour + "_" + minutes} className="text-right p-2 font-medium text-gray-600">{timeString}</td>);
+                cells.push(
+                    <td
+                        key={"timeCell_" + hour + "_" + minutes}
+                        className="text-center font-medium text-gray-600 border border-gray-300"
+                    >
+                        {timeString}
+                    </td>
+                );
 
                 for (let day = 0; day <= 6; day++) {
                     const thisButtonDate = new Date(new Date(currentWeekStartDate).setDate(currentWeekStartDate.getDate() + day));
@@ -449,21 +594,20 @@ export default function SetListPage() {
                             const state = reservation.RegisteredBy === "you" ? "reservedByYou" : "reservedBySomeoneElse";
                             const name = reservation.Fname + " " + reservation.Lname;
                             cells.push(
-                                <td key={day + "_" + hour + "_" + minutes}>
+                                <td key={day + "_" + hour + "_" + minutes} className="border border-gray-300">
                                     <SetListButton
                                         date={thisButtonDate}
                                         reservationState={state}
                                         reservationName={name}
                                         userInfo={userInfo}
                                         setIsPopupOpen={setIsPopupOpen}
-                                  
                                     />
                                 </td>
                             );
                         }
                     } else {
                         cells.push(
-                            <td key={day + "_" + hour + "_" + minutes}>
+                            <td key={day + "_" + hour + "_" + minutes} className="border border-gray-300">
                                 <SetListButton
                                     date={thisButtonDate}
                                     reservationState="open"
@@ -476,7 +620,8 @@ export default function SetListPage() {
                     }
                 }
 
-                rows.push(<tr key={"row_" + hour + "_" + minutes}>{cells}</tr>);
+                rows.push(<tr key={"row_" + hour + "_" + minutes} className="h-20">{cells}</tr>);
+
             }
         }
 
@@ -485,23 +630,24 @@ export default function SetListPage() {
 
     function TimeTable() {
         return (
-            <table className="bg-white rounded-lg h-full text-center overflow-hidden shadow-lg">
+            <table className="table-fixed bg-white rounded-lg h-full text-center overflow-hidden shadow-lg border-collapse border border-gray-300 w-full">
                 <thead>
-                    <tr className="text-center bg-[#A0A0A6] font-semibold text-lg text-gray-800">
-                        <th className="p-2 text-center">Time</th>
-                        <th className="p-2 text-center">Sunday</th>
-                        <th className="p-2 text-center">Monday</th>
-                        <th className="p-2 text-center">Tuesday</th>
-                        <th className="p-2 text-center">Wednesday</th>
-                        <th className="p-2 text-center">Thursday</th>
-                        <th className="p-2 text-center">Friday</th>
-                        <th className="p-2 text-center">Saturday</th>
+                    <tr className="text-center bg-gray-300 font-semibold text-lg text-gray-800">
+                        <th className="p-2 text-center border border-gray-400">Time</th>
+                        <th className="p-2 text-center border border-gray-400">Sunday</th>
+                        <th className="p-2 text-center border border-gray-400">Monday</th>
+                        <th className="p-2 text-center border border-gray-400">Tuesday</th>
+                        <th className="p-2 text-center border border-gray-400">Wednesday</th>
+                        <th className="p-2 text-center border border-gray-400">Thursday</th>
+                        <th className="p-2 text-center border border-gray-400">Friday</th>
+                        <th className="p-2 text-center border border-gray-400">Saturday</th>
                     </tr>
                 </thead>
                 {TimeTableBody()}
             </table>
         );
     }
+
 
     const TimeTableWithDropDown = ({
         values,

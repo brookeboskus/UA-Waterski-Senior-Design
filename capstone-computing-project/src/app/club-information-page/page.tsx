@@ -1,19 +1,83 @@
-//a. officer roles b. Bi-laws c. team history d. team drivers e. 
+//a. officer roles b. Bylaws c. team history d. team drivers e. 
 
+interface TeamDriver {
+    Fname: string;
+    Lname: string;
+    // GradYear: string;
+    // MemberType: string;
+    // Major: string;
+    // PfpImage: string;
+    // Email?: string;
+    // Phone?: string;
+    SlalomDriver?: string;
+    TrickDriver?: string;
+    JumpDriver?: string;
+}
 
 "use client";
 import { useEffect, useState } from "react";
 import Image from 'next/image';
+import axios from 'axios';
 import waterskiClubInfoPhoto1 from '../../components/img/waterski-club-info-1 1.svg';
+import React from 'react';
+import Select, { SingleValue, MultiValue } from 'react-select';
+import { useRouter } from 'next/navigation';
+
+let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
 export default function ClubInfo() {
     // const [activeSection, setActiveSection] = useState<string>('roles');
-    const [activeSection, setActiveSection] = useState<'roles' | 'bilaws' | 'drivers'>('roles');
+    //const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+    const [activeSection, setActiveSection] = useState<'roles' | 'bylaws' | 'drivers'>('roles');
     const [isBylawsExpanded, setIsBylawsExpanded] = useState<boolean>(false);
+    const [drivers, setDrivers] = useState<{ slalomDrivers: TeamDriver[]; trickDrivers: TeamDriver[]; jumpDrivers: TeamDriver[]}>({
+        slalomDrivers: [],
+        trickDrivers: [],
+        jumpDrivers: [],
+    });
+    const [loading, setLoading] = useState<boolean>(true); // Track loading state
+    const router = useRouter();
 
     // Set page title
     useEffect(() => {
         document.title = 'UA Waterski - Club Info';
+
+    }, []);
+
+    useEffect(() => {
+        const fetchDrivers = async () => {
+            try {
+    
+                if (
+                    window.location.host.includes("brian") ||
+                    window.location.host.includes("lilly") ||
+                    window.location.host.includes("brooke") ||
+                    window.location.host.includes("anastasia")
+                ) {
+                    const host = window.location.host;
+                    const baseDomain = "uawaterski.com";
+    
+                    if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
+                        APP_URL = `https://${host}/`;
+                    }
+        
+                    console.log("Current APP_URL:", APP_URL);
+                } else {
+                    console.log("oops you coded wrong, what a dummy");
+                }
+
+                const response = await axios.get<{slalomDrivers: TeamDriver[]; trickDrivers: TeamDriver[]; jumpDrivers: TeamDriver[]}>(`${APP_URL}api/drivers`);
+
+                setDrivers(response.data);
+            } catch (error) {
+                console.error('Failed to fetch driver', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+    
+        fetchDrivers();
+            
     }, []);
 
     const toggleBylaws = () => {
@@ -44,18 +108,18 @@ export default function ClubInfo() {
                 <p className="pl-4">In the event of a vacancy within the Executive Body, a new member will be elected, by popular vote, at the next scheduled team meeting.</p>
             </div>
         ),
-        bilaws: (
+        bylaws: (
             <div>
-                <h2 className="text-3xl font-bold text-[#9E1B32] mb-4">Bi-Laws</h2>
+                <h2 className="text-3xl font-bold text-[#9E1B32] mb-4">Bylaws</h2>
                 <p className="text-gray-700 leading-relaxed mb-6">
-                    The Constitution and Bi-Laws of the University of Alabama Waterski Team outline the rules and regulations that govern the team’s operations and activities.
+                    The Constitution and Bylaws of the University of Alabama Waterski Team outline the rules and regulations that govern the team’s operations and activities.
                 </p>
 
                 <button
                     className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-400 mb-6"
                     onClick={toggleBylaws}
                 >
-                    {isBylawsExpanded ? "Collapse Bi-Laws" : "Expand Bi-Laws"}
+                    {isBylawsExpanded ? "Collapse Bylaws" : "Expand Bylaws"}
                 </button>
                 <div className="border-t border-gray-700 my-2"></div>
                 <br></br>
@@ -253,8 +317,76 @@ export default function ClubInfo() {
             <div>
                 <h2 className="text-3xl font-bold text-[#9E1B32] mb-4">Team Drivers</h2>
                 <p className="text-gray-700 leading-relaxed">
-                    Only team members who have been assessed and approved by an officer are allowed to drive the team boat.
+                    Only team members who have been assessed and approved by an officer are allowed to drive the team boat. Please see the list below for the currently approved team drivers.
                 </p>
+                <p className="text-2xl font-bold text-[#9E1B32] mb-2 mt-6">
+                    Slalom Drivers
+                </p>
+                {loading ? (
+                    <p>Loading drivers...</p>
+                ) : (
+                    <ul className="list-disc pl-6 text-gray-700">
+                        {drivers.slalomDrivers.length > 0 ? (
+                            drivers.slalomDrivers.map((driver, index) => (
+                                <li key={index}>
+                                    <div className="flex items-center space-x-4">
+                                        <div>
+                                            {driver.Fname} {driver.Lname}
+                                        </div>
+                                    </div>
+                                </li>
+                            ))
+                        ) : (
+                            <p className="text-gray-700">No approved drivers at the moment.</p>
+                        )}
+                    </ul>
+                )}
+
+                <p className="text-2xl font-bold text-[#9E1B32] mb-2 mt-6">
+                    Trick Drivers
+                </p>
+                {loading ? (
+                    <p>Loading drivers...</p>
+                ) : (
+                    <ul className="list-disc pl-6 text-gray-700">
+                        {drivers.trickDrivers.length > 0 ? (
+                            drivers.trickDrivers.map((driver, index) => (
+                                <li key={index}>
+                                    <div className="flex items-center space-x-4">
+                                        <div>
+                                            {driver.Fname} {driver.Lname}
+                                        </div>
+                                    </div>
+                                </li>
+                            ))
+                        ) : (
+                            <p className="text-gray-700">No approved drivers at the moment.</p>
+                        )}
+                    </ul>
+                )}
+
+                <p className="text-2xl font-bold text-[#9E1B32] mb-2 mt-6">
+                    Jump Drivers
+                </p>
+                {loading ? (
+                    <p>Loading drivers...</p>
+                ) : (
+                    <ul className="list-disc pl-6 text-gray-700">
+                        {drivers.jumpDrivers.length > 0 ? (
+                            drivers.jumpDrivers.map((driver, index) => (
+                                <li key={index}>
+                                    <div className="flex items-center space-x-4">
+                                        <div>
+                                            {driver.Fname} {driver.Lname}
+                                        </div>
+                                    </div>
+                                </li>
+                            ))
+                        ) : (
+                            <p className="text-gray-700">No approved drivers at the moment.</p>
+                        )}
+                    </ul>
+                )}  
             </div>
         ),
      
@@ -294,10 +426,10 @@ export default function ClubInfo() {
                             Officer Roles
                         </button>
                         <button
-                            className={`px-4 py-2 mx-2 ${activeSection === 'bilaws' ? 'bg-[#9E1B32] text-white' : 'bg-white text-[#9E1B32] border border-[#9E1B32]'}`}
-                            onClick={() => setActiveSection('bilaws')}
+                            className={`px-4 py-2 mx-2 ${activeSection === 'bylaws' ? 'bg-[#9E1B32] text-white' : 'bg-white text-[#9E1B32] border border-[#9E1B32]'}`}
+                            onClick={() => setActiveSection('bylaws')}
                         >
-                            Bi-Laws
+                            Bylaws
                         </button>
                         <button
                             className={`px-4 py-2 mx-2 ${activeSection === 'drivers' ? 'bg-[#9E1B32] text-white' : 'bg-white text-[#9E1B32] border border-[#9E1B32]'}`}

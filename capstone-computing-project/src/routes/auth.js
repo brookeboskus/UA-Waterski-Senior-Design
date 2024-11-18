@@ -57,6 +57,7 @@ import signup from '../../pages/api/signup.js';
 import getRoster from '../../pages/api/roster.js';
 import { getSetList, registerReservation, deleteReservation } from '../../pages/api/setlist.js';
 import profile from '../../pages/api/profile.js';
+import drivers from '../../pages/api/drivers.js';
 import { getMeetingNotes, addMeetingNote, deleteMeetingNote } from '../../pages/api/meetingnotes.js';
 
 const router = express.Router();
@@ -86,6 +87,7 @@ router.post('/signup', upload.single('pfpimage'), signup);
 router.get('/roster', checkAuth, getRoster);
 router.get('/profile', profile);
 router.get('/setlist', getSetList);
+router.get('/drivers', drivers);
 router.post('/setlist', registerReservation);
 router.delete('/setlist', deleteReservation);
 
