@@ -48,6 +48,7 @@ export default function Navbar() {
     const toggleEditPage = () => {
         setIsEditPageOpen(!isEditPageOpen);
         setIsSidebarOpen(!isSidebarOpen);
+        fetchProfile();
        
 
     };
