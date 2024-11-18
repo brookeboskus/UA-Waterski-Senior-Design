@@ -124,6 +124,7 @@ export default function LoginPage() {
     const router = useRouter();
     const [csrfToken, setCsrfToken] = useState('');
     const [error, setError ] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
 
     let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -134,8 +135,10 @@ export default function LoginPage() {
             try {
                 const response = await axios.get(`${APP_URL}api/csrf-token`);
                 setCsrfToken(response.data.csrfToken);
+                setIsLoading(false);
             } catch (error) {
                 console.error ('Error fetching CSRF token in the login-page:', error);
+                setIsLoading(false);
             }
         };
 
@@ -181,6 +184,12 @@ export default function LoginPage() {
         } else {
             console.log("oops you coded wrong, what a dummy");
         }
+
+            // Ensure CSRF token is present before proceeding
+            // if (!csrfToken) {
+            //     console.error('CSRF token is missing');
+            //     return;  // Prevent the request from being sent if CSRF token is missing
+            // }
 
         const endpoint = isLogin ? `${APP_URL}api/login` : `${APP_URL}api/signup`;
         
@@ -365,7 +374,7 @@ export default function LoginPage() {
                                 </div>
                             )}
 
-                            <button type="submit" className="w-full bg-[white] text-[black] py-2 rounded-full font-bold hover:text-[#9E1B32]">
+                            <button type="submit" className="w-full bg-[white] text-[black] py-2 rounded-full font-bold hover:text-[#9E1B32]" disabled={isLoading}>
                                 {isLogin ? 'Sign In' : 'Sign Up'}
                             </button>
                         </form>
