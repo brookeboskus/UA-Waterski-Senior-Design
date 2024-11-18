@@ -205,7 +205,7 @@ export default function Home() {
                             <Image
                                 src={SkiBamaLogo}
                                 alt="Ski Bama Logo"
-                                className="h-200 w-200 md:h-100 md:w-100 lg:h-200 lg:w-200 object-contain"
+                                className="h-200 w-200 md:h-100 md:w-100 lg:h-200 lg:w-200 object-contain animate-bounce"
                                 priority={true}
                             />
                         </div>
