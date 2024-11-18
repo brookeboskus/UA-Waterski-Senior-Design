@@ -34,6 +34,7 @@ export default function Navbar() {
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
+    
     };
 
     const closeMenu = () => {
@@ -46,11 +47,16 @@ export default function Navbar() {
 
     const toggleEditPage = () => {
         setIsEditPageOpen(!isEditPageOpen);
+        setIsSidebarOpen(!isSidebarOpen);
+       
+
     };
 
     const handleClick = () => {
-        fetchProfile();
+
         toggleEditPage();
+        setIsSidebarOpen(!isSidebarOpen);
+       
     }
     // fetch the profile data including PfpImage and MemberType
     const fetchProfile = async () => {
@@ -59,6 +65,8 @@ export default function Navbar() {
             if (!token) {
                 throw new Error('No token found');
             }
+
+            console.log("did we arrive?");
 
 
             if (

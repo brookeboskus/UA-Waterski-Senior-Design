@@ -144,6 +144,7 @@ interface UserProfilePayload {
     JumpDriver?: string;
     SlalomDriver?: string;
     TrickDriver?: string;
+    PfpImage?: File;
 }
 
 const updateUserProfile = async (email: string, payload: UserProfilePayload) => {
@@ -191,6 +192,11 @@ const updateUserProfile = async (email: string, payload: UserProfilePayload) => 
         values.push(payload.TrickDriver);
     }
 
+    if(payload.PfpImage){
+        query += 'PfpImage = ?, ';
+        const imageBuffer = payload.PfpImage ? Buffer.from(payload.PfpImage, 'base64') : null;
+        values.push(imageBuffer);
+    }
     query = query.slice(0, -2); 
     query += ` WHERE Email = ?`;
     values.push(email);

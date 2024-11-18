@@ -18,10 +18,10 @@ const statusOptions = [
 ];
 
 const grades = [
-{value: 'Freshman', label: 'Freshman'},
-{value: 'Sophmore', label: 'Sophmore'},
-{value: 'Junior' , label: 'Junior'},
-{value: 'Senior', label: 'Senior'},
+    { value: 'Freshman', label: 'Freshman' },
+    { value: 'Sophmore', label: 'Sophmore' },
+    { value: 'Junior', label: 'Junior' },
+    { value: 'Senior', label: 'Senior' },
 ];
 
 
@@ -146,8 +146,12 @@ export default function EditProfile() {
     const [phone, setPhone] = useState('');
     const [gradYear, setGradYear] = useState('');
     const [memberType, setStatus] = useState('');
+    const [isUserUpdated, setIsUserUpdated] = useState(false);
 
-    const [PfpImage, setProfilePicture] = useState<File | null>(null);
+
+
+
+    const [pfpImage, setProfilePicture] = useState<File | null>(null);
 
     const [teamMember, setTeamMember] = useState<TeamMember | null>(null);
 
@@ -168,6 +172,8 @@ export default function EditProfile() {
                     setProfilePicture(file);
                 }
             };
+
+            
         }
     };
 
@@ -222,7 +228,6 @@ export default function EditProfile() {
 
     const updateProfile = async (e: React.FormEvent) => {
         e.preventDefault();
-
         try {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -240,7 +245,8 @@ export default function EditProfile() {
                 MemberType: memberType,
                 JumpDriver: jumpDriver,
                 SlalomDriver: slalomDriver,
-                TrickDriver: trickDriver
+                TrickDriver: trickDriver,
+                PfpImage: pfpImage
             };
 
             const response = await fetch('/api/updateProfile', {
@@ -256,6 +262,9 @@ export default function EditProfile() {
 
             if (response.ok) {
                 console.log('Profile updated successfully!');
+                setIsUserUpdated(!isUserUpdated);
+
+
             } else {
                 console.error('Failed to update profile:', data.error || 'Error occurred.');
             }
@@ -285,52 +294,49 @@ export default function EditProfile() {
                     />
                 </div>
             </div>
-            
 
 
-              
 
 
-                    {/* Input Fields */}
-                    <div className="absolute p-5">
-                        {/* First Name */}
-                        <div className="text-[#b9b9b9] text-[15px] font-bold">First Name</div>
-                        <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
-                            <input
-                                type="text"
-                                value={fname}
-                                onChange={(e) => setFname(e.target.value)}
-                                className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
-                                placeholder={teamMember.Fname}
-                            />
-                        </div>
-
-                        {/* Last Name */}
-                        <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Last Name</div>
-                        <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
-                            <input
-                                type="text"
-                                value={lname}
-                                onChange={(e) => setLname(e.target.value)}
-                                className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
-                                placeholder={teamMember.Lname}
-                            />
-                        </div>
-
-                        {/* Phone Number */}
-                        <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Phone Number</div>
-                        <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
-                            <input
-                                type="text"
-                                value={phone}
-                                onChange={(e) => setPhone(e.target.value)}
-                                className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
-                                placeholder={teamMember.Phone}
-                            />
-                        </div>
 
 
-                   
+            {/* Input Fields */}
+            <div className="absolute p-5">
+                {/* First Name */}
+                <div className="text-[#b9b9b9] text-[15px] font-bold">First Name</div>
+                <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
+                    <input
+                        type="text"
+                        value={fname}
+                        onChange={(e) => setFname(e.target.value)}
+                        className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
+                        placeholder={teamMember.Fname}
+                    />
+                </div>
+
+                {/* Last Name */}
+                <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Last Name</div>
+                <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
+                    <input
+                        type="text"
+                        value={lname}
+                        onChange={(e) => setLname(e.target.value)}
+                        className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
+                        placeholder={teamMember.Lname}
+                    />
+                </div>
+
+                {/* Phone Number */}
+                <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Phone Number</div>
+                <div className="w-[380px] h-[68px] bg-white rounded-[20px] border-2 border-[#9e1b32] mt-1">
+                    <input
+                        type="text"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="w-full h-full text-black text-[15px] font-bold bg-transparent outline-none p-4"
+                        placeholder={teamMember.Phone}
+                    />
+                </div>
 
 
 
@@ -339,136 +345,145 @@ export default function EditProfile() {
 
 
 
-                        {/* Profile Photo */}
-                        <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Profile Photo</div>
-                        <div className="w-[380px] h-[68px] bg-gray-200 rounded-[20px] border-2 border-[#9e1b32] mt-1 flex items-center">
-                            <label className=" w-[380px] h-[68px]  text-black  font-bold  outline-none flex justify-center p-0">
-                                <span className="text-gray-700 mt-5 p-0">Click to Upload</span>
-                                <input
-                                    type="file"
-                                    accept=".png, .jpg, .jpeg, .webp"
-                                    onChange={handleFileChange}
-                                    className="hidden"
-                                />
-                            </label>
-                            {PfpImage && <span className="ml-2 text-gray-600">{PfpImage.name}</span>}
-                        </div>
 
-                        {/* grad Year*/}
-                        <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Grad Year</div>
 
-                        <Select
-                            placeholder="Select your grade"
-                        
-                            value={grades.find(option => option.value === gradYear)}
-                            onChange={(option) => {
-                                // Check if the option is not null or undefined
-                                if (option?.value) {
-                                    setGradYear(option.value); // Store only the value
-                                }
-                            }}
-                            options={grades}
-                            className="w-full text-black"
-                            required
-                            
+
+                {/* Profile Photo */}
+                <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Profile Photo</div>
+                <div className="w-[380px] h-[68px] bg-gray-200 rounded-[20px] border-2 border-[#9e1b32] mt-1 flex items-center">
+                    <label className=" w-[380px] h-[68px]  text-black  font-bold  outline-none flex justify-center p-0">
+                        <span className="text-gray-700 mt-5 p-0">Click to Upload</span>
+                        <input
+                            type="file"
+                            accept=".png, .jpg, .jpeg, .webp"
+                            onChange={handleFileChange}
+                            className="hidden"
                         />
+                    </label>
+                    {pfpImage && <span className="ml-2 text-gray-600">{pfpImage.name}</span>}
+                </div>
 
-                        {/* Major */}
-                        <div className="text-[#b9b9b9] text-[15px] font-bold">Major</div>
+                {/* grad Year*/}
+                <div className="text-[#b9b9b9] text-[15px] font-bold mt-5">Grad Year</div>
 
-                        <Select
-                            placeholder="Select your major"
-                            value={majors.find(option => option.value === selectedMajor)}
-                            onChange={(option) => {
-                                // Check if the option is not null or undefined
-                                if (option?.value) {
-                                    setSelectedMajor(option.value); // Store only the value
-                                }
-                            }}
-                            options={majors}
-                            className="w-full text-black"
-                            required
-                        />
+                <Select
+                    placeholder="Select your grade"
 
-                        {/* Status */}
-                        <div className="text-[#b9b9b9] text-[15px] font-bold">Status</div>
-                        <Select
-                            placeholder="Select status"
-                            value={statusOptions.find(option => option.value === memberType)} 
-                            onChange={(option) => {
-                                // Check if the option is not null or undefined
-                                if (option?.value) {
-                                    setStatus(option.value); // Store only the value
-                                }
-                            }}
-                            options={statusOptions}
-                            className="w-full text-black"
-                            required
-                        />
+                    value={grades.find(option => option.value === gradYear)}
+                    onChange={(option) => {
+                        // Check if the option is not null or undefined
+                        if (option?.value) {
+                            setGradYear(option.value); // Store only the value
+                        }
+                    }}
+                    options={grades}
+                    className="w-full text-black"
+                    required
 
-                        {/* Slalom Driver */}
-                        <div className="text-[#b9b9b9] text-[15px] font-bold">Slalom Driver</div>
-                        <Select
-                            placeholder="Approved?"
-                            value={driverApproved.find(option => option.value === slalomDriver)} // Find option by value
+                />
 
-                            onChange={(option) => {
-                                // Check if the option is not null or undefined
-                                if (option?.value) {
-                                    setslalomDriver(option.value); // Store only the value
-                                }
-                            }}
-                            options={driverApproved}
-                            className="w-full text-black"
-                            required
-                        />
+                {/* Major */}
+                <div className="text-[#b9b9b9] text-[15px] font-bold">Major</div>
 
+                <Select
+                    placeholder="Select your major"
+                    value={majors.find(option => option.value === selectedMajor)}
+                    onChange={(option) => {
+                        // Check if the option is not null or undefined
+                        if (option?.value) {
+                            setSelectedMajor(option.value); // Store only the value
+                        }
+                    }}
+                    options={majors}
+                    className="w-full text-black"
+                    required
+                />
 
-                        {/* Trick Driver */}
-                        <div className="text-[#b9b9b9] text-[15px] font-bold">Trick Driver</div>
-                        <Select
-                            placeholder="Approved?"
-                            value={driverApproved.find(option => option.value === trickDriver)} // Find option by value
-                            onChange={(option) => {
-                                // Check if the option is not null or undefined
-                                if (option?.value) {
-                                    settrickDriver(option.value); // Store only the value
-                                }
-                            }}
-                            options={driverApproved}
-                            className="w-full text-black"
-                            required
-                        />
+                {/* Status */}
+                <div className="text-[#b9b9b9] text-[15px] font-bold">Status</div>
+                <Select
+                    placeholder="Select status"
+                    value={statusOptions.find(option => option.value === memberType)}
+                    onChange={(option) => {
+                        // Check if the option is not null or undefined
+                        if (option?.value) {
+                            setStatus(option.value); // Store only the value
+                        }
+                    }}
+                    options={statusOptions}
+                    className="w-full text-black"
+                    required
+                />
 
-                        {/* Jump Driver */}
-                        <div className="text-[#b9b9b9] text-[15px] font-bold">Jump Driver</div>
-                        <Select
-                            placeholder="Approved?"
-                            value={driverApproved.find(option => option.value === jumpDriver)} // Find option by value
-                            onChange={(option) => {
-                                // Check if the option is not null or undefined
-                                if (option?.value) {
-                                    setjumpDriver(option.value); // Store only the value
-                                }
-                            }}
-                            options={driverApproved}
-                            className="w-full text-black"
-                            required
-                        />
+                {/* Slalom Driver */}
+                <div className="text-[#b9b9b9] text-[15px] font-bold">Slalom Driver</div>
+                <Select
+                    placeholder="Approved?"
+                    value={driverApproved.find(option => option.value === slalomDriver)} // Find option by value
+
+                    onChange={(option) => {
+                        // Check if the option is not null or undefined
+                        if (option?.value) {
+                            setslalomDriver(option.value); // Store only the value
+                        }
+                    }}
+                    options={driverApproved}
+                    className="w-full text-black"
+                    required
+                />
 
 
+                {/* Trick Driver */}
+                <div className="text-[#b9b9b9] text-[15px] font-bold">Trick Driver</div>
+                <Select
+                    placeholder="Approved?"
+                    value={driverApproved.find(option => option.value === trickDriver)} // Find option by value
+                    onChange={(option) => {
+                        // Check if the option is not null or undefined
+                        if (option?.value) {
+                            settrickDriver(option.value); // Store only the value
+                        }
+                    }}
+                    options={driverApproved}
+                    className="w-full text-black"
+                    required
+                />
 
-                  
+                {/* Jump Driver */}
+                <div className="text-[#b9b9b9] text-[15px] font-bold">Jump Driver</div>
+                <Select
+                    placeholder="Approved?"
+                    value={driverApproved.find(option => option.value === jumpDriver)} // Find option by value
+                    onChange={(option) => {
+                        // Check if the option is not null or undefined
+                        if (option?.value) {
+                            setjumpDriver(option.value); // Store only the value
+                        }
+                    }}
+                    options={driverApproved}
+                    className="w-full text-black"
+                    required
+                />
 
-                    {/* Save Button */}
 
 
 
-                    <div onClick={updateProfile} className="w-[380px] h-[57px] bg-[#9e1b32] rounded-[30px] absolute left-[18px] bottom-[125px]">
-                        <button className="w-full h-full text-[#f7f7f7] text-xl font-bold font-['Inter']">Save</button>
-                    </div>
-                 
-                    <div>
+
+                {/* Save Button */}
+
+
+
+                <div
+                    onClick={updateProfile}
+                    className={`w-[380px] h-[57px] rounded-[30px] absolute left-[18px] bottom-[125px] ${isUserUpdated ? 'bg-gray-400' : 'bg-[#9e1b32]' // Change color based on state
+                        }`}
+                >
+                    <button className="w-full h-full text-[#f7f7f7] text-xl font-bold font-['Inter']">
+                        {isUserUpdated ? 'Changes Saved' : 'Save'}
+                    </button>
+                </div>
+
+                <div>
                 </div>
                 <br>
                 </br>
@@ -486,7 +501,7 @@ export default function EditProfile() {
                 </br>
                 <br>
                 </br>
-                
+
             </div>
         </div >
 
