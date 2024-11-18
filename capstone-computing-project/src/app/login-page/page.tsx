@@ -8,10 +8,6 @@ import Image from 'next/image';
 import WaterskiImage from '../img/loginSkiIMG.svg';
 import SkiBamaLogo from '../img/skibamalogo.svg';
 
-let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
-
-
-
 // list of majors offered by UA, think we should take out minors for now. our database only holds one major, but ppl can have multiple as well.
 const majors = [
     { value: 'Accounting, BS', label: 'Accounting, BS' },
@@ -200,14 +196,10 @@ export default function LoginPage() {
             }
             );
         }
-
+        
         const payload = isLogin
-            ? { email, password, csrfToken }
-            : { email, password, csrfToken, fname, lname, cwid, phone, gradYear, major: selectedMajor?.value || '', pfpimage: pfpBase64, };
-
-        // const payload = isLogin
-        // ? { email, password }
-        // : { email, password, fname, lname, cwid, phone, gradYear, major: selectedMajor?.value || '', pfpimage: pfpBase64, };
+        ? { email, password }
+        : { email, password, fname, lname, cwid, phone, gradYear, major: selectedMajor?.value || '', pfpimage: pfpBase64, };
 
         try {
             const response = await axios.post(endpoint, payload, {

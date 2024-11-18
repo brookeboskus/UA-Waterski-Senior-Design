@@ -1,4 +1,3 @@
-
 import express from 'express';
 import bodyParser from 'body-parser';
 import authRoutes from './src/routes/auth.js';
@@ -14,7 +13,6 @@ const app = express();
 
 const corsOptions = {
     origin: process.env.NEXT_PUBLIC_APP_URL,
-    //origin: 'https://brooke.uawaterski.com',
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'csrf-token'],
     credentials: true,
@@ -27,23 +25,6 @@ app.use(bodyParser.json());
 
 app.use(csrfTokenRoutes);
 
-// Initialize CSRF protection
-// const csrfMiddleware = csrfProtection({
-//     // Customize settings here if needed, such as error handling
-//     cookie: { httpOnly: true, secure: process.env.NODE_ENV === 'production' },  // Secure cookies
-// });
-
-//const token = new csrf();
-
-
-//const csrfMiddleware = csrf();
-
-// app.get('/api/csrf-token', (req, res) => {
-//     console.log("CSRF token request received");
-//     const csrfToken = token.create(process.env.JWT_SECRET);
-//     res.json({ csrfToken});
-// });
-
 app.use('/auth', authRoutes);
 
 app.use((err, req, res, next) => {
@@ -53,8 +34,3 @@ app.use((err, req, res, next) => {
         next(err);
     }
 });
-
-// const PORT = 3000; //localhost
-// app.listen(PORT, () => {
-//     console.log(`Server running on port ${PORT}`);
-// });
