@@ -1,0 +1,15 @@
+{
+    "redirects": [
+        {
+            "source": "/",
+            "has": [
+                {
+                    "type": "host",
+                    "value": "uawaterski.com"
+                }
+            ],
+            "destination": "https://www.uawaterski.com",
+            "permanent": true
+        }
+    ]
+}
