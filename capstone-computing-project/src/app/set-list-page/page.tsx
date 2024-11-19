@@ -244,7 +244,9 @@ const SetListButton = ({
                 // ? `${reservationName}'s past reservation` // past reservation made by someone else
                 ? (
                     <div className="w-full h-full">
-                        <span className="hidden sm:inline">{reservationName}'s past reservation</span>
+                        {/* <span className="hidden sm:inline">{reservationName}'s past reservation</span> */}
+                        <span className="hidden sm:inline">{`${reservationName}'s past reservation`}</span>
+
                     </div>
                 )
                 : ''; // past reserveration
