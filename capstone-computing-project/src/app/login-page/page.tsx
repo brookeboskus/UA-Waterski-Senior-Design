@@ -305,7 +305,7 @@ export default function LoginPage() {
                                         placeholder="First Name"
                                         value={fname}
                                         onChange={(e) => setFname(e.target.value)}
-                                        className="col-span-2 md:col-span-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
+                                        className="col-span-2 md:col-span-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
                                         required
                                     />
                                     <input
@@ -313,7 +313,7 @@ export default function LoginPage() {
                                         placeholder="Last Name"
                                         value={lname}
                                         onChange={(e) => setLname(e.target.value)}
-                                        className="col-span-2 md:col-span-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
+                                        className="col-span-2 md:col-span-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
                                         required
                                     />
                                     <input
@@ -321,7 +321,7 @@ export default function LoginPage() {
                                         placeholder="CWID"
                                         value={cwid}
                                         onChange={(e) => setCwid(e.target.value)}
-                                        className="col-span-2 md:col-span-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
+                                        className="col-span-2 md:col-span-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
                                         required
                                     />
                                     <input
@@ -329,14 +329,14 @@ export default function LoginPage() {
                                         placeholder="Phone Number"
                                         value={phone}
                                         onChange={(e) => setPhone(e.target.value)}
-                                        className="col-span-2 md:col-span-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
+                                        className="col-span-2 md:col-span-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
                                         required
                                     />
                                     <div className="col-span-2">
                                         <select
                                             value={gradYear}
                                             onChange={(e) => setGradYear(e.target.value)}
-                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#49A097]"
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
                                             required
                                         >
                                             <option value="Freshman">Freshman</option>
@@ -356,7 +356,7 @@ export default function LoginPage() {
                                         />
                                     </div>
                                     <div className="col-span-2">
-                                        <label className="w-full cursor-pointer border-2 border-[#49A097] rounded-lg p-2 flex justify-between items-center">
+                                        <label className="w-full cursor-pointer border-2 border-[#9e1b32] rounded-lg p-2 flex justify-between items-center">
                                             <span className="text-gray-700">Upload Profile Picture</span>
                                             <input
                                                 type="file"
