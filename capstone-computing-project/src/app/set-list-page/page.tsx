@@ -47,16 +47,37 @@ const Button = ({ onClick, className, children }: { onClick: () => void; classNa
     );
 };
 
+// function Popup({ children, isOpen, onClose }: { children: React.ReactNode; isOpen: boolean; onClose: () => void }) {
+//     return (
+//         <div className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+//             <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+//                 {children}
+//                 <button onClick={onClose} className="mt-4 w-full bg-[#931b32] text-white py-2 rounded-lg hover:bg-[#8b0000]">Close</button>
+//             </div>
+//         </div>
+//     );
+// };
+
 function Popup({ children, isOpen, onClose }: { children: React.ReactNode; isOpen: boolean; onClose: () => void }) {
     return (
-        <div className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+        <div
+            className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+                }`}
+            style={{ zIndex: 1000 }} 
+        >
             <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
                 {children}
-                <button onClick={onClose} className="mt-4 w-full bg-[#931b32] text-white py-2 rounded-lg hover:bg-[#8b0000]">Close</button>
+                <button
+                    onClick={onClose}
+                    className="mt-4 w-full bg-[#931b32] text-white py-2 rounded-lg hover:bg-[#8b0000]"
+                >
+                    Close
+                </button>
             </div>
         </div>
     );
 };
+
 
 const makeReservation = async (date: Date) => {
     try {
@@ -307,11 +328,12 @@ const SetListButton = ({
                         : `Reserved by ${reservationName}`;
 
             }
-        } else {
+        } 
+        else {
             console.log("NO INFO");
             buttonText = reservationState === 'open'
                 ? (
-                    <div className={`w-full h-full flex items-center justify-center ${reservationState === 'open' ? 'bg-green-400 sm:bg-transparent opacity-80 sm:opacity-100' : ''}`}>
+                    <div className={`w-full h-full flex items-center justify-center ${reservationState === 'open' ? 'bg-green-400 sm:bg-transparent' : ''}`}>
                         <span className="hidden sm:inline text-center">Slot available</span>
                     </div>
                 ) : reservationState === 'reservedByYou'
