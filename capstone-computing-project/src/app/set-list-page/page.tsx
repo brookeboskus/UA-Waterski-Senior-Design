@@ -6,6 +6,10 @@ import BlankPfp from '../img/blankpfp.svg';
 import { useRouter } from 'next/navigation';
 import ReactDOMServer from 'react-dom/server';
 import boatSVG from '../img/boat-svgrepo-com.svg';
+// import { useMediaQuery } from 'react-responsive';
+// import Select, { SingleValue } from 'react-select';
+import clockSVG from "../../components/img/clock-two-thirty-svgrepo-com.svg"
+
 
 let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -32,11 +36,7 @@ interface TeamMember {
 }
 
 const Button = ({ onClick, className, children }: { onClick: () => void; className: string; children: React.ReactNode }) => {
-    // return (
-    //     <button className={`${className} p-2 rounded-md transition-all duration-300 hover:scale-105`} onClick={onClick}>
-    //         {children}
-    //     </button>
-    // );
+
     return (
         <button
             className={`${className} w-full h-full block overflow-hidden text-ellipsis whitespace-pre-wrap`}
@@ -234,22 +234,34 @@ const SetListButton = ({
 
     if (date < new Date()) {
         buttonText = reservationState === 'reservedByYou'
-            ? 'My past reservation' // past reservation made by you
+            // ? 'My past reservation' // past reservation made by you
+            ? (
+                <div className="w-full h-full">
+                    <span className="hidden sm:inline">My past reservation</span>
+                </div>
+            )
             : reservationState === 'reservedBySomeoneElse'
-                ? `${reservationName}'s past reservation` // past reservation made by someone else
+                // ? `${reservationName}'s past reservation` // past reservation made by someone else
+                ? (
+                    <div className="w-full h-full">
+                        <span className="hidden sm:inline">{reservationName}'s past reservation</span>
+                    </div>
+                )
                 : ''; // past reserveration
 
         buttonClass = reservationState === 'reservedByYou'
-            ? 'bg-[#855454] text-white cursor-not-allowed border-2 border-transparent hover:border-black w-50'
+            ? ' bg-[#855454] text-white border-2 border-transparent hover:border-[#9E1B32] w-50'
             : reservationState === 'reservedBySomeoneElse'
-                ? 'bg-[#404040] text-white cursor-not-allowed border-2 border-transparent hover:border-black w-50'
+                ? 'bg-[#404040] text-white border-2 border-transparent hover:border-black w-50'
                 : 'bg-[#808080] text-black cursor-not-allowed border-2 border-transparent hover:border-black w-50';
     } else {
+
         buttonClass = reservationState === 'open'
-            ? 'bg-[#D7D7E0] text-black border-2 border-transparent hover:border-[#9e1b32] w-full h-full'
+            ? 'bg-[#D7D7E0] text-black border-2 border-transparent hover:border-green-200 sm:hover:border-gray-500 w-full h-full'
             : reservationState === 'reservedByYou'
-                ? 'bg-black text-white hover:border-[#808080] w-full h-full'
-                : 'bg-[#800020] text-white cursor-not-allowed w-full h-full';
+                ? 'bg-black text-white hover:border-green-50 sm:hover:border-gray-500 w-full h-full'
+                : 'bg-[#800020] text-white w-full h-full border border-0 hover:border-white';
+
 
         if (info2 != null) {
             if (info2.SlalomDriver === "Yes" || info2.JumpDriver === "Yes" || info2.TrickDriver === "Yes") {
@@ -257,41 +269,52 @@ const SetListButton = ({
                 console.log("BOAT SVG", boatSVG)
 
                 buttonText = reservationState === 'open'
-                    ? 'Slot available'
+                    ? (
+                        <div className="w-full h-full">
+                            <span className="hidden sm:inline">Slot available</span>
+                        </div>
+                    )
                     : reservationState === 'reservedByYou'
-                        ? 'Click to cancel reservation' // slot reserved by user, not past reserveration time
+                        ? (
+                            <div className="w-full h-full flex items-center justify-center bg-[#ACACB5] text-black border border-black hover:text-white">
+                                <span className="hidden sm:inline text-center ">Click to cancel reservation</span>
+                            </div>
+                        )
                         : (
-                            <>
-                                <div className="space-y-2">
+                            <div className="w-full h-full space-y-2">
+                                <div className="hidden sm:block space-y-2">
                                     <div>
                                         <Image src={boatSVG.src} alt="Boat SVG" width={24} height={24} className="ml-16" />
                                     </div>
-                                    <div>
-                                        Reserved by {reservationName}
-                                    </div>
+                                    <div>Reserved by {reservationName}</div>
                                 </div>
-
-
-                            </>
+                            </div>
                         );
+
 
             } else {
                 console.log("NO IM NOT A DRIVER")
+
                 buttonText = reservationState === 'open'
-                    ? 'Slot available'
-                    : reservationState === 'reservedByYou'
+                    ? (
+                        <div className="w-full h-full">
+                            <span className="visible sm:invisible">Slot available</span>
+                        </div>
+                    ) : reservationState === 'reservedByYou'
                         ? 'Slot reserved by you. Click to cancel'
                         : `Reserved by ${reservationName}`;
 
             }
         } else {
-            console.log("NO INFO")
+            console.log("NO INFO");
             buttonText = reservationState === 'open'
-                ? 'Slot available'
-                : reservationState === 'reservedByYou'
+                ? (
+                    <div className={`w-full h-full flex items-center justify-center ${reservationState === 'open' ? 'bg-green-400 sm:bg-transparent opacity-80 sm:opacity-100' : ''}`}>
+                        <span className="hidden sm:inline text-center">Slot available</span>
+                    </div>
+                ) : reservationState === 'reservedByYou'
                     ? 'Slot reserved by you. Click to cancel'
                     : `Reserved by ${reservationName}`;
-
         }
 
     }
@@ -359,6 +382,8 @@ export default function SetListPage() {
 
     const dateRangeStartString = `${dateRangeStart.getFullYear()}-${(dateRangeStart.getMonth() + 1)}-${dateRangeStart.getDate()} 00:00:00`;
     const dateRangeEndString = `${dateRangeEnd.getFullYear()}-${(dateRangeEnd.getMonth() + 1)}-${dateRangeEnd.getDate()} 23:59:59`;
+
+
 
     useEffect(() => {
         document.title = 'UA Waterski - Set List';
@@ -471,90 +496,6 @@ export default function SetListPage() {
         }
     }, [isLoggedIn, dateRangeEndString, dateRangeStartString]);
 
-    // function TimeTableBody() {
-    //     const rows = [];
-
-    //     const currentWeekDropDown = document.getElementById("dateRangeDropDown") as HTMLInputElement;
-    //     if (currentWeekDropDown == null) return;
-
-    //     const currentWeekStartDate = new Date(Number(currentWeekDropDown.value) * 1000);
-
-    //     for (let hour = 7; hour <= 17; hour++) {
-    //         for (let minutes = 0; minutes < 60; minutes += 15) {
-    //             if (hour === 17 && minutes !== 0) continue;
-
-    //             const cells = [];
-    //             const hourString = hour <= 12 ? hour.toString() : (hour - 12).toString();
-    //             const minuteString = minutes === 0 ? minutes.toString() + "0" : minutes.toString();
-    //             const amPMString = hour < 12 ? "am" : "pm";
-    //             const timeString = hourString + ":" + minuteString + amPMString;
-
-    //             cells.push(<td key={"timeCell_" + hour + "_" + minutes} className="text-right p-2 font-medium text-gray-600">{timeString}</td>);
-
-    //             for (let day = 0; day <= 6; day++) {
-    //                 const thisButtonDate = new Date(new Date(currentWeekStartDate).setDate(currentWeekStartDate.getDate() + day));
-    //                 thisButtonDate.setHours(hour, minutes, 0, 0);
-
-    //                 if (timesSet.has(thisButtonDate.getTime())) {
-    //                     const reservation = getReservationInfo(reservations, thisButtonDate);
-    //                     if (reservation) {
-    //                         const userInfo = getTeamMemberInfo(teamMembers, reservation.Email);
-    //                         const state = reservation.RegisteredBy === "you" ? "reservedByYou" : "reservedBySomeoneElse";
-    //                         const name = reservation.Fname + " " + reservation.Lname;
-    //                         cells.push(
-    //                             <td key={day + "_" + hour + "_" + minutes}>
-    //                                 <SetListButton
-    //                                     date={thisButtonDate}
-    //                                     reservationState={state}
-    //                                     reservationName={name}
-    //                                     userInfo={userInfo}
-    //                                     setIsPopupOpen={setIsPopupOpen}
-
-    //                                 />
-    //                             </td>
-    //                         );
-    //                     }
-    //                 } else {
-    //                     cells.push(
-    //                         <td key={day + "_" + hour + "_" + minutes}>
-    //                             <SetListButton
-    //                                 date={thisButtonDate}
-    //                                 reservationState="open"
-    //                                 reservationName=""
-    //                                 userInfo={null}
-    //                                 setIsPopupOpen={setIsPopupOpen}
-    //                             />
-    //                         </td>
-    //                     );
-    //                 }
-    //             }
-
-    //             rows.push(<tr key={"row_" + hour + "_" + minutes}>{cells}</tr>);
-    //         }
-    //     }
-
-    //     return <tbody>{rows}</tbody>;
-    // }
-
-    // function TimeTable() {
-    //     return (
-    //         <table className="bg-white rounded-lg h-full text-center overflow-hidden shadow-lg">
-    //             <thead>
-    //                 <tr className="text-center bg-[#A0A0A6] font-semibold text-lg text-gray-800">
-    //                     <th className="p-2 text-center">Time</th>
-    //                     <th className="p-2 text-center">Sunday</th>
-    //                     <th className="p-2 text-center">Monday</th>
-    //                     <th className="p-2 text-center">Tuesday</th>
-    //                     <th className="p-2 text-center">Wednesday</th>
-    //                     <th className="p-2 text-center">Thursday</th>
-    //                     <th className="p-2 text-center">Friday</th>
-    //                     <th className="p-2 text-center">Saturday</th>
-    //                 </tr>
-    //             </thead>
-    //             {TimeTableBody()}
-    //         </table>
-    //     );
-    // }
 
     function TimeTableBody() {
         const rows = [];
@@ -577,7 +518,7 @@ export default function SetListPage() {
                 cells.push(
                     <td
                         key={"timeCell_" + hour + "_" + minutes}
-                        className="text-center font-medium text-gray-600 border border-gray-300"
+                        className="text-center font-medium text-gray-600 border border-gray-300 whitespace-normal break-words"
                     >
                         {timeString}
                     </td>
@@ -621,7 +562,6 @@ export default function SetListPage() {
                 }
 
                 rows.push(<tr key={"row_" + hour + "_" + minutes} className="h-20">{cells}</tr>);
-
             }
         }
 
@@ -633,21 +573,43 @@ export default function SetListPage() {
             <table className="table-fixed bg-white rounded-lg h-full text-center overflow-hidden shadow-lg border-collapse border border-gray-300 w-full">
                 <thead>
                     <tr className="text-center bg-gray-300 font-semibold text-lg text-gray-800">
-                        <th className="p-2 text-center border border-gray-400">Time</th>
-                        <th className="p-2 text-center border border-gray-400">Sunday</th>
-                        <th className="p-2 text-center border border-gray-400">Monday</th>
-                        <th className="p-2 text-center border border-gray-400">Tuesday</th>
-                        <th className="p-2 text-center border border-gray-400">Wednesday</th>
-                        <th className="p-2 text-center border border-gray-400">Thursday</th>
-                        <th className="p-2 text-center border border-gray-400">Friday</th>
-                        <th className="p-2 text-center border border-gray-400">Saturday</th>
+                        <th className="p-2 text-center border border-gray-400">
+                            <span className="hidden sm:inline">Time</span>
+                        </th>
+                        <th className="p-2 text-center border border-gray-400">
+                            <span className="hidden sm:inline">Sunday</span>
+                            <span className="sm:hidden">S</span>
+                        </th>
+                        <th className="p-2 text-center border border-gray-400">
+                            <span className="hidden sm:inline">Monday</span>
+                            <span className="sm:hidden">M</span>
+                        </th>
+                        <th className="p-2 text-center border border-gray-400">
+                            <span className="hidden sm:inline">Tuesday</span>
+                            <span className="sm:hidden">T</span>
+                        </th>
+                        <th className="p-2 text-center border border-gray-400">
+                            <span className="hidden sm:inline">Wednesday</span>
+                            <span className="sm:hidden">W</span>
+                        </th>
+                        <th className="p-2 text-center border border-gray-400">
+                            <span className="hidden sm:inline">Thursday</span>
+                            <span className="sm:hidden">TR</span>
+                        </th>
+                        <th className="p-2 text-center border border-gray-400">
+                            <span className="hidden sm:inline">Friday</span>
+                            <span className="sm:hidden">F</span>
+                        </th>
+                        <th className="p-2 text-center border border-gray-400">
+                            <span className="hidden sm:inline">Saturday</span>
+                            <span className="sm:hidden">S</span>
+                        </th>
                     </tr>
                 </thead>
                 {TimeTableBody()}
             </table>
         );
     }
-
 
     const TimeTableWithDropDown = ({
         values,
@@ -674,17 +636,60 @@ export default function SetListPage() {
 
         return (
             <div className="overflow-x-auto w-full p-4">
-                <select
-                    id="dateRangeDropDown"
-                    value={selectedOption}
-                    onChange={e => setSelectedOption(Number(e.target.value))}
-                    className="p-2 rounded-lg border-none bg-gray-600 text-lg font-bold mb-4"
-                >
-                    {options.map(o => (
-                        <option key={o[0]} value={o[0]}>{o[1]}</option>
-                    ))}
-                </select>
-                {TimeTable()}
+                <div>
+                    <select
+                        id="dateRangeDropDown"
+                        value={selectedOption}
+                        onChange={e => setSelectedOption(Number(e.target.value))}
+                        className="p-2 rounded-lg border-none bg-gray-600 text-lg font-bold mb-4"
+                    >
+                        {options.map(o => (
+                            <option key={o[0]} value={o[0]}>{o[1]}</option>
+                        ))}
+                    </select>
+                    <div>
+                        {TimeTable()}
+                    </div>
+                </div>
+
+                {/* legends section only for mobile view */}
+                {/* <div className="md:hidden absolute top-0 right-0 flex flex-col bg-white mt-5 mr-10 p-4 rounded-lg shadow-lg border border-gray-300">
+                    <table className="table-auto w-full">
+                        <tbody>
+                            <tr>
+                                <td className="p-2 border border-gray-300 bg-green-200 text-black whitespace-nowrap mr-5">Available</td>
+                                <td className="p-2 border border-gray-300 bg-[#ACACB5] text-white whitespace-nowrap mr-5">Reserved by Me</td>
+                                <td className="p-2 border border-gray-300 bg-[#800020] text-white whitespace-nowrap mr-5">Reserved</td>
+                                <td className="p-2 border border-gray-300 bg-[#855454] text-white whitespace-nowrap">My Previous Reservation</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> */}
+
+                {/* legends section only for mobile view */}
+                <div className="md:hidden fixed bottom-4 right-4 bg-white p-2 rounded-md shadow-lg border border-gray-300 w-fit text-sm">
+                    <table className="table-auto">
+                        <tbody>
+                            <tr>
+                                <td className="p-1 bg-green-200 text-black whitespace-nowrap">Available</td>
+                            </tr>
+                            <tr>
+                                <td className="p-1 bg-[#ACACB5] text-white whitespace-nowrap">Reserved by Me</td>
+                            </tr>
+                            <tr>
+                                <td className="p-1 bg-[#800020] text-white whitespace-nowrap">Reserved</td>
+                            </tr>
+                            <tr>
+                                <td className="p-1 bg-[#855454] text-white whitespace-nowrap">My Previous Reservation</td>
+                            </tr>
+                            <tr>
+                                <td className="p-1 bg-[#404040] text-white whitespace-nowrap">Previous Reservation</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
             </div>
         );
     };
@@ -730,4 +735,6 @@ export default function SetListPage() {
             {TimeTableInit()}
         </div>
     );
+
 }
+
