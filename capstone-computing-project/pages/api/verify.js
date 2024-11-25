@@ -10,7 +10,9 @@ const verify = async (req, res) => {
         if (!user || user.length === 0) {
             // return res.redirect(`${APP_URL}/verification-failed-page`);
             const endpoint = `${APP_URL}verification-failed-page`;
-            return res.redirect(endpoint);
+            // return res.redirect(endpoint);
+            res.redirect(endpoint); 
+            return;
 
 
             // return res.status(400).json({ message: 'Invalid or expired token' });
@@ -20,7 +22,9 @@ const verify = async (req, res) => {
 
         // res.redirect(`${APP_URL}/verification-success-page`);
         const endpoint = `${APP_URL}verification-success-page`;
-        return res.redirect(endpoint);
+        // return res.redirect(endpoint);
+        res.redirect(endpoint);
+        return;
         
         // res.status(200).json({ message: 'Email verified successfully!' });
     } catch (error) {
