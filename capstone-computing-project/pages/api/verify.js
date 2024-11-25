@@ -10,9 +10,15 @@ const verify = async (req, res) => {
         const [user] = await db.query('SELECT * FROM User WHERE VerificationToken = ?', [token]);
         console.log("Query result:", user);
 
-        if (!user || user.length === 0) {
+        if (!user || user.length === 0) { // no user found with the token
             console.log("Invalid or expired token. Redirecting to failed page...");
-            const endpoint = `${APP_URL}verification-failed-page`;
+            // THIS IS TEMP
+            // for localhost this flow works fine but deployed is having some issues. 
+            // i believe outlook scans the email for links and our endpoint is being triggered before the user actually clisk the link themselves
+            // which lets the user login, but it leads them to this failed page when they DO click on the link on deployed website
+            // const endpoint = `${APP_URL}verification-failed-page`;
+            // so changing it to success page for now... so failed page doesn't exist rn on deployed
+            const endpoint = `${APP_URL}verification-success-page`;
             res.redirect(endpoint);
             return;
         }

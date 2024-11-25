@@ -60,42 +60,17 @@ const signup = async (req, res) => {
             from: process.env.GMAIL_EMAIL,
             to: email,
             subject: 'UA Waterski Team | Verify Your Email for Account Creation',
-            // html: `
-            //     <div style="font-family: Arial, sans-serif; color: #333; padding: 20px;">
-            //         <h3 style="color: #9E1B32; margin-bottom: 20px;">Hello,</h3>
-            //         <p style="font-size: 16px; line-height: 1.5;">
-            //             Thank you for signing up with the University of Alabama's Waterski Team! To complete your registration, please verify your email address by clicking the link below:
-            //         </p>
-            //         <div style="background-color: #f9f9f9; padding: 20px; border-left: 4px solid #9E1B32; border-radius: 8px; margin: 20px 0; text-align: center;">
-            //             <a href="${verificationURL}" style="display: inline-block; padding: 10px 20px; background-color: #9E1B32; color: #fff; text-decoration: none; font-size: 16px; font-weight: bold; border-radius: 5px;">
-            //                 Verify Email
-            //             </a>
-            //         </div>
-            //         <p style="font-size: 16px; line-height: 1.5;">
-            //             If you didn’t create this account, please ignore this email.
-            //         </p>
-            //         <p style="font-size: 16px; line-height: 1.5; margin-top: 20px;">
-            //             Best regards,<br>
-            //             <span style="font-weight: bold; color: #9E1B32;">UA's Waterski Team</span>
-            //         </p>
-            //         <hr style="border: none; border-top: 1px solid #9E1B32; margin-top: 30px;"/>
-            //         <p style="font-size: 12px; color: #777;">
-            //             This email was sent from <strong>UA’s Waterski Team</strong>. You can visit our website at 
-            //             <a href="https://www.uawaterski.com/" style="color: #9E1B32; text-decoration: none;">https://www.uawaterski.com/</a>.
-            //         </p>
-            //     </div>
-            // `,
-
-            // okay for now, there's an issue wtih deployed website where the user doesn't have to click on verification link but as soon as they receive the email, they can log in
-            // inadvertently, breaks the whole successful-page i set up for deployment
-            // weirdly, this whole flow works on localhost and user HAS to click on verification link from email....
-            // for now, i'm gonna use this html that removes the entire verification link button since deployed website works without it somehow
             html: `
                 <div style="font-family: Arial, sans-serif; color: #333; padding: 20px;">
                     <h3 style="color: #9E1B32; margin-bottom: 20px;">Hello,</h3>
                     <p style="font-size: 16px; line-height: 1.5;">
-                        Thank you for signing up with the University of Alabama's Waterski Team! Your account has been registered sucessfully. 
+                        Thank you for signing up with the University of Alabama's Waterski Team! To complete your registration, please verify your email address by clicking the link below:
                     </p>
+                    <div style="background-color: #f9f9f9; padding: 20px; border-left: 4px solid #9E1B32; border-radius: 8px; margin: 20px 0; text-align: center;">
+                        <a href="${verificationURL}" style="display: inline-block; padding: 10px 20px; background-color: #9E1B32; color: #fff; text-decoration: none; font-size: 16px; font-weight: bold; border-radius: 5px;">
+                            Verify Email
+                        </a>
+                    </div>
                     <p style="font-size: 16px; line-height: 1.5;">
                         If you didn’t create this account, please ignore this email.
                     </p>
@@ -110,6 +85,11 @@ const signup = async (req, res) => {
                     </p>
                 </div>
             `,
+
+            // okay for now, there's an issue wtih deployed website where the user doesn't have to click on verification link but as soon as they receive the email, they can log in
+            // inadvertently, breaks the whole successful-page i set up for deployment
+            // weirdly, this whole flow works on localhost and user HAS to click on verification link from email....
+            // for now, i'm gonna use this html that removes the entire verification link button since deployed website works without it somehow
         };
         
     
