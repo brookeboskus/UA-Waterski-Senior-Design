@@ -15,7 +15,7 @@ const verify = async (req, res) => {
 
         await db.query('UPDATE User SET IsVerified = ?, VerificationToken = NULL WHERE VerificationToken = ?', [true, token]);
 
-        res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/verification-success-page`);
+        res.redirect(`${APP_URL}/verification-success-page`);
 
         // res.status(200).json({ message: 'Email verified successfully!' });
     } catch (error) {
