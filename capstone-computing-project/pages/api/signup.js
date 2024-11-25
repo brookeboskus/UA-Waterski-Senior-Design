@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import db from '../../db.js';
 import bcrypt from 'bcrypt';
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
+let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 import 'dotenv/config';
 import nodemailer from 'nodemailer';
 
