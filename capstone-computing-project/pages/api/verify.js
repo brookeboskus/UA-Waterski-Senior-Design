@@ -74,8 +74,6 @@ const verify = async (req, res) => {
     }
 };
 
-export default verify;
-
 
 
 export default verify;
