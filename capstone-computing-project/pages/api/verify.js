@@ -47,7 +47,7 @@
 import db from '../../db.js';
 let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
-const MAX_ATTEMPTS = 2; 
+const MAX_ATTEMPTS = 3; 
 
 const verify = async (req, res) => {
     const { token } = req.query;
