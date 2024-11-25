@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
 import axios, { AxiosError } from 'axios';
@@ -120,27 +119,14 @@ export default function LoginPage() {
     const [cwid, setCwid] = useState('');
     const [phone, setPhone] = useState('');
     const [gradYear, setGradYear] = useState('Freshman');
-    // const [selectedMajor, setSelectedMajor] = useState(null);
     const [selectedMajor, setSelectedMajor] = useState<{ value: string, label: string } | null>(null);
-    // const [PfpImage, setProfilePicture] = useState(null);
     const [PfpImage, setProfilePicture] = useState<File | null>(null);
     const [isLogin, setIsLogin] = useState(true);
     const router = useRouter();
-    const [csrfToken, setCsrfToken] = useState('');
-    const [error, setError ] = useState('');
+
 
     useEffect(() => {
         document.title = 'UA Waterski - Login/Sign Up';
-        // const fetchCSRFToken = async () => {
-        //     try {
-        //         const response = await axios.get('/api/csrf-token');
-        //         setCsrfToken(response.data.csrfToken);
-        //     } catch (error) {
-        //         console.error ('Error fetching CSRF token:', error);
-        //     }
-        // };
-
-        // fetchCSRFToken();
     }, []);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -163,6 +149,7 @@ export default function LoginPage() {
         }
     };
 
+    //listens to our subomains for endpoint
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (
@@ -178,14 +165,12 @@ export default function LoginPage() {
                 APP_URL = `https://${host}/`;
             }
 
-            // console.log("Current APP_URL:", APP_URL);
         } else {
             console.log("oops you coded wrong, what a dummy");
         }
 
         const endpoint = isLogin ? `${APP_URL}api/login` : `${APP_URL}api/signup`;
         
-        // console.log('endpoint:', endpoint);
 
         let pfpBase64 = null;
         if (PfpImage && !isLogin) {
@@ -197,10 +182,6 @@ export default function LoginPage() {
             }
             );
         }
-
-        // const payload = isLogin
-        //     ? { email, password, csrfToken }
-        //     : { email, password, csrfToken, fname, lname, cwid, phone, gradYear, major: selectedMajor?.value || '', pfpimage: pfpBase64, };
 
         const payload = isLogin
         ? { email, password }

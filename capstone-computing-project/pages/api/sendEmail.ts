@@ -64,7 +64,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     <hr style="border: none; border-top: 1px solid #9E1B32; margin-top: 30px;"/>
                     <p style="font-size: 12px; color: #777;">
                         This email was sent from <strong>UA’s Waterski Team</strong>. You can visit our website at 
-                        <a href="https://testing-waterski-deployment.vercel.app/" style="color: #9E1B32; text-decoration: none;">https://testing-waterski-deployment.vercel.app/[DON"T FORGET TO CHANGE THIS TO THE ACTUAL DOAMIN NAME]</a>.
+                        <a href="https://www.uawaterski.com/" style="color: #9E1B32; text-decoration: none;">https://www.uawaterski.com/</a>.
                     </p>
                 </div>
             `,
