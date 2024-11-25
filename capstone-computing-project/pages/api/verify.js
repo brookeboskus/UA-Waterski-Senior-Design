@@ -3,6 +3,7 @@ let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
 const verify = async (req, res) => {
     const { token } = req.query;
+    console.log("token in verify.js:", token);
 
     try {
         const [user] = await db.query('SELECT * FROM User WHERE VerificationToken = ?', [token]);
