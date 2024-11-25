@@ -17,13 +17,6 @@ const verify = async (req, res) => {
             return;
         }
 
-        if (user[0].IsVerified) {
-            console.log("User already verified. Redirecting to success page...");
-            const endpoint = `${APP_URL}verification-success-page`;
-            res.redirect(endpoint);
-            return;
-        }
-
         console.log("Updating database for verification...");
         await db.query(
             'UPDATE User SET IsVerified = ?, VerificationToken = NULL WHERE VerificationToken = ?',

@@ -20,9 +20,9 @@ const signup = async (req, res) => {
     }
 
     try {
-        console.log('Received request:', req.body); 
+        // console.log('Received request:', req.body); 
         const [existingUsers] = await db.query('SELECT * FROM User WHERE Email = ?', [email]);
-        console.log('Existing users:', existingUsers);
+        // console.log('Existing users:', existingUsers);
     
         if (existingUsers && existingUsers.length > 0) {
             console.log('User already exists');
@@ -31,13 +31,14 @@ const signup = async (req, res) => {
     
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-        console.log('Password hashed');
+        // console.log('Password hashed');
     
         const imageBuffer = pfpimage ? Buffer.from(pfpimage, 'base64') : null;
     
         const verificationToken = crypto.randomBytes(32).toString('hex');
         const verificationURL = `${APP_URL}/api/verify?token=${verificationToken}`;
-        console.log('Generated verification token:', verificationToken);
+
+        // console.log('Generated verification token:', verificationToken);
     
         await db.query(
             `INSERT INTO User (Email, Password, Fname, Lname, CWID, Phone, GradYear, Major, PfpImage, VerificationToken) 
