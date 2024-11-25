@@ -13,16 +13,23 @@ const signup = async (req, res) => {
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
 
-    const { email, password, fname, lname, cwid, phone, gradYear, major, pfpimage } = req.body;
+    let { email, password, fname, lname, cwid, phone, gradYear, major, pfpimage } = req.body;
+
+    // check if email is using + symbol trick just before @
+    // this one isn't complex, should refine this
+    // prevents scripting accounts with + symbol trick
+    for (let i = 0; i < email.length; i++) {
+        if (email[i] === '+' && !isNaN(email[i + 1])) {
+            return res.status(400).json({ message: 'Invalid email' });
+        }
+    }
 
     if (!email.endsWith('.ua.edu')) {
         return res.status(400).json({ message: 'Only .ua.edu emails are allowed to sign up.' });
     }
 
     try {
-        // console.log('Received request:', req.body); 
         const [existingUsers] = await db.query('SELECT * FROM User WHERE Email = ?', [email]);
-        // console.log('Existing users:', existingUsers);
     
         if (existingUsers && existingUsers.length > 0) {
             console.log('User already exists');
@@ -31,14 +38,12 @@ const signup = async (req, res) => {
     
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-        // console.log('Password hashed');
     
         const imageBuffer = pfpimage ? Buffer.from(pfpimage, 'base64') : null;
     
         const verificationToken = crypto.randomBytes(32).toString('hex');
         const verificationURL = `${APP_URL}/api/verify?token=${verificationToken}`;
 
-        // console.log('Generated verification token:', verificationToken);
     
         await db.query(
             `INSERT INTO User (Email, Password, Fname, Lname, CWID, Phone, GradYear, Major, PfpImage, VerificationToken) 
@@ -54,7 +59,6 @@ const signup = async (req, res) => {
                 pass: process.env.GMAIL_APP_PASSWORD,
             },
         });
-
 
         const mailOptions = {
             from: process.env.GMAIL_EMAIL,
@@ -86,10 +90,6 @@ const signup = async (req, res) => {
                 </div>
             `,
 
-            // okay for now, there's an issue wtih deployed website where the user doesn't have to click on verification link but as soon as they receive the email, they can log in
-            // inadvertently, breaks the whole successful-page i set up for deployment
-            // weirdly, this whole flow works on localhost and user HAS to click on verification link from email....
-            // for now, i'm gonna use this html that removes the entire verification link button since deployed website works without it somehow
         };
         
     

@@ -14,7 +14,6 @@ const login = async (req, res) => {
     }
 
     const { email, password } = req.body;
-    // console.log('req.body for login:', req.body);
 
     try {
         const [results] = await db.query('SELECT * FROM User WHERE Email = ?', [email]);
