@@ -195,7 +195,7 @@ export default function EditProfile() {
         const fetchProfile = async () => {
             const token = localStorage.getItem('token');
             if (!token) {
-                console.error('Authentication token missing. Please log in again.');
+                console.error('Authentication token missing. Please log in again.'); // prob should take out for ambiguity 
                 return;
             }
 
@@ -219,7 +219,7 @@ export default function EditProfile() {
                         APP_URL = `https://${host}/`;
                     }
 
-                    console.log("Current APP_URL:", APP_URL);
+                    // console.log("Current APP_URL:", APP_URL);
                 } else {
                     console.log("oops you coded wrong, what a dummy");
                 }
@@ -257,7 +257,7 @@ export default function EditProfile() {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                console.error('Authentication token missing. Please log in again.');
+                console.error('Authentication token missing. Please log in again.'); // prob should take out for ambiguity
                 return;
             }
 
@@ -298,7 +298,7 @@ export default function EditProfile() {
             const data = await response.json();
 
             if (response.ok) {
-                console.log('Profile updated successfully!');
+                // console.log('Profile updated successfully!');
                 setIsUserUpdated(!isUserUpdated);
 
 

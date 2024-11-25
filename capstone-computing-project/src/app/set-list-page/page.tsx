@@ -6,9 +6,6 @@ import BlankPfp from '../img/blankpfp.svg';
 import { useRouter } from 'next/navigation';
 import ReactDOMServer from 'react-dom/server';
 import boatSVG from '../img/boat-svgrepo-com.svg';
-// import { useMediaQuery } from 'react-responsive';
-// import Select, { SingleValue } from 'react-select';
-import clockSVG from "../../components/img/clock-two-thirty-svgrepo-com.svg"
 
 
 let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
@@ -47,23 +44,13 @@ const Button = ({ onClick, className, children }: { onClick: () => void; classNa
     );
 };
 
-// function Popup({ children, isOpen, onClose }: { children: React.ReactNode; isOpen: boolean; onClose: () => void }) {
-//     return (
-//         <div className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
-//             <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
-//                 {children}
-//                 <button onClick={onClose} className="mt-4 w-full bg-[#931b32] text-white py-2 rounded-lg hover:bg-[#8b0000]">Close</button>
-//             </div>
-//         </div>
-//     );
-// };
 
 function Popup({ children, isOpen, onClose }: { children: React.ReactNode; isOpen: boolean; onClose: () => void }) {
     return (
         <div
             className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
                 }`}
-            style={{ zIndex: 1000 }} 
+            style={{ zIndex: 1000 }}
         >
             <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
                 {children}
@@ -103,7 +90,7 @@ const makeReservation = async (date: Date) => {
                 APP_URL = `https://${host}/`;
             }
 
-            console.log("Current APP_URL:", APP_URL);
+            // console.log("Current APP_URL:", APP_URL);
         } else {
             console.log("oops you coded wrong, what a dummy");
         }
@@ -151,7 +138,7 @@ const deleteReservation = async (date: Date) => {
                 APP_URL = `https://${host}/`;
             }
 
-            console.log("Current APP_URL:", APP_URL);
+            // console.log("Current APP_URL:", APP_URL);
         } else {
             console.log("oops you coded wrong, what a dummy");
         }
@@ -166,7 +153,6 @@ const deleteReservation = async (date: Date) => {
 };
 
 function popupContent(info: TeamMember) {
-    // console.log(info);
     return (
         <div className="p-4">
             <div className="relative w-24 h-24 mx-auto mb-4">
@@ -288,8 +274,8 @@ const SetListButton = ({
 
         if (info2 != null) {
             if (info2.SlalomDriver === "Yes" || info2.JumpDriver === "Yes" || info2.TrickDriver === "Yes") {
-                console.log("YES IM A DRIVER")
-                console.log("BOAT SVG", boatSVG)
+                // console.log("YES IM A DRIVER")
+                // console.log("BOAT SVG", boatSVG)
 
                 buttonText = reservationState === 'open'
                     ? (
@@ -316,7 +302,8 @@ const SetListButton = ({
 
 
             } else {
-                console.log("NO IM NOT A DRIVER")
+                // current reservation + is not slalom/trick/jump driver in DB
+                // console.log("NO IM NOT A DRIVER")
 
                 buttonText = reservationState === 'open'
                     ? (
@@ -324,21 +311,49 @@ const SetListButton = ({
                             <span className="visible sm:invisible">Slot available</span>
                         </div>
                     ) : reservationState === 'reservedByYou'
-                        ? 'Slot reserved by you. Click to cancel'
-                        : `Reserved by ${reservationName}`;
+                        ? (
+                            <div className="w-full h-full flex items-center justify-center bg-[#ACACB5] text-black">
+                                <span className="hidden sm:inline text-center ">Click to cancel reservation</span>
+                            </div>
+                        )
+                        : (
+                            <div className="w-full h-full space-y-2">
+                                <div className="hidden sm:block space-y-2">
+                                    <div>
+                                        <Image src={boatSVG.src} alt="Boat SVG" width={24} height={24} className="ml-16" />
+                                    </div>
+                                    <div>Reserved by {reservationName}</div>
+                                </div>
+                            </div>
+                        );
+
+
 
             }
-        } 
+        }
         else {
-            console.log("NO INFO");
+            // console.log("NO INFO");
             buttonText = reservationState === 'open'
                 ? (
                     <div className={`w-full h-full flex items-center justify-center ${reservationState === 'open' ? 'bg-green-400 sm:bg-transparent' : ''}`}>
                         <span className="hidden sm:inline text-center">Slot available</span>
                     </div>
                 ) : reservationState === 'reservedByYou'
-                    ? 'Slot reserved by you. Click to cancel'
-                    : `Reserved by ${reservationName}`;
+                    ? (
+                        <div className="w-full h-full flex items-center justify-center bg-[#ACACB5] text-black">
+                            <span className="hidden sm:inline text-center ">Click to cancel reservation</span>
+                        </div>
+                    )
+                    : (
+                        <div className="w-full h-full space-y-2">
+                            <div className="hidden sm:block space-y-2">
+                                <div>
+                                    <Image src={boatSVG.src} alt="Boat SVG" width={24} height={24} className="ml-16" />
+                                </div>
+                                <div>Reserved by {reservationName}</div>
+                            </div>
+                        </div>
+                    );
         }
 
     }
@@ -447,7 +462,7 @@ export default function SetListPage() {
                         APP_URL = `https://${host}/`;
                     }
 
-                    console.log("Current APP_URL:", APP_URL);
+                    // console.log("Current APP_URL:", APP_URL);
                 } else {
                     console.log("oops you coded wrong, what a dummy");
                 }
@@ -492,7 +507,7 @@ export default function SetListPage() {
                         APP_URL = `https://${host}/`;
                     }
 
-                    console.log("Current APP_URL:", APP_URL);
+                    // console.log("Current APP_URL:", APP_URL);
                 } else {
                     console.log("oops you coded wrong, what a dummy");
                 }

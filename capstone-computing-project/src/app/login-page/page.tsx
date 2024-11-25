@@ -178,14 +178,14 @@ export default function LoginPage() {
                 APP_URL = `https://${host}/`;
             }
 
-            console.log("Current APP_URL:", APP_URL);
+            // console.log("Current APP_URL:", APP_URL);
         } else {
             console.log("oops you coded wrong, what a dummy");
         }
 
         const endpoint = isLogin ? `${APP_URL}api/login` : `${APP_URL}api/signup`;
         
-        console.log('endpoint:', endpoint);
+        // console.log('endpoint:', endpoint);
 
         let pfpBase64 = null;
         if (PfpImage && !isLogin) {

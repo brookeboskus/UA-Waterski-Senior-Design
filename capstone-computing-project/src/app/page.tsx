@@ -22,7 +22,7 @@ export default function Home() {
     }, []);
 
     useEffect(() => {
-        console.log("Fetching data...");
+        // console.log("Fetching data...");
         // fetching data from Google Sheets
         const getData = async () => {
             try {

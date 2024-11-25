@@ -67,7 +67,7 @@ export default function Navbar() {
                 throw new Error('No token found');
             }
 
-            console.log("did we arrive?");
+            // console.log("did we arrive?");
 
 
             if (
@@ -83,7 +83,7 @@ export default function Navbar() {
                     APP_URL = `https://${host}/`;
                 }
 
-                console.log("Current APP_URL:", APP_URL);
+                // console.log("Current APP_URL:", APP_URL);
             } else {
                 console.log("oops you coded wrong, what a dummy");
             }

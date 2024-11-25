@@ -41,7 +41,7 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: MeetingNotes
                     APP_URL = `https://${host}/`;
                 }
     
-                console.log("Current APP_URL:", APP_URL);
+                // console.log("Current APP_URL:", APP_URL);
             } else {
                 console.log("oops you coded wrong, what a dummy");
             }
@@ -51,7 +51,7 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: MeetingNotes
                 ...note,
                 date: new Date(note.date)
             }));
-            console.log("Received Notes:", formattedNotes);
+            // console.log("Received Notes:", formattedNotes);
             setNotes(formattedNotes);
         } catch (error) {
             console.error("Error fetching meeting notes:", error);
@@ -87,7 +87,7 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: MeetingNotes
                     APP_URL = `https://${host}/`;
                 }
     
-                console.log("Current APP_URL:", APP_URL);
+                // console.log("Current APP_URL:", APP_URL);
             } else {
                 console.log("oops you coded wrong, what a dummy");
             }
@@ -122,7 +122,7 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: MeetingNotes
                     APP_URL = `https://${host}/`;
                 }
     
-                console.log("Current APP_URL:", APP_URL);
+                // console.log("Current APP_URL:", APP_URL);
             } else {
                 console.log("oops you coded wrong, what a dummy");
             }
@@ -248,7 +248,7 @@ export default function OfficerResourcesPage() {
                         APP_URL = `https://${host}/`;
                     }
         
-                    console.log("Current APP_URL:", APP_URL);
+                    // console.log("Current APP_URL:", APP_URL);
                 } else {
                     console.log("oops you coded wrong, what a dummy");
                 }

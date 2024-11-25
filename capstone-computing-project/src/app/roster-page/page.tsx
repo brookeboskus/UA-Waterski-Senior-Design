@@ -106,7 +106,7 @@ export default function RosterPage() {
                         APP_URL = `https://${host}/`;
                     }
         
-                    console.log("Current APP_URL:", APP_URL);
+                    // console.log("Current APP_URL:", APP_URL);
                 } else {
                     console.log("oops you coded wrong, what a dummy");
                 }
