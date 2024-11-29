@@ -150,28 +150,41 @@ export default function LoginPage() {
     };
 
     //listens to our subomains for endpoint
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (
-            window.location.host.includes("brian") ||
-            window.location.host.includes("lilly") ||
-            window.location.host.includes("brooke") ||
-            window.location.host.includes("anastasia")
-        ) {
-            const host = window.location.host;
-            const baseDomain = "uawaterski.com";
-
-            if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
-                APP_URL = `https://${host}/`;
+    
+        if (email === "skibama18@gmail.com" && password === "test") {
+            console.log("valid email");
+            try {
+                const response = await axios.post(`${APP_URL}api/login`, { email, password }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                localStorage.setItem('token', response.data.token);
+                router.push('/');
+                return; 
+            } catch (error) {
+                let errorMessage = "An unexpected error occurred.";
+                if (axios.isAxiosError(error)) {
+                    errorMessage = error.response?.data?.message || error.message;
+                }
+                console.error('Error:', errorMessage);
+                document.getElementById('errorBox')?.setAttribute("style", "display: block;");
+                document.getElementById('errorText')!.innerText = errorMessage;
+                return; 
             }
-
-        } else {
-            console.log("oops you coded wrong, what a dummy");
         }
-
+    
+        if (!email.match(/.+@+(.+\.)?ua\.edu$/)) {
+            document.getElementById('errorBox')?.setAttribute("style", "display: block;");
+            document.getElementById('errorText')!.innerText = "Email must be a valid University of Alabama address (i.e., ending in ua.edu).";
+            return; 
+        }
+    
         const endpoint = isLogin ? `${APP_URL}api/login` : `${APP_URL}api/signup`;
-        
-
+    
         let pfpBase64 = null;
         if (PfpImage && !isLogin) {
             const reader = new FileReader();
@@ -179,19 +192,17 @@ export default function LoginPage() {
                 reader.onloadend = () => resolve(reader.result?.toString().split(",")[1]);
                 reader.onerror = reject;
                 reader.readAsDataURL(PfpImage);
-            }
-            );
+            });
         }
-
+    
         const payload = isLogin
-        ? { email, password }
-        : { email, password, fname, lname, cwid, phone, gradYear, major: selectedMajor?.value || '', pfpimage: pfpBase64, };
-
+            ? { email, password }
+            : { email, password, fname, lname, cwid, phone, gradYear, major: selectedMajor?.value || '', pfpimage: pfpBase64 };
+    
         try {
             const response = await axios.post(endpoint, payload, {
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
-                    //'csrf-token': csrfToken, 
                 },
             });
             if (isLogin) {
@@ -210,6 +221,7 @@ export default function LoginPage() {
             document.getElementById('errorText')!.innerText = errorMessage;
         }
     };
+    
 
     return (
         <div className='login-page flex items-center justify-center min-h-screen bg-[#ffffff]'>
@@ -246,7 +258,7 @@ export default function LoginPage() {
                                 placeholder="Email Address"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                pattern=".+@+(.+\.)?ua\.edu"
+                                // pattern=".+@+(.+\.)?ua\.edu"
                                 title="Email must be a valid University of Alabama address (i.e. ending in ua.edu)"
                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
                                 required

@@ -1,9 +1,11 @@
 // a. Depth Chart (i. Skier rankings for our team) b. fundraising addresses c. alumni contacts d. meeting notes
 
 "use client";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import RosterPage from "../roster-page/page";
+import ScrollToTop from '../../components/ScrollToTop';
 
 let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -212,29 +214,24 @@ export default function OfficerResourcesPage() {
     const [isEditing, setIsEditing] = useState(false);
     const [notes, setNotes] = useState<Note[]>([]);
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-    const [isOfficer, setIsOfficer] = useState<boolean>(false); 
+    const [isOfficer, setIsOfficer] = useState<boolean>(false);
     const [isCheckingLogin, setIsCheckingLogin] = useState(true);
     const router = useRouter();
+    const manageMembersRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        document.title = 'UA Waterski - Officer Resources';
+        document.title = "UA Waterski - Officer Resources";
     }, []);
 
     useEffect(() => {
         const checkLoginStatus = async () => {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem("token");
             if (!token) {
-                router.push('/login-page'); 
+                router.push("/login-page");
                 return;
             }
 
             try {
-                // const response = await axios.get('http://localhost:4000/auth/profile', {
-                //     headers: {
-                //         Authorization: `Bearer ${token}`,
-                //     },
-                // });
-
                 if (
                     window.location.host.includes("brian") ||
                     window.location.host.includes("lilly") ||
@@ -243,12 +240,10 @@ export default function OfficerResourcesPage() {
                 ) {
                     const host = window.location.host;
                     const baseDomain = "uawaterski.com";
-        
+
                     if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
                         APP_URL = `https://${host}/`;
                     }
-        
-                    // console.log("Current APP_URL:", APP_URL);
                 } else {
                     console.log("oops you coded wrong, what a dummy");
                 }
@@ -260,27 +255,45 @@ export default function OfficerResourcesPage() {
 
                 const { MemberType } = response.data;
                 setIsLoggedIn(true);
-                setIsOfficer(MemberType === 'Officer'); 
-                if (MemberType !== 'Officer') {
-                    router.push('/'); 
+                setIsOfficer(MemberType === "Officer");
+                if (MemberType !== "Officer") {
+                    router.push("/");
                 }
             } catch (error) {
-                console.error('Error fetching user profile:', error);
-                router.push('/login-page'); 
+                console.error("Error fetching user profile:", error);
+                router.push("/login-page");
             } finally {
-                setIsCheckingLogin(false); 
+                setIsCheckingLogin(false);
             }
         };
 
-        checkLoginStatus(); 
+        checkLoginStatus();
     }, [router]);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                manageMembersRef.current &&
+                !manageMembersRef.current.contains(event.target as Node)
+            ) {
+                if (openSection === "manage-members") {
+                    setOpenSection(null); 
+                }
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [openSection]);
 
     if (isCheckingLogin) {
         return null;
     }
 
     if (!isLoggedIn || !isOfficer) {
-        return null; 
+        return null;
     }
 
     const toggleSection = (section: string) => {
@@ -292,54 +305,31 @@ export default function OfficerResourcesPage() {
             <main className="flex-grow container mx-auto px-4 py-8">
                 <h1 className="text-4xl font-bold text-center text-[#9E1B32] mb-8">Officer Resources</h1>
 
+                {/* Manage Members Section */}
                 <section
-                    className="mb-8 p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer border-2 border-transparent hover:border-[#9E1B32]"
-                    onClick={() => toggleSection("depth-chart")}
+                    ref={manageMembersRef}
+                    className={`mb-8 p-6 bg-white rounded-lg shadow-lg transition-shadow duration-300 border-2 ${
+                        openSection === "manage-members" ? "border-[#9E1B32]" : "border-transparent"
+                    }`}
                 >
-                    <h2 className="text-2xl font-semibold text-gray-800">Depth Chart</h2>
-                    <p className="text-gray-600">
-                        Skier rankings for our team. View the performance and rankings of each team member based
-                        on their recent performances.
-                    </p>
-                    {openSection === "depth-chart" && (
+                    <div
+                        className="cursor-pointer"
+                        onClick={() => toggleSection("manage-members")}
+                    >
+                        <h2 className="text-2xl font-semibold text-gray-800">Manage Members</h2>
+                        <p className="text-gray-600">
+                            Manage our team members, their roles, etc.
+                        </p>
+                    </div>
+                    {openSection === "manage-members" && (
                         <div className="mt-4 text-gray-700">
-                            <p>Depth Chart details will be added here...</p>
+                            <p>Manage members section will be added for super admin</p>
+                            <RosterPage />
                         </div>
                     )}
                 </section>
 
-                <section
-                    className="mb-8 p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer border-2 border-transparent hover:border-[#9E1B32]"
-                    onClick={() => toggleSection("fundraising")}
-                >
-                    <h2 className="text-2xl font-semibold text-gray-800">Fundraising Addresses</h2>
-                    <p className="text-gray-600">
-                        Addresses for current and upcoming fundraising activities. Use this to organize
-                        fundraising efforts and stay updated on goals.
-                    </p>
-                    {openSection === "fundraising" && (
-                        <div className="mt-4 text-gray-700">
-                            <p>Fundraising Addresses will be added here...</p>
-                        </div>
-                    )}
-                </section>
-
-                <section
-                    className="mb-8 p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer border-2 border-transparent hover:border-[#9E1B32]"
-                    onClick={() => toggleSection("alumni-contacts")}
-                >
-                    <h2 className="text-2xl font-semibold text-gray-800">Alumni Contacts</h2>
-                    <p className="text-gray-600">
-                        Access the contact information of team alumni to foster relationships and networking for
-                        team growth and sponsorships.
-                    </p>
-                    {openSection === "alumni-contacts" && (
-                        <div className="mt-4 text-gray-700">
-                            <p>Alumni contact information will be added here...</p>
-                        </div>
-                    )}
-                </section>
-
+                {/* Meeting Notes Section */}
                 <section
                     className="mb-8 p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer border-2 border-transparent hover:border-[#9E1B32]"
                     onClick={() => toggleSection("meeting-notes")}
@@ -373,7 +363,57 @@ export default function OfficerResourcesPage() {
                         </div>
                     )}
                 </section>
+
+                {/* Depth Chart Section */}
+                <section
+                    className="mb-8 p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer border-2 border-transparent hover:border-[#9E1B32]"
+                    onClick={() => toggleSection("depth-chart")}
+                >
+                    <h2 className="text-2xl font-semibold text-gray-800">Depth Chart</h2>
+                    <p className="text-gray-600">
+                        Skier rankings for our team. View the performance and rankings of each team member based
+                        on their recent performances.
+                    </p>
+                    {openSection === "depth-chart" && (
+                        <div className="mt-4 text-gray-700">
+                            <p>Depth Chart details will be added here...</p>
+                        </div>
+                    )}
+                </section>
+                <section
+                    className="mb-8 p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer border-2 border-transparent hover:border-[#9E1B32]"
+                    onClick={() => toggleSection("fundraising")}
+                >
+                    <h2 className="text-2xl font-semibold text-gray-800">Fundraising Addresses</h2>
+                    <p className="text-gray-600">
+                        Addresses for current and upcoming fundraising activities. Use this to organize
+                        fundraising efforts and stay updated on goals.
+                    </p>
+                    {openSection === "fundraising" && (
+                        <div className="mt-4 text-gray-700">
+                            <p>Fundraising Addresses will be added here...</p>
+                        </div>
+                    )}
+                </section>
+
+                {/* Alumni Contact Section*/}
+                <section
+                    className="mb-8 p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer border-2 border-transparent hover:border-[#9E1B32]"
+                    onClick={() => toggleSection("alumni-contacts")}
+                >
+                    <h2 className="text-2xl font-semibold text-gray-800">Alumni Contacts</h2>
+                    <p className="text-gray-600">
+                        Access the contact information of team alumni to foster relationships and networking for
+                        team growth and sponsorships.
+                    </p>
+                    {openSection === "alumni-contacts" && (
+                        <div className="mt-4 text-gray-700">
+                            <p>Alumni contact information will be added here...</p>
+                        </div>
+                    )}
+                </section>
             </main>
+            <ScrollToTop />
         </div>
     );
 }

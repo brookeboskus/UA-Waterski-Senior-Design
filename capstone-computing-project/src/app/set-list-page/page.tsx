@@ -6,6 +6,7 @@ import BlankPfp from '../img/blankpfp.svg';
 import { useRouter } from 'next/navigation';
 import ReactDOMServer from 'react-dom/server';
 import boatSVG from '../img/boat-svgrepo-com.svg';
+import ScrollToTop from '../../components/ScrollToTop';
 
 
 let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
@@ -772,6 +773,7 @@ export default function SetListPage() {
                 </Popup>
             </div>
             {TimeTableInit()}
+            <ScrollToTop />
         </div>
     );
 
