@@ -285,7 +285,7 @@ export default function RosterPage() {
                     {filteredMembers && filteredMembers.length > 0 ? (
                         filteredMembers.map((member, index) => (
                             <div
-                                key={member.id}
+                                key={member.CWID}
                                 className={`relative perspective w-full h-72 border border-gray-200 transform hover:scale-105`}
                                 onClick={() => handleFlip(index)}
                                 onMouseLeave={() => handleMouseLeave(index)}
