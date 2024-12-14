@@ -7,7 +7,7 @@ import Image from 'next/image';
 import WaterskiImage from '../img/loginSkiIMG.svg';
 import SkiBamaLogo from '../img/skibamalogo.svg';
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
+let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
 
 
@@ -157,6 +157,25 @@ export default function LoginPage() {
         if (email === "skibama18@gmail.com" && password === "test") {
             console.log("valid email");
             try {
+
+                if (
+                    window.location.host.includes("brian") ||
+                    window.location.host.includes("lilly") ||
+                    window.location.host.includes("brooke") ||
+                    window.location.host.includes("anastasia")
+                ) {
+                    const host = window.location.host;
+                    const baseDomain = "uawaterski.com";
+
+                    if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
+                        APP_URL = `https://${host}/`;
+                    }
+
+                    // console.log("Current APP_URL:", APP_URL);
+                } else {
+                    console.log("oops you coded wrong, what a dummy");
+                }
+
                 const response = await axios.post(`${APP_URL}api/login`, { email, password }, {
                     headers: {
                         'Content-Type': 'application/json',
