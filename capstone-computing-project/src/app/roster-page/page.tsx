@@ -38,7 +38,7 @@ interface TeamMember {
     GradYear: string;
     MemberType: string;
     Major: string;
-    PfpImage: string;
+    PfpImage: string | null;
     Email?: string;
     Phone?: string;
     SlalomDriver?: string;
