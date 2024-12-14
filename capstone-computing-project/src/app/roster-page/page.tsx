@@ -304,6 +304,54 @@ export default function RosterPage() {
                     )
                 );
 
+                const fetchRoster = async () => {
+                    try {
+                        const token = localStorage.getItem("token");
+                        if (!token) {
+                            throw new Error("No token available");
+                        }
+        
+                        if (
+                            window.location.host.includes("brian") ||
+                            window.location.host.includes("lilly") ||
+                            window.location.host.includes("brooke") ||
+                            window.location.host.includes("anastasia")
+                        ) {
+                            const host = window.location.host;
+                            const baseDomain = "uawaterski.com";
+        
+                            if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
+                                APP_URL = `https://${host}/`;
+                            }
+        
+                            // console.log("Current APP_URL:", APP_URL);
+                        } else {
+                            console.log("oops you coded wrong, what a dummy");
+                        }
+                        
+        
+                        const response = await axios.get<TeamMember[]>(`${APP_URL}api/roster`, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        });
+        
+                        // admin account hidden on roster display
+                        const filteredMembers = response.data.filter(
+                            (member) => member.Email?.toLowerCase() !== "skibama18@gmail.com"
+                        );
+        
+                        setTeamMembers(filteredMembers);
+                    } catch (error) {
+                        console.error("Failed to fetch team roster:", error);
+                        router.push("/login-page");
+                    } finally {
+                        setLoading(false);
+                    }
+                };
+
+                await fetchRoster();
+
                 // close the modal
                 setIsUserUpdated(!isUserUpdated);
                 closeEditUserModal();
@@ -383,6 +431,43 @@ export default function RosterPage() {
                     onChange={handleYearChange}
                     className="text-black"
                     placeholder="Filter by Class Year"
+                    theme={(theme) => ({
+                        ...theme,
+                        colors: {
+                            ...theme.colors,
+                            primary: "#9E1B32",
+
+                        },
+                    })}
+                    styles={{
+                        control: (provided) => ({
+                            ...provided,
+                            borderRadius: "8px",
+                            borderColor: "#9E1B32",
+                            boxShadow: "none",
+                            "&:hover": {
+                                borderColor: "#9E1B32",
+                            },
+                        }),
+                        menu: (provided) => ({
+                            ...provided,
+                            borderRadius: "8px",
+                            border: "1px solid #9E1B32",
+                            boxShadow: "none",
+                        }),
+                        option: (provided, state) => ({
+                            ...provided,
+                            backgroundColor: state.isSelected
+                                ? "#ffffff"
+                                : state.isFocused
+                                    ? "#FBE4E6"
+                                    : "white",
+                            color: state.isSelected ? "#9E1B32" : "#333333",
+                            "&:hover": {
+                                backgroundColor: "#FBE4E6",
+                            },
+                        }),
+                    }}
                 />
                 <Select
                     isMulti
@@ -391,6 +476,43 @@ export default function RosterPage() {
                     onChange={handleRoleChange}
                     className="text-black"
                     placeholder="Filter by Member Type"
+                    theme={(theme) => ({
+                        ...theme,
+                        colors: {
+                            ...theme.colors,
+                            primary: "#9E1B32",
+
+                        },
+                    })}
+                    styles={{
+                        control: (provided) => ({
+                            ...provided,
+                            borderRadius: "8px",
+                            borderColor: "#9E1B32",
+                            boxShadow: "none",
+                            "&:hover": {
+                                borderColor: "#9E1B32",
+                            },
+                        }),
+                        menu: (provided) => ({
+                            ...provided,
+                            borderRadius: "8px",
+                            border: "1px solid #9E1B32",
+                            boxShadow: "none",
+                        }),
+                        option: (provided, state) => ({
+                            ...provided,
+                            backgroundColor: state.isSelected
+                                ? "#ffffff"
+                                : state.isFocused
+                                    ? "#FBE4E6"
+                                    : "white",
+                            color: state.isSelected ? "#9E1B32" : "#333333",
+                            "&:hover": {
+                                backgroundColor: "#FBE4E6",
+                            },
+                        }),
+                    }}
                 />
                 <Select
                     options={sortOptions}
@@ -399,6 +521,43 @@ export default function RosterPage() {
                     className="text-black"
                     placeholder="Sort by Name"
                     isClearable
+                    theme={(theme) => ({
+                        ...theme,
+                        colors: {
+                            ...theme.colors,
+                            primary: "#9E1B32",
+
+                        },
+                    })}
+                    styles={{
+                        control: (provided) => ({
+                            ...provided,
+                            borderRadius: "8px",
+                            borderColor: "#9E1B32",
+                            boxShadow: "none",
+                            "&:hover": {
+                                borderColor: "#9E1B32",
+                            },
+                        }),
+                        menu: (provided) => ({
+                            ...provided,
+                            borderRadius: "8px",
+                            border: "1px solid #9E1B32",
+                            boxShadow: "none",
+                        }),
+                        option: (provided, state) => ({
+                            ...provided,
+                            backgroundColor: state.isSelected
+                                ? "#ffffff"
+                                : state.isFocused
+                                    ? "#FBE4E6"
+                                    : "white",
+                            color: state.isSelected ? "#9E1B32" : "#333333",
+                            "&:hover": {
+                                backgroundColor: "#FBE4E6",
+                            },
+                        }),
+                    }}
                 />
             </div>
 
