@@ -308,7 +308,7 @@ export default function OfficerResourcesPage() {
                 {/* Manage Members Section */}
                 <section
                     ref={manageMembersRef}
-                    className={`mb-8 p-6 bg-white rounded-lg shadow-lg transition-shadow duration-300 border-2 ${
+                    className={`mb-8 p-6 bg-white rounded-lg shadow-lg transition-shadow duration-300 border-2 hover:border-[#9E1B32] ${
                         openSection === "manage-members" ? "border-[#9E1B32]" : "border-transparent"
                     }`}
                 >
@@ -318,12 +318,13 @@ export default function OfficerResourcesPage() {
                     >
                         <h2 className="text-2xl font-semibold text-gray-800">Manage Members</h2>
                         <p className="text-gray-600">
-                            Manage our team members, their roles, etc.
+                            Manage our team members, their roles, and profile information.
+                            If the user has put inappropriate information (even their profile picture, this section lets the admin change such info)
                         </p>
                     </div>
                     {openSection === "manage-members" && (
                         <div className="mt-4 text-gray-700">
-                            <p>Manage members section will be added for super admin</p>
+                            <p>Manage members section is only visible for the admin account.</p>
                             <RosterPage />
                         </div>
                     )}

@@ -9,6 +9,8 @@ import React from "react";
 import Select, { SingleValue, MultiValue } from "react-select";
 import { useRouter } from "next/navigation";
 import ScrollToTop from "../../components/ScrollToTop";
+import editpfpicon from '../img/EditPFPIcon.svg';
+
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -63,6 +65,25 @@ export default function RosterPage() {
     const [memberToDelete, setMemberToDelete] = useState<TeamMember | null>(null);
     const [isSuperAdmin, setIsSuperAdmin] = useState<boolean>(false);
 
+    const [showDeleteModal, setShowDeleteModal] = useState(false); // delete modal
+    const [showEditModal, setShowEditModal] = useState(false); // edit user modal
+
+
+
+    const [email, setEmail] = useState('');
+    const [fname, setFname] = useState('');
+    const [lname, setLname] = useState('');
+    const [selectedMajor, setSelectedMajor] = useState('');
+    const [slalomDriver, setslalomDriver] = useState('');
+    const [trickDriver, settrickDriver] = useState('');
+    const [jumpDriver, setjumpDriver] = useState('');
+    const [phone, setPhone] = useState('');
+    const [gradYear, setGradYear] = useState('');
+    const [memberType, setStatus] = useState('');
+    const [isUserUpdated, setIsUserUpdated] = useState(false);
+    const [PfpImage, setProfilePicture] = useState<File | null>(null);
+
+
     const router = useRouter();
 
     useEffect(() => {
@@ -81,7 +102,7 @@ export default function RosterPage() {
                 const decodedToken = JSON.parse(atob(token.split(".")[1]));
                 setIsLoggedIn(true);
                 if (decodedToken.email === "skibama18@gmail.com") {
-                    setIsSuperAdmin(true); 
+                    setIsSuperAdmin(true);
                 }
             }
             setIsCheckingLogin(false);
@@ -97,18 +118,18 @@ export default function RosterPage() {
                 if (!token) {
                     throw new Error("No token available");
                 }
-    
+
                 const response = await axios.get<TeamMember[]>(`${APP_URL}api/roster`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-    
+
                 // admin account hidden on roster display
                 const filteredMembers = response.data.filter(
                     (member) => member.Email?.toLowerCase() !== "skibama18@gmail.com"
                 );
-    
+
                 setTeamMembers(filteredMembers);
             } catch (error) {
                 console.error("Failed to fetch team roster:", error);
@@ -117,12 +138,12 @@ export default function RosterPage() {
                 setLoading(false);
             }
         };
-    
+
         if (isLoggedIn) {
             fetchRoster();
         }
     }, [isLoggedIn, router]);
-    
+
 
     const handleYearChange = (selectedOptions: MultiValue<Option>) => {
         setSelectedYears(selectedOptions);
@@ -148,50 +169,134 @@ export default function RosterPage() {
 
     const handleDeleteMember = async () => {
         if (!memberToDelete) return;
-    
+
         try {
             const token = localStorage.getItem("token");
             if (!token) {
                 throw new Error("No token available");
             }
-    
-            console.log("Deleting member with CWID: ", memberToDelete.CWID); 
+
+            console.log("Deleting member with CWID: ", memberToDelete.CWID);
             console.log(
                 "DELETE Endpoint:",
-                `${APP_URL}api/roster?CWID=${memberToDelete.CWID}` 
+                `${APP_URL}api/roster?CWID=${memberToDelete.CWID}`
             );
-    
+
             const response = await axios.delete(`${APP_URL}api/roster?CWID=${memberToDelete.CWID}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
-    
+
             // console.log("Delete Response:", response);
-    
+
             setTeamMembers((prevMembers) =>
                 prevMembers.filter((member) => member.CWID !== memberToDelete.CWID)
             );
-    
-            setShowModal(false); 
-            setMemberToDelete(null); 
+
+            setShowModal(false);
+            setMemberToDelete(null);
         } catch (error) {
-            console.error("Failed to delete team member:", error); 
+            console.error("Failed to delete team member:", error);
         }
     };
-    
-    
-    
+
+
+
 
     const openDeleteModal = (member: TeamMember) => {
         setMemberToDelete(member);
-        setShowModal(true);
+        setShowDeleteModal(true);
+
     };
 
     const closeModal = () => {
-        setShowModal(false);
+        setShowDeleteModal(false);
         setMemberToDelete(null);
     };
+
+    const openEditUserModal = (member: TeamMember) => {
+        console.log("Edit Member:", member);
+        setMemberToDelete(null);
+        setShowEditModal(true);
+        setMemberToDelete(member);
+    };
+
+    const closeEditUserModal = () => {
+        setShowEditModal(false);
+        setMemberToDelete(null);
+    };
+
+    const handleEditMember = async (e: React.FormEvent) => {
+        e.preventDefault(); // prevents form submission reload
+
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('Authentication token missing. Please log in again.');
+                return;
+            }
+
+            let pfpBase64 = null;
+            if (PfpImage) {
+                const reader = new FileReader();
+                pfpBase64 = await new Promise((resolve, reject) => {
+                    reader.onloadend = () => resolve(reader.result?.toString().split(",")[1]);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(PfpImage);
+                });
+            }
+
+            if (!memberToDelete) {
+                console.error("No member selected for editing.");
+                return;
+            }
+
+            const payload = {
+                Fname: memberToDelete.Fname,
+                Lname: memberToDelete.Lname,
+                GradYear: memberToDelete.GradYear,
+                Major: memberToDelete.Major,
+                Phone: memberToDelete.Phone,
+                MemberType: memberToDelete.MemberType,
+                JumpDriver: memberToDelete.JumpDriver,
+                SlalomDriver: memberToDelete.SlalomDriver,
+                TrickDriver: memberToDelete.TrickDriver,
+                PfpImage: pfpBase64,
+                targetEmail: memberToDelete.Email,
+            };
+
+            const response = await fetch(`${APP_URL}api/updateProfile`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ payload }),
+            });
+
+            if (response.ok) {
+                const updatedMember = await response.json();
+
+                // updates the teamMembers state directly
+                setTeamMembers((prevMembers) =>
+                    prevMembers.map((member) =>
+                        member.CWID === updatedMember.CWID ? { ...member, ...updatedMember } : member
+                    )
+                );
+
+                // close the modal
+                setIsUserUpdated(!isUserUpdated);
+                closeEditUserModal();
+            } else {
+                const error = await response.json();
+                console.error('Failed to update member profile:', error.message || response.statusText);
+            }
+        } catch (error) {
+            console.error('Failed to update member profile:', error);
+        }
+    };
+
 
     const filteredMembers = teamMembers
         .filter((member) => {
@@ -234,7 +339,7 @@ export default function RosterPage() {
                         onClick={handleToggleEdit}
                         className="bg-[#9E1B32] text-white px-4 py-2 rounded-md shadow-md hover:bg-[#B32346] transition duration-300"
                     >
-                        {isEditMode ? "Exit Edit Mode" : "Edit"}
+                        {isEditMode ? "Cancel" : "Edit"}
                     </button>
                 )}
             </div>
@@ -315,14 +420,28 @@ export default function RosterPage() {
                                                 <strong>Major:</strong> {member.Major || "N/A"}
                                             </p>
                                         </div>
+
+                                        {/* admin account pressed edit button on roster page. */}
                                         {isEditMode && (
-                                            <button
-                                                onClick={() => openDeleteModal(member)}
-                                                className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded-md shadow-md hover:bg-red-700 transition duration-300"
-                                            >
-                                                -
-                                            </button>
+                                            <div className="relative flex justify-end space-x-4 mr-2">
+                                                {/* delete button icon */}
+                                                <button
+                                                    onClick={() => openDeleteModal(member)}
+                                                    className="bg-gray-200 text-red-500 px-2 py-1 w-10 h-10 -mt-60 rounded-md shadow-md hover:bg-gray-500 transition duration-300"
+                                                >
+                                                    -
+                                                </button>
+
+                                                {/* edit button icon */}
+                                                <button
+                                                    onClick={() => openEditUserModal(member)}
+                                                    className="bg-gray-200 text-white px-4 py-1 w-10 h-10 -mt-60 rounded-md shadow-md hover:bg-gray-500 transition duration-300"
+                                                >
+                                                    <Image src={editpfpicon} alt="Edit PFP Icon" />
+                                                </button>
+                                            </div>
                                         )}
+
                                     </div>
 
                                     <div className="flip-card-back bg-white shadow-md hover:shadow-lg rounded-lg overflow-hidden p-4 text-black h-full">
@@ -357,7 +476,7 @@ export default function RosterPage() {
             <ScrollToTop />
 
             {/* Confirmation Modal */}
-            {showModal && memberToDelete && (
+            {showDeleteModal && memberToDelete && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6 text-center">
                         <h3 className="text-2xl font-semibold mb-4 text-[#9E1B32]">
@@ -383,6 +502,407 @@ export default function RosterPage() {
                     </div>
                 </div>
             )}
+
+            {/* Modal for editing user */}
+            {showEditModal && memberToDelete && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative mt-10" style={{ maxHeight: "90vh", overflowY: "auto" }}>
+                        <h3 className="text-2xl font-semibold mb-4 text-[#9E1B32]">
+                            Edit Member Details
+                        </h3>
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault(); // prevents the default form submission
+                                handleEditMember(e);
+                            }}
+                        >
+
+                            {/* update user's First Name */}
+                            <label className="block mb-2 text-black">
+                                First Name
+                                <input
+                                    type="text"
+                                    value={memberToDelete.Fname}
+                                    onChange={(e) =>
+                                        setMemberToDelete({
+                                            ...memberToDelete,
+                                            Fname: e.target.value,
+                                        })
+                                    }
+                                    className="w-full p-2 border rounded-md"
+                                />
+                            </label>
+
+                            {/* update user's Last Name */}
+                            <label className="block mb-2 text-black">
+                                Last Name
+                                <input
+                                    type="text"
+                                    value={memberToDelete.Lname}
+                                    onChange={(e) =>
+                                        setMemberToDelete({
+                                            ...memberToDelete,
+                                            Lname: e.target.value,
+                                        })
+                                    }
+                                    className="w-full p-2 border rounded-md"
+                                />
+                            </label>
+
+                            {/* update user's PFP or remove their pfp entirely if inappropriate */}
+
+                            <label className="block mb-2 text-black">
+                                Profile Picture
+                                <div className="flex items-center space-x-4 bg-[#9E1B32]">
+                                    {/* hides the original file input text (Choose File with gray background one) */}
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        id="profile-picture"
+                                        onChange={(e) => setProfilePicture(e.target.files?.[0] || null)}
+                                        className="hidden"
+                                    />
+
+                                    {/* custom button to upload */}
+                                    <label
+                                        htmlFor="profile-picture"
+                                        className="bg-[#9E1B32] text-white px-4 py-2 rounded-md shadow-md hover:bg-[#B32346] cursor-pointer transition duration-300"
+                                    >
+                                        Choose File
+                                    </label>
+
+                                    {PfpImage && (
+                                        <span className="text-white">{PfpImage.name}</span>
+                                    )}
+                                </div>
+                            </label>
+
+
+                            <div className="flex items-center mt-2">
+                                {/* Custom Styled Checkbox */}
+                                <input
+                                    type="checkbox"
+                                    id="remove-pfp"
+                                    onChange={(e) => {
+                                        if (e.target.checked) {
+                                            setProfilePicture(null);
+                                            setMemberToDelete({
+                                                ...memberToDelete,
+                                                PfpImage: null,
+                                            });
+                                        }
+                                    }}
+                                    className="peer hidden"
+                                />
+                                <label
+                                    htmlFor="remove-pfp"
+                                    className="w-5 h-5 border border-1 border-[#9E1B32] rounded-md flex items-center justify-center cursor-pointer peer-checked:bg-[#9E1B32] peer-checked:text-white"
+                                >
+                                    ✓
+                                </label>
+                                <span className="ml-2 text-gray-500">Remove Profile Picture</span>
+                            </div>
+
+
+                            {/* end of section for user's PFP or remove their pfp entirely if inappropriate */}
+
+                            {/* update user's GradYear */}
+                            <label className="block mb-2 text-black">
+                                Graduation Year
+                                <Select
+                                    value={{
+                                        value: memberToDelete.GradYear,
+                                        label: memberToDelete.GradYear,
+                                    }}
+                                    options={yearOptions}
+                                    onChange={(selectedOption) =>
+                                        setMemberToDelete({
+                                            ...memberToDelete,
+                                            GradYear: selectedOption?.value || "",
+                                        })
+                                    }
+                                    theme={(theme) => ({
+                                        ...theme,
+                                        colors: {
+                                            ...theme.colors,
+                                            primary: "#9E1B32",
+
+                                        },
+                                    })}
+                                    styles={{
+                                        control: (provided) => ({
+                                            ...provided,
+                                            borderRadius: "8px",
+                                            borderColor: "#9E1B32",
+                                            boxShadow: "none",
+                                            "&:hover": {
+                                                borderColor: "#9E1B32",
+                                            },
+                                        }),
+                                        menu: (provided) => ({
+                                            ...provided,
+                                            borderRadius: "8px",
+                                            border: "1px solid #9E1B32",
+                                            boxShadow: "none",
+                                        }),
+                                        option: (provided, state) => ({
+                                            ...provided,
+                                            backgroundColor: state.isSelected
+                                                ? "#ffffff"
+                                                : state.isFocused
+                                                    ? "#FBE4E6"
+                                                    : "white",
+                                            color: state.isSelected ? "#9E1B32" : "#333333",
+                                            "&:hover": {
+                                                backgroundColor: "#FBE4E6",
+                                            },
+                                        }),
+                                    }}
+                                />
+                            </label>
+
+                            {/* update user's member type (Athlete or Officer) */}
+                            <label className="block mb-2 text-black">
+                                Member Type
+                                <Select
+                                    value={{
+                                        value: memberToDelete.MemberType,
+                                        label: memberToDelete.MemberType,
+                                    }}
+                                    options={roleOptions}
+                                    onChange={(selectedOption) =>
+                                        setMemberToDelete({
+                                            ...memberToDelete,
+                                            MemberType: selectedOption?.value || "",
+                                        })
+                                    }
+                                    theme={(theme) => ({
+                                        ...theme,
+                                        colors: {
+                                            ...theme.colors,
+                                            primary: "#9E1B32",
+                                        },
+                                    })}
+                                    styles={{
+                                        control: (provided) => ({
+                                            ...provided,
+                                            borderRadius: "8px",
+                                            borderColor: "#9E1B32",
+                                            boxShadow: "none",
+                                            "&:hover": {
+                                                borderColor: "#9E1B32",
+                                            },
+                                        }),
+                                        menu: (provided) => ({
+                                            ...provided,
+                                            borderRadius: "8px",
+                                            border: "1px solid #9E1B32",
+                                            boxShadow: "none",
+                                        }),
+                                        option: (provided, state) => ({
+                                            ...provided,
+                                            backgroundColor: state.isSelected
+                                                ? "#ffffff"
+                                                : state.isFocused
+                                                    ? "#FBE4E6"
+                                                    : "white",
+                                            color: state.isSelected ? "#9E1B32" : "#333333",
+                                            "&:hover": {
+                                                backgroundColor: "#FBE4E6",
+                                            },
+                                        }),
+                                    }}
+                                />
+                            </label>
+
+                            {/* update user on their SlalomDriver TrickDriver JumpDriver with yes or no choice */}
+                            <label className="block mb-2 text-black">
+                                Slalom Driver
+                                <Select
+                                    value={{
+                                        value: memberToDelete.SlalomDriver,
+                                        label: memberToDelete.SlalomDriver,
+                                    }}
+                                    options={[
+                                        { value: "Yes", label: "Yes" },
+                                        { value: "No", label: "No" },
+                                    ]}
+                                    onChange={(selectedOption) =>
+                                        setMemberToDelete({
+                                            ...memberToDelete,
+                                            SlalomDriver: selectedOption?.value || "",
+                                        })
+                                    }
+                                    theme={(theme) => ({
+                                        ...theme,
+                                        colors: {
+                                            ...theme.colors,
+                                            primary: "#9E1B32",
+                                        },
+                                    })}
+                                    styles={{
+                                        control: (provided) => ({
+                                            ...provided,
+                                            borderRadius: "8px",
+                                            borderColor: "#9E1B32",
+                                            boxShadow: "none",
+                                            "&:hover": {
+                                                borderColor: "#9E1B32",
+                                            },
+                                        }),
+                                        menu: (provided) => ({
+                                            ...provided,
+                                            borderRadius: "8px",
+                                            border: "1px solid #9E1B32",
+                                            boxShadow: "none",
+                                        }),
+                                        option: (provided, state) => ({
+                                            ...provided,
+                                            backgroundColor: state.isSelected
+                                                ? "#ffffff"
+                                                : state.isFocused
+                                                    ? "#FBE4E6"
+                                                    : "white",
+                                            color: state.isSelected ? "#9E1B32" : "#333333",
+                                            "&:hover": {
+                                                backgroundColor: "#FBE4E6",
+                                            },
+                                        }),
+                                    }}
+                                />
+
+                            </label>
+                            <label className="block mb-2 text-black">
+                                Trick Driver
+                                <Select
+                                    value={{
+                                        value: memberToDelete.TrickDriver,
+                                        label: memberToDelete.TrickDriver,
+                                    }}
+                                    options={[
+                                        { value: "Yes", label: "Yes" },
+                                        { value: "No", label: "No" },
+                                    ]}
+                                    onChange={(selectedOption) =>
+                                        setMemberToDelete({
+                                            ...memberToDelete,
+                                            TrickDriver: selectedOption?.value || "",
+                                        })
+                                    }
+                                    theme={(theme) => ({
+                                        ...theme,
+                                        colors: {
+                                            ...theme.colors,
+                                            primary: "#9E1B32",
+                                        },
+                                    })}
+                                    styles={{
+                                        control: (provided) => ({
+                                            ...provided,
+                                            borderRadius: "8px",
+                                            borderColor: "#9E1B32",
+                                            boxShadow: "none",
+                                            "&:hover": {
+                                                borderColor: "#9E1B32",
+                                            },
+                                        }),
+                                        menu: (provided) => ({
+                                            ...provided,
+                                            borderRadius: "8px",
+                                            border: "1px solid #9E1B32",
+                                            boxShadow: "none",
+                                        }),
+                                        option: (provided, state) => ({
+                                            ...provided,
+                                            backgroundColor: state.isSelected
+                                                ? "#ffffff"
+                                                : state.isFocused
+                                                    ? "#FBE4E6"
+                                                    : "white",
+                                            color: state.isSelected ? "#9E1B32" : "#333333",
+                                            "&:hover": {
+                                                backgroundColor: "#FBE4E6",
+                                            },
+                                        }),
+                                    }}
+                                />
+                            </label>
+                            <label className="block mb-2 text-black">
+                                Jump Driver
+                                <Select
+                                    value={{
+                                        value: memberToDelete.JumpDriver,
+                                        label: memberToDelete.JumpDriver,
+                                    }}
+                                    options={[
+                                        { value: "Yes", label: "Yes" },
+                                        { value: "No", label: "No" },
+                                    ]}
+                                    onChange={(selectedOption) =>
+                                        setMemberToDelete({
+                                            ...memberToDelete,
+                                            JumpDriver: selectedOption?.value || "",
+                                        })
+                                    }
+                                    theme={(theme) => ({
+                                        ...theme,
+                                        colors: {
+                                            ...theme.colors,
+                                            primary: "#9E1B32",
+                                        },
+                                    })}
+                                    styles={{
+                                        control: (provided) => ({
+                                            ...provided,
+                                            borderRadius: "8px",
+                                            borderColor: "#9E1B32",
+                                            boxShadow: "none",
+                                            "&:hover": {
+                                                borderColor: "#9E1B32",
+                                            },
+                                        }),
+                                        menu: (provided) => ({
+                                            ...provided,
+                                            borderRadius: "8px",
+                                            border: "1px solid #9E1B32",
+                                            boxShadow: "none",
+                                        }),
+                                        option: (provided, state) => ({
+                                            ...provided,
+                                            backgroundColor: state.isSelected
+                                                ? "#ffffff"
+                                                : state.isFocused
+                                                    ? "#FBE4E6"
+                                                    : "white",
+                                            color: state.isSelected ? "#9E1B32" : "#333333",
+                                            "&:hover": {
+                                                backgroundColor: "#FBE4E6",
+                                            },
+                                        }),
+                                    }}
+                                />
+                            </label>
+
+                            <div className="flex justify-end space-x-4 mt-6">
+                                <button
+                                    onClick={closeEditUserModal}
+                                    type="button"
+                                    className="bg-gray-300 text-black px-4 py-2 rounded-md hover:bg-gray-400"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="bg-[#9E1B32] text-white px-4 py-2 rounded-md hover:bg-[#8B1A2B]"
+                                >
+                                    Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }
