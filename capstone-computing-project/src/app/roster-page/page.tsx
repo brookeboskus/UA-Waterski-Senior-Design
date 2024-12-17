@@ -337,6 +337,7 @@ export default function RosterPage() {
                         });
         
                         // admin account hidden on roster display
+                        // todo: using .env to hide the admin email for better security
                         const filteredMembers = response.data.filter(
                             (member) => member.Email?.toLowerCase() !== "skibama18@gmail.com"
                         );
@@ -762,7 +763,7 @@ export default function RosterPage() {
                                     type="checkbox"
                                     id="remove-pfp"
                                     onChange={(e) => {
-                                        if (e.target.checked) {
+                                        if (e.target.checked && setProfilePicture !== null) {
                                             setProfilePicture(null);
                                             setMemberToDelete({
                                                 ...memberToDelete,

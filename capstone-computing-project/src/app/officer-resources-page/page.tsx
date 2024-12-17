@@ -172,7 +172,7 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: MeetingNotes
                     {notes.map((note) => (
                         <div
                             key={note.id}
-                            className="p-6 bg-white rounded-lg shadow-lg border border-gray-200 hover:border-[#9E1B32] transition duration-300 cursor-pointer"
+                            className="p-6 bg-white rounded-lg shadow-lg border border-gray-200 hover:border-[#9E1B32] transition duration-300 cursor-pointer overflow-x-auto"
                             onClick={(event) => toggleNote(event, note.id)}
                         >
                             <div className="flex justify-between items-center">
@@ -324,7 +324,7 @@ export default function OfficerResourcesPage() {
                     </div>
                     {openSection === "manage-members" && (
                         <div className="mt-4 text-gray-700">
-                            <p>Manage members section is only visible for the admin account.</p>
+                            <p>Manage members section is only editable for the admin account.</p>
                             <RosterPage />
                         </div>
                     )}
