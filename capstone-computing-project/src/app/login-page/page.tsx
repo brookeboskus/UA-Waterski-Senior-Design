@@ -2,14 +2,12 @@
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
 import axios, { AxiosError } from 'axios';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation'; 
 import Image from 'next/image';
 import WaterskiImage from '../img/loginSkiIMG.svg';
 import SkiBamaLogo from '../img/skibamalogo.svg';
 
 let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
-
-
 
 // list of majors offered by UA, think we should take out minors for now. our database only holds one major, but ppl can have multiple as well.
 const majors = [
@@ -123,7 +121,19 @@ export default function LoginPage() {
     const [PfpImage, setProfilePicture] = useState<File | null>(null);
     const [isLogin, setIsLogin] = useState(true);
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const redirect = searchParams.get('redirect') || '/';
 
+    useEffect(() => {
+        if (router.isReady) {
+            console.log('Router query:', router.query); 
+            const redirect = router.query?.redirect as string;
+            console.log('Redirect path:', redirect);
+            setRedirectPath(redirect || '/');
+        } else {
+            console.log('that didnt work bruh why are u even coding at this point');
+        }
+    }, [router.isReady, router.query]);
 
     useEffect(() => {
         document.title = 'UA Waterski - Login/Sign Up';
@@ -150,7 +160,6 @@ export default function LoginPage() {
     };
 
     //listens to our subomains for endpoint
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
     
@@ -182,7 +191,10 @@ export default function LoginPage() {
                     },
                 });
                 localStorage.setItem('token', response.data.token);
-                router.push('/');
+
+                console.log("Redirecting to:", redirect as string);
+
+                router.push(redirect || '/');
                 return; 
             } catch (error) {
                 let errorMessage = "An unexpected error occurred.";
@@ -213,7 +225,6 @@ export default function LoginPage() {
                 reader.readAsDataURL(PfpImage);
             });
         }
-    
         const payload = isLogin
             ? { email, password }
             : { email, password, fname, lname, cwid, phone, gradYear, major: selectedMajor?.value || '', pfpimage: pfpBase64 };
@@ -226,7 +237,7 @@ export default function LoginPage() {
             });
             if (isLogin) {
                 localStorage.setItem('token', response.data.token);
-                router.push('/');
+                router.push(redirect as string);
             } else {
                 setIsLogin(true);
             }
@@ -240,7 +251,6 @@ export default function LoginPage() {
             document.getElementById('errorText')!.innerText = errorMessage;
         }
     };
-    
 
     return (
         <div className='login-page flex items-center justify-center min-h-screen bg-[#ffffff]'>

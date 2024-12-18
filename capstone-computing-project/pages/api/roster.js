@@ -3,7 +3,7 @@ import db from '../../db.js';
 const getRoster = async (req, res) => {
     try {
         const [results] = await db.query(
-            'SELECT CWID, Fname, Lname, GradYear, MemberType, Major, Phone, Email, PfpImage, SlalomDriver, TrickDriver, JumpDriver FROM User'
+            'SELECT CWID, Fname, Lname, GradYear, MemberType, Major, Phone, Email, PfpImage, SlalomDriver, TrickDriver, JumpDriver, isAdminVerified FROM User'
         );
 
         const rosterWithImages = results.map((user) => {

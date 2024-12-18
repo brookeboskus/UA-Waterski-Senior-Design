@@ -6,6 +6,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import RosterPage from "../roster-page/page";
 import ScrollToTop from '../../components/ScrollToTop';
+import confirmAccountSVG from '../../components/img/confirmaccount.svg';
+import denyAccountSVG from '../../components/img/denyaccount.svg';
 
 let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -38,11 +40,11 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: MeetingNotes
             ) {
                 const host = window.location.host;
                 const baseDomain = "uawaterski.com";
-    
+
                 if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
                     APP_URL = `https://${host}/`;
                 }
-    
+
                 // console.log("Current APP_URL:", APP_URL);
             } else {
                 console.log("oops you coded wrong, what a dummy");
@@ -84,11 +86,11 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: MeetingNotes
             ) {
                 const host = window.location.host;
                 const baseDomain = "uawaterski.com";
-    
+
                 if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
                     APP_URL = `https://${host}/`;
                 }
-    
+
                 // console.log("Current APP_URL:", APP_URL);
             } else {
                 console.log("oops you coded wrong, what a dummy");
@@ -119,11 +121,11 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: MeetingNotes
             ) {
                 const host = window.location.host;
                 const baseDomain = "uawaterski.com";
-    
+
                 if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
                     APP_URL = `https://${host}/`;
                 }
-    
+
                 // console.log("Current APP_URL:", APP_URL);
             } else {
                 console.log("oops you coded wrong, what a dummy");
@@ -209,6 +211,61 @@ function MeetingNotes({ isEditing, setIsEditing, notes, setNotes }: MeetingNotes
     );
 }
 
+
+interface User {
+    Email: string;
+    Fname: string;
+    Lname: string;
+}
+
+interface ConfirmMemberRegistrationProps {
+    pendingUsers: User[];
+    handleAction: (email: string, action: 'confirm' | 'deny') => void;
+}
+
+function ConfirmMemberRegistration({ pendingUsers, handleAction }: ConfirmMemberRegistrationProps) {
+    return (
+        <div className="flex flex-col items-center min-h-[50vh] bg-gray-100 p-6 rounded-lg shadow-lg">
+            <h1 className="text-2xl font-bold text-gray-700 mb-6">Confirm Member Registration</h1>
+            <div className="w-full max-w-4xl">
+                {pendingUsers.length === 0 ? (
+                    <p className="text-lg text-gray-700 text-center">No pending registrations to confirm.</p>
+                ) : (
+                    <ul className="space-y-4">
+                        {pendingUsers.map(user => (
+                            <li key={user.Email} className="bg-white p-4 rounded-lg shadow-md flex justify-between items-center">
+                                <div>
+                                    <p className="text-lg font-medium text-gray-900">{user.Fname} {user.Lname}</p>
+                                    <p className="text-sm text-gray-600">{user.Email}</p>
+                                </div>
+                                <div className="flex space-x-2">
+                                    <button
+                                        className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+                                        onClick={() => handleAction(user.Email, 'confirm')}
+                                    >
+                                        <svg width="25" height="25" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M4 12.6111L8.92308 17.5L20 6.5" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                    </button>
+                                    <button
+                                        className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                                        onClick={() => handleAction(user.Email, 'deny')}
+                                    >
+                                        <svg fill="#000000" width="25" height="25" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                            <title>cancel2</title>
+                                            <path d="M19.587 16.001l6.096 6.096c0.396 0.396 0.396 1.039 0 1.435l-2.151 2.151c-0.396 0.396-1.038 0.396-1.435 0l-6.097-6.096-6.097 6.096c-0.396 0.396-1.038 0.396-1.434 0l-2.152-2.151c-0.396-0.396-0.396-1.038 0-1.435l6.097-6.096-6.097-6.097c-0.396-0.396-0.396-1.039 0-1.435l2.153-2.151c0.396-0.396 1.038-0.396 1.434 0l6.096 6.097 6.097-6.097c0.396-0.396 1.038-0.396 1.435 0l2.151 2.152c0.396 0.396 0.396 1.038 0 1.435l-6.096 6.096z"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
+        </div>
+    );
+}
+
 export default function OfficerResourcesPage() {
     const [openSection, setOpenSection] = useState<string | null>(null);
     const [isEditing, setIsEditing] = useState(false);
@@ -218,6 +275,34 @@ export default function OfficerResourcesPage() {
     const [isCheckingLogin, setIsCheckingLogin] = useState(true);
     const router = useRouter();
     const manageMembersRef = useRef<HTMLDivElement>(null);
+
+    const [manageMembersMode, setManageMembersMode] = useState<'roster' | 'confirm'>('roster');
+
+    const [pendingUsers, setPendingUsers] = useState<User[]>([]);
+
+
+
+    useEffect(() => {
+        const fetchPendingUsers = async () => {
+            try {
+                const response = await axios.get('/api/pendingRegistrations');
+                setPendingUsers(response.data);
+            } catch (error) {
+                console.error('Failed to fetch pending users:', error);
+            }
+        };
+
+        fetchPendingUsers();
+    }, []);
+
+    const handleAction = async (email: string, action: 'confirm' | 'deny') => {
+        try {
+            await axios.post('/api/confirmRegistrations', { email, action });
+            setPendingUsers(pendingUsers.filter(user => user.Email !== email));
+        } catch (error) {
+            console.error(`Failed to ${action} user:`, error);
+        }
+    };
 
     useEffect(() => {
         document.title = "UA Waterski - Officer Resources";
@@ -277,7 +362,7 @@ export default function OfficerResourcesPage() {
                 !manageMembersRef.current.contains(event.target as Node)
             ) {
                 if (openSection === "manage-members") {
-                    setOpenSection(null); 
+                    setOpenSection(null);
                 }
             }
         };
@@ -308,9 +393,8 @@ export default function OfficerResourcesPage() {
                 {/* Manage Members Section */}
                 <section
                     ref={manageMembersRef}
-                    className={`mb-8 p-6 bg-white rounded-lg shadow-lg transition-shadow duration-300 border-2 hover:border-[#9E1B32] ${
-                        openSection === "manage-members" ? "border-[#9E1B32]" : "border-transparent"
-                    }`}
+                    className={`mb-8 p-6 bg-white rounded-lg shadow-lg transition-shadow duration-300 border-2 hover:border-[#9E1B32] ${openSection === "manage-members" ? "border-[#9E1B32]" : "border-transparent"
+                        }`}
                 >
                     <div
                         className="cursor-pointer"
@@ -325,7 +409,22 @@ export default function OfficerResourcesPage() {
                     {openSection === "manage-members" && (
                         <div className="mt-4 text-gray-700">
                             <p>Manage members section is only editable for the admin account.</p>
-                            <RosterPage />
+                            <br></br>
+                            <div className="flex space-x-4 mb-4">
+                                <button
+                                    className={`px-4 py-2 rounded-lg ${manageMembersMode === 'roster' ? 'bg-[#9E1B32] text-white' : 'bg-gray-200 text-gray-800'}`}
+                                    onClick={() => setManageMembersMode('roster')}
+                                >
+                                    Roster Page
+                                </button>
+                                <button
+                                    className={`px-4 py-2 rounded-lg ${manageMembersMode === 'confirm' ? 'bg-[#9E1B32] text-white' : 'bg-gray-200 text-gray-800'}`}
+                                    onClick={() => setManageMembersMode('confirm')}
+                                >
+                                    Confirm Member Registration
+                                </button>
+                            </div>
+                            {manageMembersMode === 'roster' ? <RosterPage /> : <ConfirmMemberRegistration pendingUsers={pendingUsers} handleAction={handleAction} />}
                         </div>
                     )}
                 </section>

@@ -1,4 +1,7 @@
 // v3
+// Current issues with manage members section for Roster page: 
+// When a user has a PFP, and the admin edits information of the user, the PFP is deleted after admin presses save chagnes
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -44,6 +47,7 @@ interface TeamMember {
     SlalomDriver?: string;
     TrickDriver?: string;
     JumpDriver?: string;
+    isAdminVerified?: number;
 }
 
 interface Option {
@@ -136,7 +140,7 @@ export default function RosterPage() {
                 } else {
                     console.log("oops you coded wrong, what a dummy");
                 }
-                
+
 
                 const response = await axios.get<TeamMember[]>(`${APP_URL}api/roster`, {
                     headers: {
@@ -145,9 +149,19 @@ export default function RosterPage() {
                 });
 
                 // admin account hidden on roster display
-                const filteredMembers = response.data.filter(
-                    (member) => member.Email?.toLowerCase() !== "skibama18@gmail.com"
-                );
+                // const filteredMembers = response.data.filter(
+                //     (member) => member.Email?.toLowerCase() !== "skibama18@gmail.com"
+                // );
+
+                console.log("Fetched team members:", response.data);
+
+                const filteredMembers = response.data.filter((member) => {
+                    console.log("Member:", member);
+                    console.log("isAdminVerified:", member.isAdminVerified);
+                    return member.Email?.toLowerCase() !== "skibama18@gmail.com" && member.isAdminVerified === 1;
+                });
+
+                console.log("Filtered team members:", filteredMembers);
 
                 setTeamMembers(filteredMembers);
             } catch (error) {
@@ -239,6 +253,10 @@ export default function RosterPage() {
         setMemberToDelete(null);
         setShowEditModal(true);
         setMemberToDelete(member);
+        setProfilePicture(null); 
+        if (member.PfpImage) {
+            setProfilePicture(new File([], member.PfpImage)); 
+        }
     };
 
     const closeEditUserModal = () => {
@@ -310,7 +328,7 @@ export default function RosterPage() {
                         if (!token) {
                             throw new Error("No token available");
                         }
-        
+
                         if (
                             window.location.host.includes("brian") ||
                             window.location.host.includes("lilly") ||
@@ -319,29 +337,29 @@ export default function RosterPage() {
                         ) {
                             const host = window.location.host;
                             const baseDomain = "uawaterski.com";
-        
+
                             if (host !== `www.${baseDomain}` && host.endsWith(baseDomain)) {
                                 APP_URL = `https://${host}/`;
                             }
-        
+
                             // console.log("Current APP_URL:", APP_URL);
                         } else {
                             console.log("oops you coded wrong, what a dummy");
                         }
-                        
-        
+
+
                         const response = await axios.get<TeamMember[]>(`${APP_URL}api/roster`, {
                             headers: {
                                 Authorization: `Bearer ${token}`,
                             },
                         });
-        
+
                         // admin account hidden on roster display
                         // todo: using .env to hide the admin email for better security
                         const filteredMembers = response.data.filter(
                             (member) => member.Email?.toLowerCase() !== "skibama18@gmail.com"
                         );
-        
+
                         setTeamMembers(filteredMembers);
                     } catch (error) {
                         console.error("Failed to fetch team roster:", error);
@@ -751,7 +769,7 @@ export default function RosterPage() {
                                     </label>
 
                                     {PfpImage && (
-                                        <span className="text-white">{PfpImage.name}</span>
+                                        <span className="text-white">{PfpImage.name.slice(0,20)}</span>
                                     )}
                                 </div>
                             </label>
@@ -762,7 +780,7 @@ export default function RosterPage() {
                                 <input
                                     type="checkbox"
                                     id="remove-pfp"
-                                    onChange={(e) => {
+                                    onChange={async (e) => {
                                         if (e.target.checked && setProfilePicture !== null) {
                                             setProfilePicture(null);
                                             setMemberToDelete({

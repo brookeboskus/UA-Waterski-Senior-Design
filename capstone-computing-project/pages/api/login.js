@@ -27,6 +27,10 @@ const login = async (req, res) => {
         if (!user.IsVerified) {
             return res.status(403).json({ message: 'Please verify your email before logging in.' });
         }
+
+        if (user.isAdminVerified === 0) {
+            return res.status(403).json({ message: 'Please wait for admin approval before logging in.' });
+        }
         
         const validPassword = await bcrypt.compare(password, user.Password);
         if (!validPassword) {

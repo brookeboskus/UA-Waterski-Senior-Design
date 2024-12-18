@@ -18,15 +18,16 @@ const signup = async (req, res) => {
     // check if email is using + symbol trick just before @
     // this one isn't complex, should refine this
     // prevents scripting accounts with + symbol trick
-    for (let i = 0; i < email.length; i++) {
-        if (email[i] === '+' && !isNaN(email[i + 1])) {
-            return res.status(400).json({ message: 'Invalid email' });
-        }
-    }
+    // ENABLE THESE AGAIN
+    // for (let i = 0; i < email.length; i++) {
+    //     if (email[i] === '+' && !isNaN(email[i + 1])) {
+    //         return res.status(400).json({ message: 'Invalid email' });
+    //     }
+    // }
 
-    if (!email.endsWith('.ua.edu')) {
-        return res.status(400).json({ message: 'Only .ua.edu emails are allowed to sign up.' });
-    }
+    // if (!email.endsWith('.ua.edu')) {
+    //     return res.status(400).json({ message: 'Only .ua.edu emails are allowed to sign up.' });
+    // }
 
     try {
         const [existingUsers] = await db.query('SELECT * FROM User WHERE Email = ?', [email]);
@@ -46,8 +47,8 @@ const signup = async (req, res) => {
 
     
         await db.query(
-            `INSERT INTO User (Email, Password, Fname, Lname, CWID, Phone, GradYear, Major, PfpImage, VerificationToken) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO User (Email, Password, Fname, Lname, CWID, Phone, GradYear, Major, PfpImage, VerificationToken, isAdminVerified) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, FALSE)`,
             [email, hashedPassword, fname, lname, cwid, phone, gradYear, major, imageBuffer, verificationToken]
         );
         console.log('User inserted into the database');
@@ -91,10 +92,42 @@ const signup = async (req, res) => {
             `,
 
         };
-        
-    
+
+        const mailOptionsForConfirmingUserRegistration = {
+            from: process.env.GMAIL_EMAIL,
+            to: email,
+            subject: 'UA Waterski Team | Confirm User Registration',
+            html: `
+                <div style="font-family: Arial, sans-serif; color: #333; padding: 20px;">
+                    <h3 style="color: #9E1B32; margin-bottom: 20px;">Hello Admin,</h3>
+                    <p style="font-size: 16px; line-height: 1.5;">
+                        Below is a link to confirm the registration of a new user:
+                    </p>
+                    <div style="background-color: #f9f9f9; padding: 20px; border-left: 4px solid #9E1B32; border-radius: 8px; margin: 20px 0; text-align: center;">
+                        <a href="https://www.uawaterski.com/login-page?redirect=/officer-resources-page" style="display: inline-block; padding: 10px 20px; background-color: #9E1B32; color: #fff; text-decoration: none; font-size: 16px; font-weight: bold; border-radius: 5px;">
+                            Confirm User Registration
+                        </a>
+                    </div>
+                    <p style="font-size: 16px; line-height: 1.5;">
+                        The user cannot login until the admin has confirmed and finalized their registration! Please make sure to be haste in your confirmation so as the user can access important features of the website.
+                    </p>
+                    <hr style="border: none; border-top: 1px solid #9E1B32; margin-top: 30px;"/>
+                    <p style="font-size: 12px; color: #777;">
+                        This email was sent from <strong>UA’s Waterski Team</strong>. You can visit our website at 
+                        <a href="https://www.uawaterski.com/" style="color: #9E1B32; text-decoration: none;">https://www.uawaterski.com/</a>.
+                    </p>
+                </div>
+            `,
+        };
+
+        // personal note: that link works on localhost, just saving it before i attempt to do this for deployment
+        // http://localhost:3000/login-page?redirect=/officer-resources-page
+
         await transporter.sendMail(mailOptions);
         console.log('Verification email sent');
+
+        await transporter.sendMail(mailOptionsForConfirmingUserRegistration);
+        console.log('User registration confirmation email sent to admin email');
     
         res.status(201).json({ message: 'Signup successful! Please check your email to verify your account.' });
     } catch (error) {
