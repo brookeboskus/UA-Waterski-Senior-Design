@@ -122,7 +122,9 @@ export default function LoginPage() {
     const [isLogin, setIsLogin] = useState(true);
     const router = useRouter();
     const searchParams = useSearchParams();
-    const redirect = searchParams.get('redirect') || '/';
+    // const redirect = searchParams.get('redirect') || '/';
+    const redirect = searchParams ? searchParams.get('redirect') || '/' : '/'; // vercel complained about searh param null
+
 
     useEffect(() => {
         if (router.isReady) {
