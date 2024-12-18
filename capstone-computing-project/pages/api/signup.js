@@ -111,6 +111,18 @@ const signup = async (req, res) => {
                     <p style="font-size: 16px; line-height: 1.5;">
                         The user cannot login until the admin has confirmed and finalized their registration! Please make sure to be haste in your confirmation so as the user can access important features of the website.
                     </p>
+
+                    <p style="font-size: 16px; line-height: 1.5;">
+                        Steps to confirm the registration:
+                        <ol>
+                            <li>Login with admin account</li>
+                            <li>Click on Manage Members while on Officer Resources page</li>
+                            <li>Click on Confirm Member Registration button</li>
+                            <li>Accept or Deny an account registration with the corresponding action buttons</li>
+                            <li>Click on Roster page button and Click Edit if you need to edit user's information</li>
+                        </ol>
+                    </p>
+                    
                     <hr style="border: none; border-top: 1px solid #9E1B32; margin-top: 30px;"/>
                     <p style="font-size: 12px; color: #777;">
                         This email was sent from <strong>UA’s Waterski Team</strong>. You can visit our website at 
