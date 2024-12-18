@@ -108,7 +108,8 @@ const majors = [
     { value: 'Women\'s Studies, BA', label: 'Women\'s Studies, BA' },
 ];
 
-export default function LoginPage() {
+// used to have export default function LoginPage() 
+const LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -425,3 +426,5 @@ export default function LoginPage() {
         </Suspense>
     );
 }
+
+export default LoginPage;
