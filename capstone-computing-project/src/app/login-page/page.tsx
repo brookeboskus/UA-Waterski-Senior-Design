@@ -109,7 +109,7 @@ const majors = [
 ];
 
 // used to have export default function LoginPage() 
-const LoginPage() {
+const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
