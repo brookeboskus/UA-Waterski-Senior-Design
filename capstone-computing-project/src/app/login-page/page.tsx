@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Select from 'react-select';
 import axios, { AxiosError } from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation'; 
@@ -256,170 +256,172 @@ export default function LoginPage() {
     };
 
     return (
-        <div className='login-page flex items-center justify-center min-h-screen bg-[#ffffff]'>
-            <div className="flex flex-row w-full h-full">
-                <div className="w-full md:w-2/3 flex flex-col justify-center items-center pr-0">
-                    <div className="mb-8" style={{ height: 'auto', width: '300px' }}>
-                        <Image src={SkiBamaLogo} alt="Ski Bama Logo" />
-                    </div>
-
-                    <div className='bg-white p-8 rounded-lg shadow-lg w-full max-w-md text-black mt-[-40px]'>
-
-                        <div className='bg-[#ffaaaa] rounded-lg p-2 mt-2 mb-2 hidden' id="errorBox">
-                            <p className='font-bold'>Error:</p><p id="errorText">DEFAULT ERROR TEXT</p>
+        <Suspense fallback={<div>Loading...</div>}>
+            <div className='login-page flex items-center justify-center min-h-screen bg-[#ffffff]'>
+                <div className="flex flex-row w-full h-full">
+                    <div className="w-full md:w-2/3 flex flex-col justify-center items-center pr-0">
+                        <div className="mb-8" style={{ height: 'auto', width: '300px' }}>
+                            <Image src={SkiBamaLogo} alt="Ski Bama Logo" />
                         </div>
 
-                        <div className='flex justify-between mb-4'>
-                            <button
-                                onClick={() => setIsLogin(true)}
-                                className={`w-1/2 mr-1 py-2 rounded-l-full font-bold ${isLogin ? 'bg-[#9E1B32] text-white' : 'bg-gray-200 text-[#9E1B32]'}`}
-                            >
-                                Login
-                            </button>
-                            <button
-                                onClick={() => setIsLogin(false)}
-                                className={`w-1/2 ml-1 py-2 rounded-r-full font-bold ${!isLogin ? 'bg-[#9E1B32] text-white' : 'bg-gray-200 text-[#9E1B32]'}`}
-                            >
-                                Sign Up
-                            </button>
-                        </div>
+                        <div className='bg-white p-8 rounded-lg shadow-lg w-full max-w-md text-black mt-[-40px]'>
 
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            <input
-                                type="email"
-                                placeholder="Email Address"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                // pattern=".+@+(.+\.)?ua\.edu"
-                                title="Email must be a valid University of Alabama address (i.e. ending in ua.edu)"
-                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
-                                required
-                            />
-                            <div className="relative">
-                                <input
-                                    type={showPassword ? 'text' : 'password'}
-                                    placeholder="Password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
-                                    required
-                                />
+                            <div className='bg-[#ffaaaa] rounded-lg p-2 mt-2 mb-2 hidden' id="errorBox">
+                                <p className='font-bold'>Error:</p><p id="errorText">DEFAULT ERROR TEXT</p>
+                            </div>
+
+                            <div className='flex justify-between mb-4'>
                                 <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute inset-y-0 right-3 flex items-center"
+                                    onClick={() => setIsLogin(true)}
+                                    className={`w-1/2 mr-1 py-2 rounded-l-full font-bold ${isLogin ? 'bg-[#9E1B32] text-white' : 'bg-gray-200 text-[#9E1B32]'}`}
                                 >
-                                    {showPassword ? (
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <path d="M17.94 17.94A10.95 10.95 0 0112 20c-5.523 0-10-4.477-10-10 0-1.326.255-2.593.72-3.757" />
-                                            <path d="M3.6 3.6l16.8 16.8" />
-                                        </svg>
-                                    ) : (
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <circle cx="12" cy="12" r="3" />
-                                            <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12z" />
-                                        </svg>
-                                    )}
+                                    Login
+                                </button>
+                                <button
+                                    onClick={() => setIsLogin(false)}
+                                    className={`w-1/2 ml-1 py-2 rounded-r-full font-bold ${!isLogin ? 'bg-[#9E1B32] text-white' : 'bg-gray-200 text-[#9E1B32]'}`}
+                                >
+                                    Sign Up
                                 </button>
                             </div>
 
-                            {!isLogin && (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <form onSubmit={handleSubmit} className="space-y-4">
+                                <input
+                                    type="email"
+                                    placeholder="Email Address"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    // pattern=".+@+(.+\.)?ua\.edu"
+                                    title="Email must be a valid University of Alabama address (i.e. ending in ua.edu)"
+                                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
+                                    required
+                                />
+                                <div className="relative">
                                     <input
-                                        type="text"
-                                        placeholder="First Name"
-                                        value={fname}
-                                        onChange={(e) => setFname(e.target.value)}
-                                        className="col-span-2 md:col-span-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
+                                        type={showPassword ? 'text' : 'password'}
+                                        placeholder="Password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
                                         required
                                     />
-                                    <input
-                                        type="text"
-                                        placeholder="Last Name"
-                                        value={lname}
-                                        onChange={(e) => setLname(e.target.value)}
-                                        className="col-span-2 md:col-span-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
-                                        required
-                                    />
-                                    <input
-                                        type="text"
-                                        placeholder="CWID"
-                                        value={cwid}
-                                        onChange={(e) => setCwid(e.target.value)}
-                                        className="col-span-2 md:col-span-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
-                                        required
-                                    />
-                                    <input
-                                        type="text"
-                                        placeholder="Phone Number"
-                                        value={phone}
-                                        onChange={(e) => setPhone(e.target.value)}
-                                        className="col-span-2 md:col-span-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
-                                        required
-                                    />
-                                    <div className="col-span-2">
-                                        <select
-                                            value={gradYear}
-                                            onChange={(e) => setGradYear(e.target.value)}
-                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
-                                            required
-                                        >
-                                            <option value="Freshman">Freshman</option>
-                                            <option value="Sophomore">Sophomore</option>
-                                            <option value="Junior">Junior</option>
-                                            <option value="Senior">Senior</option>
-                                        </select>
-                                    </div>
-                                    <div className="col-span-2">
-                                        <Select
-                                            placeholder="Select your Major"
-                                            value={selectedMajor}
-                                            onChange={setSelectedMajor}
-                                            options={majors}
-                                            className="w-full"
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute inset-y-0 right-3 flex items-center"
+                                    >
+                                        {showPassword ? (
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d="M17.94 17.94A10.95 10.95 0 0112 20c-5.523 0-10-4.477-10-10 0-1.326.255-2.593.72-3.757" />
+                                                <path d="M3.6 3.6l16.8 16.8" />
+                                            </svg>
+                                        ) : (
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <circle cx="12" cy="12" r="3" />
+                                                <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12z" />
+                                            </svg>
+                                        )}
+                                    </button>
+                                </div>
+
+                                {!isLogin && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <input
+                                            type="text"
+                                            placeholder="First Name"
+                                            value={fname}
+                                            onChange={(e) => setFname(e.target.value)}
+                                            className="col-span-2 md:col-span-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
                                             required
                                         />
-                                    </div>
-                                    <div className="col-span-2">
-                                        <label className="w-full cursor-pointer border-2 border-[#9e1b32] rounded-lg p-2 flex justify-between items-center">
-                                            <span className="text-gray-700">Upload Profile Picture</span>
-                                            <input
-                                                type="file"
-                                                accept=".png, .jpg, .jpeg, .webp"
-                                                onChange={handleFileChange}
-                                                className="hidden"
+                                        <input
+                                            type="text"
+                                            placeholder="Last Name"
+                                            value={lname}
+                                            onChange={(e) => setLname(e.target.value)}
+                                            className="col-span-2 md:col-span-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
+                                            required
+                                        />
+                                        <input
+                                            type="text"
+                                            placeholder="CWID"
+                                            value={cwid}
+                                            onChange={(e) => setCwid(e.target.value)}
+                                            className="col-span-2 md:col-span-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
+                                            required
+                                        />
+                                        <input
+                                            type="text"
+                                            placeholder="Phone Number"
+                                            value={phone}
+                                            onChange={(e) => setPhone(e.target.value)}
+                                            className="col-span-2 md:col-span-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
+                                            required
+                                        />
+                                        <div className="col-span-2">
+                                            <select
+                                                value={gradYear}
+                                                onChange={(e) => setGradYear(e.target.value)}
+                                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9e1b32]"
+                                                required
+                                            >
+                                                <option value="Freshman">Freshman</option>
+                                                <option value="Sophomore">Sophomore</option>
+                                                <option value="Junior">Junior</option>
+                                                <option value="Senior">Senior</option>
+                                            </select>
+                                        </div>
+                                        <div className="col-span-2">
+                                            <Select
+                                                placeholder="Select your Major"
+                                                value={selectedMajor}
+                                                onChange={setSelectedMajor}
+                                                options={majors}
+                                                className="w-full"
+                                                required
                                             />
-                                        </label>
-                                        {PfpImage && <span className="ml-2 text-gray-600">{PfpImage.name}</span>}
+                                        </div>
+                                        <div className="col-span-2">
+                                            <label className="w-full cursor-pointer border-2 border-[#9e1b32] rounded-lg p-2 flex justify-between items-center">
+                                                <span className="text-gray-700">Upload Profile Picture</span>
+                                                <input
+                                                    type="file"
+                                                    accept=".png, .jpg, .jpeg, .webp"
+                                                    onChange={handleFileChange}
+                                                    className="hidden"
+                                                />
+                                            </label>
+                                            {PfpImage && <span className="ml-2 text-gray-600">{PfpImage.name}</span>}
+                                        </div>
                                     </div>
-                                </div>
+                                )}
+
+                                <button type="submit" className="w-full bg-[white] text-[black] py-2 rounded-full font-bold hover:text-[#9E1B32]">
+                                    {isLogin ? 'Sign In' : 'Sign Up'}
+                                </button>
+                            </form>
+
+                            {isLogin && (
+                                <p className='text-center mt-4 text-xs'>
+                                    <a href='/forgot-password-page' className='text-[black] hover:text-[#9E1B32] font-bold'>
+                                        Forgot Password?
+                                    </a>
+                                </p>
                             )}
+                        </div>
 
-                            <button type="submit" className="w-full bg-[white] text-[black] py-2 rounded-full font-bold hover:text-[#9E1B32]">
-                                {isLogin ? 'Sign In' : 'Sign Up'}
-                            </button>
-                        </form>
-
-                        {isLogin && (
-                            <p className='text-center mt-4 text-xs'>
-                                <a href='/forgot-password-page' className='text-[black] hover:text-[#9E1B32] font-bold'>
-                                    Forgot Password?
-                                </a>
-                            </p>
-                        )}
                     </div>
 
-                </div>
-
-                <div className="hidden md:block rounded-tl-[55px] rounded-bl-[55px] relative" style={{ maxWidth: '100%', height: 'auto' }}>
-                    <Image
-                        src={WaterskiImage}
-                        alt="Water ski image"
-                        priority={true}
-                        style={{ width: '100%', height: 'auto' }}
-                    />
+                    <div className="hidden md:block rounded-tl-[55px] rounded-bl-[55px] relative" style={{ maxWidth: '100%', height: 'auto' }}>
+                        <Image
+                            src={WaterskiImage}
+                            alt="Water ski image"
+                            priority={true}
+                            style={{ width: '100%', height: 'auto' }}
+                        />
+                    </div>
                 </div>
             </div>
-        </div>
+        </Suspense>
     );
 }
