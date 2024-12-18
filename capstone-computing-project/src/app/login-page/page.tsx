@@ -126,16 +126,17 @@ export default function LoginPage() {
     const redirect = searchParams ? searchParams.get('redirect') || '/' : '/'; // vercel complained about searh param null
 
 
-    useEffect(() => {
-        if (router.isReady) {
-            console.log('Router query:', router.query); 
-            const redirect = router.query?.redirect as string;
-            console.log('Redirect path:', redirect);
-            setRedirectPath(redirect || '/');
-        } else {
-            console.log('that didnt work bruh why are u even coding at this point');
-        }
-    }, [router.isReady, router.query]);
+    // below useEffect is not in use, we switched to searchParams 
+    // useEffect(() => {
+    //     if (router.isReady) {
+    //         console.log('Router query:', router.query); 
+    //         const redirect = router.query?.redirect as string;
+    //         console.log('Redirect path:', redirect);
+    //         setRedirectPath(redirect || '/');
+    //     } else {
+    //         console.log('that didnt work bruh why are u even coding at this point');
+    //     }
+    // }, [router.isReady, router.query]);
 
     useEffect(() => {
         document.title = 'UA Waterski - Login/Sign Up';
