@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import WaterskiImage from '../img/loginSkiIMG.svg';
 import SkiBamaLogo from '../img/skibamalogo.svg';
+import dynamic from 'next/dynamic';
 
 let APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -427,4 +428,15 @@ const LoginPage = () => {
     );
 }
 
-export default LoginPage;
+// export default LoginPage;
+
+
+const LoginPageContent = dynamic(() => Promise.resolve(LoginPage), { ssr: false });
+
+export default function LoginPageWrapper() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <LoginPageContent />
+        </Suspense>
+    );
+}
