@@ -237,6 +237,12 @@ export default function Navbar() {
                     <Link href="/" className="text-white text-base hover:text-black hover:underline transition duration-300">
                         Home
                     </Link>
+                    <Link href="/team-news-page" className="text-white text-base hover:text-black hover:underline transition duration-300">
+                        Team News
+                    </Link>
+                    <Link href="/team-records-page" className="text-white text-base hover:text-black hover:underline transition duration-300">
+                        Team Records
+                    </Link>
                     {isLoggedIn && (
                         <Link href="/set-list-page" className="text-white text-base hover:text-black hover:underline transition duration-300">
                             Set List
